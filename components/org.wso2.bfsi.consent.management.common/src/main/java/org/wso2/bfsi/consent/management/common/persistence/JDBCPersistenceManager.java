@@ -18,8 +18,10 @@
 
 package org.wso2.bfsi.consent.management.common.persistence;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 
 import java.sql.Connection;
@@ -33,8 +35,8 @@ import javax.sql.DataSource;
 /**
  * This class is used for handling consent management data persistence in the JDBC Store. During the server
  * start-up, it checks whether the database is created, if not it creates one. It reads the data source properties
- * from the open-banking.xml. This is implemented as a singleton. An instance of this class can be obtained through
- * JDBCPersistenceManager.getInstance() method.
+ * from the bfsi-consent-management.xml. This is implemented as a singleton. An instance of this class can be obtained
+ * through JDBCPersistenceManager.getInstance() method.
  */
 public class JDBCPersistenceManager {
 
@@ -66,11 +68,6 @@ public class JDBCPersistenceManager {
     /**
      * Initialize the data source.
      */
-//    @SuppressFBWarnings("LDAP_INJECTION")
-    // Suppressed content - context.lookup(dataSourceName)
-    // Suppression reason - False Positive : Since the dataSourceName is taken from the deployment.toml, it can be
-    //                      trusted
-    // Suppressed warning count - 1
     private void initDataSource() {
 
         if (dataSource != null) {
@@ -78,19 +75,15 @@ public class JDBCPersistenceManager {
         }
         synchronized (JDBCPersistenceManager.class) {
             try {
-//                String dataSourceName = OpenBankingConfigParser.getInstance().getDataSourceName();
-//                if (StringUtils.isNotBlank(dataSourceName)) {
-//                    Context context = new InitialContext();
-//                    dataSource = (DataSource) context.lookup("jdbc/WSO2OB_DB");
-//                } else {
-//                    throw new ConsentManagementRuntimeException("Persistence Manager configuration for
-//                    Open Banking " +
-//                            "is not available in open-banking.xml file. Terminating the JDBC persistence manager " +
-//                            "initialization.");
-//                }
-
-                Context context = new InitialContext();
-                dataSource = (DataSource) context.lookup("jdbc/WSO2OB_DB");
+                String dataSourceName = ConsentManagementConfigParser.getInstance().getDataSourceName();
+                if (StringUtils.isNotBlank(dataSourceName)) {
+                    Context context = new InitialContext();
+                    dataSource = (DataSource) context.lookup(dataSourceName);
+                } else {
+                    throw new ConsentManagementRuntimeException("Persistence Manager configuration for Consent " +
+                            "Management is not available in bfsi-consent-management.xml file. " +
+                            "Terminating the JDBC persistence manager initialization.");
+                }
             } catch (NamingException e) {
                 throw new ConsentManagementRuntimeException("Error when looking up the Consent Management Data Source.",
                         e);

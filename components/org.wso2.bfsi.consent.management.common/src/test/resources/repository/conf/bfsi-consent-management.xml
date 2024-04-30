@@ -19,7 +19,11 @@
 
 <Server xmlns="http://wso2.org/projects/carbon/bfsi-consent-management.xml">
     <ConsentManagement>
-        <ArtifactId>org.wso2.bfsi.consent.management.service</ArtifactId>
+        <JDBCPersistenceManager>
+            <DataSource>
+                <Name>jdbc/WSO2OB_DB</Name>
+            </DataSource>
+        </JDBCPersistenceManager>
         <Rules>
             <Rule>TestRule1</Rule>
             <Rule>TestRule2</Rule>

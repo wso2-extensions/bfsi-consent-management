@@ -63,7 +63,7 @@ public class ConsentManagementConfigParserTests {
         Assert.assertNotNull(parser);
     }
 
-    @Test(priority = 5)
+    @Test(priority = 3)
     public void testSingleton() {
 
         ConsentManagementConfigParser instance1 = ConsentManagementConfigParser.getInstance();
@@ -71,7 +71,7 @@ public class ConsentManagementConfigParserTests {
         Assert.assertEquals(instance2, instance1);
     }
 
-    @Test(priority = 6)
+    @Test(priority = 4)
     public void testCarbonPath() {
 
         String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();

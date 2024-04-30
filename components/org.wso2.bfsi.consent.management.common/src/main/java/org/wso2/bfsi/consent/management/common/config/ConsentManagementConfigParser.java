@@ -62,7 +62,7 @@ public class ConsentManagementConfigParser {
     /**
      * Singleton getInstance method to create only one object.
      *
-     * @return OpenBankingConfigParser object
+     * @return ConsentManagementConfigParser object
      */
     public static ConsentManagementConfigParser getInstance() {
 
@@ -111,7 +111,7 @@ public class ConsentManagementConfigParser {
                     inStream.close();
                 }
             } catch (IOException e) {
-                log.error("Error closing the input stream for open-banking.xml", e);
+                log.error("Error closing the input stream for bfsi-consent-management.xml", e);
             }
         }
     }
@@ -214,4 +214,22 @@ public class ConsentManagementConfigParser {
         }
         return textBuilder.toString();
     }
+
+    /**
+     * Returns the element with the provided key.
+     *
+     * @param key local part name
+     * @return Corresponding value for key
+     */
+    public Object getConfigElementFromKey(String key) {
+
+        return configuration.get(key);
+    }
+
+    public String getDataSourceName() {
+
+        return getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG) == null ? "" :
+                ((String) getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG)).trim();
+    }
+
 }
