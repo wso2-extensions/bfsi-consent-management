@@ -31,7 +31,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 /**
- * This class is used for handling Open banking consent data persistence in the JDBC Store. During the server
+ * This class is used for handling consent management data persistence in the JDBC Store. During the server
  * start-up, it checks whether the database is created, if not it creates one. It reads the data source properties
  * from the open-banking.xml. This is implemented as a singleton. An instance of this class can be obtained through
  * JDBCPersistenceManager.getInstance() method.
