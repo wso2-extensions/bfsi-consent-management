@@ -25,6 +25,7 @@ import java.util.Map;
  * Utility class for tests.
  */
 public class CommonTestUtil {
+
     public static void injectEnvironmentVariable(String key, String value)
             throws ReflectiveOperationException {
 

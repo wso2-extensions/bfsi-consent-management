@@ -21,6 +21,7 @@ package org.wso2.bfsi.consent.management.common.config;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
@@ -83,7 +84,6 @@ public class ConsentManagementConfigParser {
 
         InputStream inStream = null;
         StAXOMBuilder builder;
-        String warningMessage = "";
         try {
             File configXml = new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
             if (configXml.exists()) {
@@ -92,7 +92,7 @@ public class ConsentManagementConfigParser {
             if (inStream == null) {
                 String message =
                         "BFSI Consent Management configuration not found at: " + CarbonUtils.getCarbonConfigDirPath() +
-                                ConsentManagementConstants.CONFIG_FILE + " . Cause - " + warningMessage;
+                                ConsentManagementConstants.CONFIG_FILE;
                 if (log.isDebugEnabled()) {
                     log.debug(message.replaceAll("[\r\n]", ""));
                 }
@@ -162,8 +162,7 @@ public class ConsentManagementConfigParser {
      */
     private boolean elementHasText(OMElement element) {
 
-        String text = element.getText();
-        return text != null && text.trim().length() != 0;
+       return StringUtils.isNotBlank(element.getText());
     }
 
     /**

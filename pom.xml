@@ -82,7 +82,6 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </pluginRepository>
-
         <pluginRepository>
             <id>wso2.snapshots</id>
             <name>WSO2 Snapshot Repository</name>
@@ -200,6 +199,7 @@
             </dependency>
 
             <!-- Unit test dependencies -->
+            <!-- Avoid using Powermock for unit tests -->
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -215,7 +215,6 @@
         <developerConnection>scm:git:https://github.com/wso2-extensions/bfsi-consent-management.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
-
 
     <properties>
         <!-- Carbon Kernel -->

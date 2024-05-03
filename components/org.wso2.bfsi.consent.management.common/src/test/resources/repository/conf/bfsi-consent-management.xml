@@ -24,11 +24,21 @@
                 <Name>jdbc/WSO2OB_DB</Name>
             </DataSource>
         </JDBCPersistenceManager>
-        <Rules>
-            <Rule>TestRule1</Rule>
-            <Rule>TestRule2</Rule>
-            <Rule>TestRule3</Rule>
-        </Rules>
         <UserName>${admin.username}</UserName>
+        <AuthorizeSteps>
+            <Retrieval>
+                <Step class="org.wso2.consent.management.extensions.authorize.impl.NonRegConsentRetrievalStep" priority="1"/>
+                <Step class="org.wso2.consent.management.extensions.authorize.impl.DefaultConsentRetrievalStep" priority="2"/>
+            </Retrieval>
+            <Persist>
+                <Step class="org.wso2.consent.management.extensions.authorize.impl.DefaultConsentPersistStep" priority="1"/>
+                <Step class="org.wso2.consent.management.extensions.authorize.impl.AccountConsentPersistStep" priority="2"/>
+            </Persist>
+        </AuthorizeSteps>
+        <PermissionsSupported>
+            <Permission>READ</Permission>
+            <Permission>WRITE</Permission>
+            <Permission>DELETE</Permission>
+        </PermissionsSupported>
     </ConsentManagement>
 </Server>

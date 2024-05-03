@@ -29,6 +29,7 @@ public class ConsentManagementRuntimeException extends RuntimeException {
     }
 
     public ConsentManagementRuntimeException(String message) {
+
         super(message);
     }
 

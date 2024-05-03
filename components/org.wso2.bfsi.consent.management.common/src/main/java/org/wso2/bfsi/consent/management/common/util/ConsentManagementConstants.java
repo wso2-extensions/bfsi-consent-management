@@ -19,7 +19,7 @@
 package org.wso2.bfsi.consent.management.common.util;
 
 /**
- *
+ * Common Constants class for Consent Management.
  */
 public class ConsentManagementConstants {
 

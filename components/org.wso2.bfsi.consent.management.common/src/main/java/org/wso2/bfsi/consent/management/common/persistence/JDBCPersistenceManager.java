@@ -55,6 +55,7 @@ public class JDBCPersistenceManager {
      * @return JDBCPersistenceManager instance
      */
     public static synchronized JDBCPersistenceManager getInstance() {
+
         if (instance == null) {
             synchronized (JDBCPersistenceManager.class) {
                 if (instance == null) {

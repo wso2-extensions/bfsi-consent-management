@@ -81,6 +81,7 @@ public class CarbonUtils {
      */
     @Generated(message = "Ignoring because ServerConfiguration cannot be mocked")
     public static String getCarbonHostname() {
+
         return ServerConfiguration.getInstance().getFirstProperty("HostName");
     }
 
@@ -91,6 +92,7 @@ public class CarbonUtils {
      */
     @Generated(message = "Ignoring because ServerConfiguration cannot be mocked")
     public static String getCarbonServerUrl() {
+
         return HTTPS + getCarbonHostname() + COLON + getCarbonPort();
     }
 }
