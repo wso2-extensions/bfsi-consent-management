@@ -30,14 +30,13 @@ import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import javax.xml.stream.XMLStreamException;
 
@@ -82,40 +81,25 @@ public class ConsentManagementConfigParser {
      */
     private void buildConfiguration() {
 
-        InputStream inStream = null;
         StAXOMBuilder builder;
-        try {
-            File configXml = new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
-            if (configXml.exists()) {
-                inStream = new FileInputStream(configXml);
+        File configXml = new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
+
+        if (configXml.exists()) {
+            try (FileInputStream fileInputStream = new FileInputStream(configXml)) {
+
+                builder = new StAXOMBuilder(fileInputStream);
+                OMElement rootElement = builder.getDocumentElement();
+                Stack<String> nameStack = new Stack<>();
+                readChildElements(rootElement, nameStack);
+            } catch (IOException | XMLStreamException | OMException e) {
+                throw new ConsentManagementRuntimeException("Error occurred while building configuration from" +
+                        " bfsi-consent-management.xml", e);
             }
-            if (inStream == null) {
-                String message =
-                        "BFSI Consent Management configuration not found at: " + CarbonUtils.getCarbonConfigDirPath() +
-                                ConsentManagementConstants.CONFIG_FILE;
-                if (log.isDebugEnabled()) {
-                    log.debug(message.replaceAll("[\r\n]", ""));
-                }
-                throw new FileNotFoundException(message);
-            }
-            builder = new StAXOMBuilder(inStream);
-            OMElement rootElement = builder.getDocumentElement();
-            Stack<String> nameStack = new Stack<>();
-            readChildElements(rootElement, nameStack);
-        } catch (IOException | XMLStreamException | OMException e) {
-            throw new ConsentManagementRuntimeException("Error occurred while building configuration from" +
-                    " bfsi-consent-management.xml", e);
-        } finally {
-            try {
-                if (inStream != null) {
-                    inStream.close();
-                }
-            } catch (IOException e) {
-                log.error("Error closing the input stream for bfsi-consent-management.xml", e);
-            }
+        } else {
+            throw new ConsentManagementRuntimeException("bfsi-consent-management.xml file not found in " +
+                    CarbonUtils.getCarbonConfigDirPath());
         }
     }
-
 
     /**
      * Method to read text configs from xml when root element is given.
@@ -173,13 +157,7 @@ public class ConsentManagementConfigParser {
      */
     private String getKey(Stack<String> nameStack) {
 
-        StringBuilder key = new StringBuilder();
-        for (int index = 0; index < nameStack.size(); index++) {
-            String name = nameStack.elementAt(index);
-            key.append(name).append(".");
-        }
-        key.deleteCharAt(key.lastIndexOf("."));
-        return key.toString();
+        return nameStack.stream().collect(Collectors.joining("."));
     }
 
     /**

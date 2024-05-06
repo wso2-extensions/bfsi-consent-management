@@ -2,7 +2,6 @@
 *.iml
 *.ipr
 *.iws
-components/target
 target
 # Compiled class file
 *.class
