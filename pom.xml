@@ -240,9 +240,10 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>${h2database.version}</version>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>${orbit.version.h2.engine}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -256,7 +257,7 @@
 
     <properties>
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.9</carbon.kernel.version>
+        <carbon.kernel.version>4.10.14</carbon.kernel.version>
         <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
         <maven.spotbugs.plugin.version>4.2.3</maven.spotbugs.plugin.version>
         <com.h3xstream.findsecbugs.version>1.12.0</com.h3xstream.findsecbugs.version>
@@ -268,7 +269,7 @@
         <org.testng.version>7.7.0</org.testng.version>
         <jacoco.version>0.8.6</jacoco.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
-        <h2database.version>1.3.175</h2database.version>
+        <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
         <mockito.version>1.10.19</mockito.version>
         <powermock.version>1.7.1</powermock.version>
         <org.testng.version>7.7.0</org.testng.version>
