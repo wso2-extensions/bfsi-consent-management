@@ -215,6 +215,7 @@
             </dependency>
 
             <!-- Unit test dependencies -->
+            <!-- Avoid using Powermock for unit tests -->
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>

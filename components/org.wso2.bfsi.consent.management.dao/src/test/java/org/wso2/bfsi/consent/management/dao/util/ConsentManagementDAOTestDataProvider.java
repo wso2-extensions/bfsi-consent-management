@@ -19,122 +19,133 @@
 package org.wso2.bfsi.consent.management.dao.util;
 
 import org.testng.annotations.DataProvider;
+import org.wso2.bfsi.consent.management.dao.constants.ConsentMgtDAOConstants;
+
+import java.util.UUID;
 
 public class ConsentManagementDAOTestDataProvider {
 
     @DataProvider(name = "storeConsentDataProvider")
     public Object[][] storeConsentResourceData() {
 
-        /*
-         * consentID
-         * clientID
-         * receipt
-         * consentType
-         * consentFrequency
-         * validityPeriod
-         * recurringIndicator
-         * currentStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_RESOURCE_DATA_HOLDER;
+        return new Object[][] {
+                {
+                        UUID.randomUUID().toString(),
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_RECEIPT,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_TYPE,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_FREQUENCY,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_VALIDITY_PERIOD,
+                        ConsentMgtDAOTestData.SAMPLE_RECURRING_INDICATOR,
+                        ConsentMgtDAOTestData.SAMPLE_CURRENT_STATUS,
+                }
+        };
     }
 
     @DataProvider(name = "updateConsentStatusDataProvider")
     public Object[][] updateConsentStatusData() {
 
-        /*
-         * newConsentStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_STATUS_UPDATE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_CURRENT_STATUS
+            }
+        };
     }
 
     @DataProvider(name = "storeAuthorizationDataProvider")
     public Object[][] storeAuthorizationResourceData() {
 
-        /*
-         * authorizationID
-         * consentID
-         * authorizationType
-         * userID
-         * authorizationStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.AUTHORIZATION_RESOURCE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_AUTHORIZATION_TYPE,
+                ConsentMgtDAOTestData.SAMPLE_USER_ID,
+                ConsentMgtDAOTestData.SAMPLE_AUTHORIZATION_STATUS
+            }
+        };
     }
 
     @DataProvider(name = "updateAuthorizationStatusDataProvider")
     public Object[][] updateAuthorizationStatusData() {
 
-        /*
-         * newAuthorizationStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_AUTHORIZATION_STATUS_UPDATE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_CURRENT_STATUS
+            }
+        };
     }
 
     @DataProvider(name = "updateAuthorizationUserDataProvider")
     public Object[][] updateAuthorizationUsersData() {
 
-        /*
-         * newAuthorizationUser
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_AUTHORIZATION_USER_UPDATE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_NEW_USER_ID
+            }
+        };
     }
 
     @DataProvider(name = "storeConsentMappingDataProvider")
     public Object[][] storeConsentMappingResourceData() {
 
-        /*
-         * accountID
-         * permission
-         * mappingStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_MAPPING_RESOURCE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_ACCOUNT_ID,
+                ConsentMgtDAOTestData.SAMPLE_PERMISSION,
+                ConsentMgtDAOTestData.SAMPLE_MAPPING_STATUS
+            }
+        };
     }
 
     @DataProvider(name = "updateConsentMappingStatusDataProvider")
     public Object[][] updateConsentMappingStatusData() {
 
-        /*
-         * newMappingStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_MAPPING_STATUS_UPDATE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_NEW_MAPPING_STATUS
+            }
+        };
     }
 
     @DataProvider(name = "storeConsentAttributesDataProvider")
     public Object[][] storeConsentAttributesData() {
 
-        /*
-         * consentAttributesMap
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_ATTRIBUTES_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_CONSENT_ATTRIBUTES_MAP
+            }
+        };
     }
 
     @DataProvider(name = "getConsentAttributesDataProvider")
     public Object[][] getConsentAttributesData() {
 
-        /*
-         * consentAttributeKeys
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_ATTRIBUTES_GET_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_CONSENT_ATTRIBUTES_KEYS
+            }
+        };
     }
 
     @DataProvider(name = "storeConsentFileDataProvider")
     public Object[][] storeConsentFileData() {
 
-        /*
-         * consentFile
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_FILE_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_CONSENT_FILE
+            }
+        };
     }
 
     @DataProvider(name = "storeConsentStatusAuditRecordDataProvider")
     public Object[][] storeConsentStatusAuditRecordData() {
 
-        /*
-         * currentStatus
-         * reason
-         * actionBy
-         * previousStatus
-         */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_STATUS_AUDIT_RECORD_DATA_HOLDER;
+        return new Object[][] {
+            {
+                ConsentMgtDAOTestData.SAMPLE_CURRENT_STATUS,
+                ConsentMgtDAOTestData.SAMPLE_REASON,
+                ConsentMgtDAOTestData.SAMPLE_ACTION_BY,
+                ConsentMgtDAOTestData.SAMPLE_CURRENT_STATUS
+            }
+        };
     }
 
     @DataProvider(name = "storeConsentHistoryDataProvider")
@@ -148,6 +159,48 @@ public class ConsentManagementDAOTestDataProvider {
          * amendedTimestamp
          * amendmentReason
          */
-        return ConsentMgtDAOTestData.DataProviders.CONSENT_HISTORY_DATA_HOLDER;
+        return new Object[][] {
+
+                {
+                        ConsentMgtDAOTestData.SAMPLE_HISTORY_ID,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_ID,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_BASIC_DATA_CHANGED_ATTRIBUTES_JSON.toString(),
+                        ConsentMgtDAOConstants.TYPE_CONSENT_BASIC_DATA,
+                        ConsentMgtDAOTestData.SAMPLE_UPDATED_TIME,
+                        ConsentMgtDAOTestData.SAMPLE_AMENDMENT_REASON
+                },
+                {
+                        ConsentMgtDAOTestData.SAMPLE_HISTORY_ID,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_ID,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_ATTRIBUTES_CHANGED_ATTRIBUTES_JSON.toString(),
+                        ConsentMgtDAOConstants.TYPE_CONSENT_ATTRIBUTES_DATA,
+                        ConsentMgtDAOTestData.SAMPLE_UPDATED_TIME,
+                        ConsentMgtDAOTestData.SAMPLE_AMENDMENT_REASON
+                },
+                {
+                        ConsentMgtDAOTestData.SAMPLE_HISTORY_ID,
+                        ConsentMgtDAOTestData.SAMPLE_MAPPING_ID,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_MAPPINGS_CHANGED_ATTRIBUTES_JSON.toString(),
+                        ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA,
+                        ConsentMgtDAOTestData.SAMPLE_UPDATED_TIME,
+                        ConsentMgtDAOTestData.SAMPLE_AMENDMENT_REASON
+                },
+                {
+                        ConsentMgtDAOTestData.SAMPLE_HISTORY_ID,
+                        ConsentMgtDAOTestData.SAMPLE_MAPPING_ID_2,
+                        ConsentMgtDAOTestData.SAMPLE_CONSENT_MAPPINGS_CHANGED_ATTRIBUTES_JSON.toString(),
+                        ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA,
+                        ConsentMgtDAOTestData.SAMPLE_UPDATED_TIME,
+                        ConsentMgtDAOTestData.SAMPLE_AMENDMENT_REASON
+                },
+                {
+                        ConsentMgtDAOTestData.SAMPLE_HISTORY_ID,
+                        ConsentMgtDAOTestData.SAMPLE_AUTHORIZATION_ID,
+                        "null",
+                        ConsentMgtDAOConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA,
+                        ConsentMgtDAOTestData.SAMPLE_UPDATED_TIME,
+                        ConsentMgtDAOTestData.SAMPLE_AMENDMENT_REASON
+                }
+        };
     }
 }

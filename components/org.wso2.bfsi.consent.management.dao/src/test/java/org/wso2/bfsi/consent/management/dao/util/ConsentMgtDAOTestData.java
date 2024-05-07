@@ -19,7 +19,6 @@
 package org.wso2.bfsi.consent.management.dao.util;
 
 import net.minidev.json.JSONObject;
-import org.wso2.bfsi.consent.management.dao.constants.ConsentMgtDAOConstants;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentAttributes;
 import org.wso2.bfsi.consent.management.dao.models.ConsentFile;
@@ -90,8 +89,9 @@ public class ConsentMgtDAOTestData {
     public static final Long SAMPLE_UPDATED_TIME = 1638337892L;
 
     public static final String SAMPLE_AMENDMENT_REASON = "sampleReason";
+    public static final String SAMPLE_CONSENT_FILE = "sample file content";
 
-    public static final Map<String, String> SAMPLE_CONSENT_ATTRIBUTES_MAP = new HashMap<String, String>() {
+    public static final Map<String, String> SAMPLE_CONSENT_ATTRIBUTES_MAP = new HashMap<>() {
         {
             put("x-request-id", UUID.randomUUID().toString());
             put("idempotency-key", UUID.randomUUID().toString());
@@ -100,27 +100,27 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    public static final Map<String, String> CONSENT_ATTRIBUTES_MAP_FOR_UPDATE = new HashMap<String, String>() {
+    public static final Map<String, String> CONSENT_ATTRIBUTES_MAP_FOR_UPDATE = new HashMap<>() {
         {
             put("payment-type", "international-payments");
         }
     };
 
-    public static final ArrayList<String> SAMPLE_CONSENT_ATTRIBUTES_KEYS = new ArrayList<String>() {
+    public static final ArrayList<String> SAMPLE_CONSENT_ATTRIBUTES_KEYS = new ArrayList<>() {
         {
             add("x-request-id");
             add("idempotency-key");
         }
     };
 
-    public static final ArrayList<String> UNMATCHED_MAPPING_IDS = new ArrayList<String>() {
+    public static final ArrayList<String> UNMATCHED_MAPPING_IDS = new ArrayList<>() {
         {
             add("4444");
             add("5555");
         }
     };
 
-    private static final ArrayList<String> SAMPLE_CONSENT_RECEIPTS_LIST = new ArrayList<String>() {
+    private static final ArrayList<String> SAMPLE_CONSENT_RECEIPTS_LIST = new ArrayList<>() {
         {
             add("{\"element1\": \"value1\"}");
             add("{\"element2\": \"value2\"}");
@@ -128,7 +128,7 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    public static final ArrayList<String> SAMPLE_CONSENT_TYPES_LIST = new ArrayList<String>() {
+    public static final ArrayList<String> SAMPLE_CONSENT_TYPES_LIST = new ArrayList<>() {
         {
             add("accounts");
             add("payments");
@@ -136,7 +136,7 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    public static final ArrayList<String> SAMPLE_CONSENT_STATUSES_LIST = new ArrayList<String>() {
+    public static final ArrayList<String> SAMPLE_CONSENT_STATUSES_LIST = new ArrayList<>() {
         {
             add("created");
             add("authorized");
@@ -145,7 +145,7 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    public static final ArrayList<String> SAMPLE_CLIENT_IDS_LIST = new ArrayList<String>() {
+    public static final ArrayList<String> SAMPLE_CLIENT_IDS_LIST = new ArrayList<>() {
         {
             add("clientID1");
             add("clientID2");
@@ -154,7 +154,7 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    public static final ArrayList<String> SAMPLE_USER_IDS_LIST = new ArrayList<String>() {
+    public static final ArrayList<String> SAMPLE_USER_IDS_LIST = new ArrayList<>() {
         {
             add("userID1");
             add("userID2");
@@ -162,7 +162,7 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    private static final ArrayList<Long> SAMPLE_VALIDITY_PERIOD_LIST = new ArrayList<Long>() {
+    private static final ArrayList<Long> SAMPLE_VALIDITY_PERIOD_LIST = new ArrayList<>() {
         {
             add(1613454661L);
             add(1623654661L);
@@ -170,7 +170,7 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    private static final JSONObject SAMPLE_CONSENT_BASIC_DATA_CHANGED_ATTRIBUTES_JSON = new JSONObject() {
+    public static final JSONObject SAMPLE_CONSENT_BASIC_DATA_CHANGED_ATTRIBUTES_JSON = new JSONObject() {
         {
             put("RECEIPT", SAMPLE_CONSENT_RECEIPT);
             put("VALIDITY_TIME", SAMPLE_CONSENT_VALIDITY_PERIOD);
@@ -191,211 +191,15 @@ public class ConsentMgtDAOTestData {
         }
     };
 
-    public static final String SAMPLE_CONSENT_FILE = "sample file content";
-
-    /**
-     * Data Providers class.
-     */
-    public static final class DataProviders {
-
-        /*
-         * consentID
-         * clientID
-         * receipt
-         * consentType
-         * consentFrequency
-         * validityPeriod
-         * recurringIndicator
-         * currentStatus
-         * createdTime
-         */
-        public static final Object[][] CONSENT_RESOURCE_DATA_HOLDER = new Object[][] {
-
-                {
-                        UUID.randomUUID().toString(),
-                        SAMPLE_CONSENT_RECEIPT,
-                        SAMPLE_CONSENT_TYPE,
-                        SAMPLE_CONSENT_FREQUENCY,
-                        SAMPLE_CONSENT_VALIDITY_PERIOD,
-                        SAMPLE_RECURRING_INDICATOR,
-                        SAMPLE_CURRENT_STATUS,
-                }
-        };
-
-        /*
-         * authorizationType
-         * userID
-         * authorizationStatus
-         */
-        public static final Object[][] AUTHORIZATION_RESOURCE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_AUTHORIZATION_TYPE,
-                        SAMPLE_USER_ID,
-                        SAMPLE_AUTHORIZATION_STATUS
-                }
-        };
-
-        /*
-         * accountID
-         * permission
-         * mappingStatus
-         */
-        public static final Object[][] CONSENT_MAPPING_RESOURCE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_ACCOUNT_ID,
-                        SAMPLE_PERMISSION,
-                        SAMPLE_MAPPING_STATUS
-                }
-        };
-
-        /*
-         * currentStatus
-         * reason
-         * actionBy
-         * currentStatus
-         */
-        public static final Object[][] CONSENT_STATUS_AUDIT_RECORD_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_CURRENT_STATUS,
-                        SAMPLE_REASON,
-                        SAMPLE_ACTION_BY,
-                        SAMPLE_CURRENT_STATUS
-                }
-        };
-
-        /*
-         * consentAttributesMap
-         */
-        public static final Object[][] CONSENT_ATTRIBUTES_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_CONSENT_ATTRIBUTES_MAP
-                }
-        };
-
-        /*
-         * consentFile
-         */
-        public static final Object[][] CONSENT_FILE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_CONSENT_FILE
-                }
-        };
-
-        /*
-         * newConsentStatus
-         */
-        public static final Object[][] CONSENT_STATUS_UPDATE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_CURRENT_STATUS
-                }
-        };
-
-        /*
-         * newMappingStatus
-         */
-        public static final Object[][] CONSENT_MAPPING_STATUS_UPDATE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_NEW_MAPPING_STATUS
-                }
-        };
-
-        /*
-         * newAuthorizationStatus
-         */
-        public static final Object[][] CONSENT_AUTHORIZATION_STATUS_UPDATE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_CURRENT_STATUS
-                }
-        };
-
-        /*
-         * newAuthorizationUser
-         */
-        public static final Object[][] CONSENT_AUTHORIZATION_USER_UPDATE_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_NEW_USER_ID
-                }
-        };
-
-        /*
-         * consentAttributeKeys
-         */
-        public static final Object[][] CONSENT_ATTRIBUTES_GET_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_CONSENT_ATTRIBUTES_KEYS
-                }
-        };
-
-        /*
-         * historyID
-         * consentID
-         * changedAttributes
-         * consentType
-         * amendedTimestamp
-         */
-        public static final Object[][] CONSENT_HISTORY_DATA_HOLDER = new Object[][] {
-
-                {
-                        SAMPLE_HISTORY_ID,
-                        SAMPLE_CONSENT_ID,
-                        SAMPLE_CONSENT_BASIC_DATA_CHANGED_ATTRIBUTES_JSON.toString(),
-                        ConsentMgtDAOConstants.TYPE_CONSENT_BASIC_DATA,
-                        SAMPLE_UPDATED_TIME,
-                        SAMPLE_AMENDMENT_REASON
-                },
-                {
-                        SAMPLE_HISTORY_ID,
-                        SAMPLE_CONSENT_ID,
-                        SAMPLE_CONSENT_ATTRIBUTES_CHANGED_ATTRIBUTES_JSON.toString(),
-                        ConsentMgtDAOConstants.TYPE_CONSENT_ATTRIBUTES_DATA,
-                        SAMPLE_UPDATED_TIME,
-                        SAMPLE_AMENDMENT_REASON
-                },
-                {
-                        SAMPLE_HISTORY_ID,
-                        SAMPLE_MAPPING_ID,
-                        SAMPLE_CONSENT_MAPPINGS_CHANGED_ATTRIBUTES_JSON.toString(),
-                        ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA,
-                        SAMPLE_UPDATED_TIME,
-                        SAMPLE_AMENDMENT_REASON
-                },
-                {
-                        SAMPLE_HISTORY_ID,
-                        SAMPLE_MAPPING_ID_2,
-                        SAMPLE_CONSENT_MAPPINGS_CHANGED_ATTRIBUTES_JSON.toString(),
-                        ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA,
-                        SAMPLE_UPDATED_TIME,
-                        SAMPLE_AMENDMENT_REASON
-                },
-                {
-                        SAMPLE_HISTORY_ID,
-                        SAMPLE_AUTHORIZATION_ID,
-                        "null",
-                        ConsentMgtDAOConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA,
-                        SAMPLE_UPDATED_TIME,
-                        SAMPLE_AMENDMENT_REASON
-                }
-        };
-    }
-
     public static List<String> getRecordIDListOfSampleConsentHistory() {
-
-        List<String> recordIdList = new ArrayList<>();
-        recordIdList.add(ConsentMgtDAOTestData.SAMPLE_CONSENT_ID);
-        recordIdList.add(ConsentMgtDAOTestData.SAMPLE_MAPPING_ID);
-        recordIdList.add(ConsentMgtDAOTestData.SAMPLE_MAPPING_ID_2);
-        recordIdList.add(ConsentMgtDAOTestData.SAMPLE_AUTHORIZATION_ID);
-        return  recordIdList;
+       return new ArrayList<>() {
+            {
+                add(ConsentMgtDAOTestData.SAMPLE_CONSENT_ID);
+                add(ConsentMgtDAOTestData.SAMPLE_MAPPING_ID);
+                add(ConsentMgtDAOTestData.SAMPLE_MAPPING_ID_2);
+                add(ConsentMgtDAOTestData.SAMPLE_AUTHORIZATION_ID);
+            }
+        };
     }
 
     public static ConsentResource getSampleTestConsentResource() {
