@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Open banking consent management DAO tests.
+ * Consent management DAO tests.
  */
 public class ConsentCoreDAOTests {
 
