@@ -19,7 +19,7 @@
 package org.wso2.bfsi.consent.management.dao.exceptions;
 
 /**
- * OBConsentDataRetrievalException.
+ * ConsentDataRetrievalException.
  */
 public class ConsentDataRetrievalException extends Exception {
 

@@ -19,7 +19,7 @@
 package org.wso2.bfsi.consent.management.dao.exceptions;
 
 /**
- * OBConsentDataDeletionException.
+ * ConsentDataDeletionException.
  */
 public class ConsentDataDeletionException extends Exception {
 

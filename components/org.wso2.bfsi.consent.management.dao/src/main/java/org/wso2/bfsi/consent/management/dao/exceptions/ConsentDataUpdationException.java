@@ -19,7 +19,7 @@
 package org.wso2.bfsi.consent.management.dao.exceptions;
 
 /**
- * OBConsentDataUpdationException.
+ * ConsentDataUpdationException.
  */
 public class ConsentDataUpdationException extends Exception {
 
