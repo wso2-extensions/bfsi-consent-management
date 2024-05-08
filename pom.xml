@@ -199,6 +199,11 @@
                 <artifactId>commons-collections4</artifactId>
                 <version>${commons-collections.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-annotations</artifactId>
+                <version>${spotbugs.annotations.version}</version>
+            </dependency>
 
             <!-- Add Base Product dependencies here -->
             <dependency>
@@ -261,6 +266,7 @@
         <carbon.kernel.version>4.10.14</carbon.kernel.version>
         <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
         <maven.spotbugs.plugin.version>4.2.3</maven.spotbugs.plugin.version>
+        <spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
         <com.h3xstream.findsecbugs.version>1.12.0</com.h3xstream.findsecbugs.version>
         <commons.logging.version>1.2</commons.logging.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>

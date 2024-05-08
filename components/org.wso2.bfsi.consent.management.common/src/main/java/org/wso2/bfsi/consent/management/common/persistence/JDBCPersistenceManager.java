@@ -18,6 +18,7 @@
 
 package org.wso2.bfsi.consent.management.common.persistence;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,6 +70,11 @@ public class JDBCPersistenceManager {
     /**
      * Initialize the data source.
      */
+    @SuppressFBWarnings("LDAP_INJECTION")
+    // Suppressed content - context.lookup(dataSourceName)
+    // Suppression reason - False Positive : Since the dataSourceName is taken from the deployment.toml, it can be
+    //                      trusted
+    // Suppressed warning count - 1
     private void initDataSource() {
 
         if (dataSource != null) {

@@ -467,17 +467,17 @@ public class ConsentManagementDAOUtil {
     public static String generateConsentTableId(String consentDataType) throws ConsentDataInsertionException {
 
         String tableId;
-        if (ConsentMgtDAOConstants.TYPE_CONSENT_BASIC_DATA.equalsIgnoreCase(consentDataType)) {
+        if (ConsentMgtDAOConstants.TYPE_CONSENT_BASIC_DATA.equals(consentDataType)) {
             tableId = ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT);
-        } else if (ConsentMgtDAOConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA.equalsIgnoreCase(consentDataType)) {
+        } else if (ConsentMgtDAOConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA.equals(consentDataType)) {
             tableId = ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT_AUTH_RESOURCE);
-        } else if (ConsentMgtDAOConstants.TYPE_CONSENT_ATTRIBUTES_DATA.equalsIgnoreCase(consentDataType)) {
+        } else if (ConsentMgtDAOConstants.TYPE_CONSENT_ATTRIBUTES_DATA.equals(consentDataType)) {
             tableId = ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT_ATTRIBUTE);
-        } else if (ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA.equalsIgnoreCase(consentDataType)) {
+        } else if (ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA.equals(consentDataType)) {
             tableId = ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT_MAPPING);
         } else {
             log.error(String.format("Can not find a table matching to the provided consentDataType : %s",
-                    consentDataType));
+                    consentDataType.replaceAll("[\r\n]", "")));
             throw new ConsentDataInsertionException("Error occurred while preparing to store consent amendment " +
                     "history data. Invalid consentDataType provided");
         }
@@ -573,15 +573,15 @@ public class ConsentManagementDAOUtil {
             changedAttributesJsonDataMap = consentHistoryResource.getChangedAttributesJsonDataMap();
 
             if (ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT)
-                    .equalsIgnoreCase(tableID)) {
+                    .equals(tableID)) {
                 changedAttributesJsonDataMap.put(ConsentMgtDAOConstants.TYPE_CONSENT_BASIC_DATA,
                         changedAttributesString);
             } else if (ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT_ATTRIBUTE)
-                    .equalsIgnoreCase(tableID)) {
+                    .equals(tableID)) {
                 changedAttributesJsonDataMap.put(ConsentMgtDAOConstants.TYPE_CONSENT_ATTRIBUTES_DATA,
                         changedAttributesString);
             } else if (ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT_AUTH_RESOURCE)
-                    .equalsIgnoreCase(tableID)) {
+                    .equals(tableID)) {
                 Map<String, Object> consentAuthResources;
                 if (changedAttributesJsonDataMap.containsKey(ConsentMgtDAOConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA)) {
                     consentAuthResources = (Map<String, Object>) changedAttributesJsonDataMap
@@ -593,7 +593,7 @@ public class ConsentManagementDAOUtil {
                 changedAttributesJsonDataMap.put(ConsentMgtDAOConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA,
                         consentAuthResources);
             } else if (ConsentMgtDAOConstants.TABLES_MAP.get(ConsentMgtDAOConstants.TABLE_OB_CONSENT_MAPPING)
-                    .equalsIgnoreCase(tableID)) {
+                    .equals(tableID)) {
                 Map<String, Object> consentMappingResources;
                 if (changedAttributesJsonDataMap.containsKey(ConsentMgtDAOConstants.TYPE_CONSENT_MAPPING_DATA)) {
                     consentMappingResources = (Map<String, Object>) changedAttributesJsonDataMap
@@ -606,7 +606,7 @@ public class ConsentManagementDAOUtil {
                         consentMappingResources);
             } else {
                 log.error(String.format("The retrieved tableId : %s has no corresponding consent data type to be" +
-                        " matched", tableID));
+                        " matched", tableID.replaceAll("[\r\n]", "")));
             }
             consentHistoryResource.setChangedAttributesJsonDataMap(changedAttributesJsonDataMap);
             consentAmendmentHistoryDataMap.put(historyId, consentHistoryResource);

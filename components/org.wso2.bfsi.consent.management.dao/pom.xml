@@ -54,6 +54,10 @@
             <artifactId>org.wso2.bfsi.consent.management.common</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+        </dependency>
         <!-- Unit Test Dependencies -->
         <dependency>
             <groupId>commons-dbcp</groupId>
@@ -95,7 +99,6 @@
                     <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs</spotbugsXmlOutputDirectory>
                     <excludeFilterFile>${project.basedir}/src/main/resources/findbugs-exclude.xml</excludeFilterFile>
                     <includeFilterFile>${project.basedir}/src/main/resources/findbugs-include.xml</includeFilterFile>
-                    <failOnError>false</failOnError>
                     <plugins>
                         <plugin>
                             <groupId>com.h3xstream.findsecbugs</groupId>

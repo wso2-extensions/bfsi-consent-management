@@ -18,6 +18,7 @@
 
 package org.wso2.bfsi.consent.management.dao.impl;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -67,6 +68,11 @@ public class MssqlConsentCoreDAOImpl extends ConsentCoreDAOImpl {
     }
 
     @Override
+    @SuppressFBWarnings("SQL_INJECTION_JDBC")
+    // Suppressed content - connection.prepareStatement(searchConsentsPreparedStatement,
+    //                  ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
+    // Suppression reason - False Positive : Cannot bind variables separately as the query is complex
+    // Suppressed warning count - 1
     public ArrayList<DetailedConsentResource> searchConsents(Connection connection, ArrayList<String> consentIDs,
                                                              ArrayList<String> clientIDs,
                                                              ArrayList<String> consentTypes,
