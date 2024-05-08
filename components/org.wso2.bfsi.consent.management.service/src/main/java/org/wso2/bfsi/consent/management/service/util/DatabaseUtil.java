@@ -82,8 +82,8 @@ public class DatabaseUtil {
             try {
                 dbConnection.close();
             } catch (SQLException e) {
-                log.error("Database error. Could not close statement. Continuing with others. - "
-                        + e.getMessage().replaceAll("[\r\n]", ""), e);
+                log.error(String.format("Database error. Could not close statement. Continuing with others. - %s",
+                        e.getMessage().replaceAll("[\r\n]", "")), e);
             }
         }
     }

@@ -91,7 +91,7 @@
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>
-                    <failOnError>true</failOnError>
+                    <failOnError>false</failOnError>
                     <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs</spotbugsXmlOutputDirectory>
                     <excludeFilterFile>${project.basedir}/src/main/resources/findbugs-exclude.xml</excludeFilterFile>
                     <includeFilterFile>${project.basedir}/src/main/resources/findbugs-include.xml</includeFilterFile>

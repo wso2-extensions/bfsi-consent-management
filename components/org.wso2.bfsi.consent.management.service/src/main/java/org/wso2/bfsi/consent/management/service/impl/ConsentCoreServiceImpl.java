@@ -184,13 +184,14 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
                 // Get consent attributes if needed
                 if (!withAttributes) {
                     if (log.isDebugEnabled()) {
-                        log.debug("Retrieving consent for consent ID: " + consentID.replaceAll("[\r\n]", ""));
+                        log.debug(String.format("Retrieving consent for consent ID: %s",
+                                consentID.replaceAll("[\r\n]", "")));
                     }
                     retrievedConsentResource = consentCoreDAO.getConsentResource(connection, consentID);
                 } else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Retrieving consent with consent attributes for consent ID: " +
-                                consentID.replaceAll("[\r\n]", ""));
+                        log.debug(String.format("Retrieving consent with consent attributes for consent ID: %s",
+                                consentID.replaceAll("[\r\n]", "")));
                     }
                     retrievedConsentResource = consentCoreDAO.getConsentResourceWithAttributes(connection, consentID);
                 }
@@ -225,7 +226,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                 // Retrieve the detailed consent resource
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving detailed consent for consent ID: " + consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Retrieving detailed consent for consent ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 DetailedConsentResource retrievedDetailedConsentResource = consentCoreDAO
                         .getDetailedConsentResource(connection, consentID);
@@ -271,29 +273,30 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Get the existing consent to validate status
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving the consent for ID:" + consentID.replaceAll("[\r\n]", "") +
-                            " to validate status");
+                    log.debug(String.format("Retrieving the consent for ID: %s to validate status",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 ConsentResource existingConsentResource = consentCoreDAO.getConsentResource(connection, consentID);
 
                 String existingConsentStatus = existingConsentResource.getCurrentStatus();
 
                 // Validate status of the consent
-                if (!applicableStatusToFileUpload.equalsIgnoreCase(existingConsentResource.getCurrentStatus())) {
+                if (!applicableStatusToFileUpload.equals(existingConsentResource.getCurrentStatus())) {
                     log.error(ConsentCoreServiceConstants.CONSENT_INVALID_STATUS_ERROR_MSG);
                     throw new ConsentManagementException(ConsentCoreServiceConstants.CONSENT_INVALID_STATUS_ERROR_MSG);
                 }
 
                 // Store the consent file
                 if (log.isDebugEnabled()) {
-                    log.debug("Creating the consent file for the consent of ID:" +
-                            consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Creating the consent file for the consent of ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.storeConsentFile(connection, consentFileResource);
 
                 // Update consent status with new status
                 if (log.isDebugEnabled()) {
-                    log.debug("Updating the status of the consent for ID:" + consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Updating the status of the consent for ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.updateConsentStatus(connection, consentID, newConsentStatus);
 
@@ -370,8 +373,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Create authorization resource
                 if (log.isDebugEnabled()) {
-                    log.debug("Creating authorization resource for the consent of ID: " + authorizationResource
-                            .getConsentID().replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Creating authorization resource for the consent of ID: %s",
+                            authorizationResource.getConsentID().replaceAll("[\r\n]", "")));
                 }
                 AuthorizationResource storedAuthorizationResource =
                         consentCoreDAO.storeAuthorizationResource(connection, authorizationResource);
@@ -407,8 +410,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                 // Get consent file
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving authorization resource for authorization ID: " +
-                            authorizationID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Retrieving authorization resource for authorization ID: %s",
+                            authorizationID.replaceAll("[\r\n]", "")));
                 }
                 retrievedAuthorizationResource = consentCoreDAO.getAuthorizationResource(connection, authorizationID);
 
@@ -484,8 +487,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Update authorization status with new status
                 if (log.isDebugEnabled()) {
-                    log.debug("Updating the status of the authorization for ID:" +
-                            authorizationId.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Updating the status of the authorization for ID: %s",
+                            authorizationId.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.updateAuthorizationStatus(connection, authorizationId, newAuthorizationStatus);
                 AuthorizationResource updatedAuthorizationResource = consentCoreDAO
@@ -527,8 +530,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Updating the authorized user
                 if (log.isDebugEnabled()) {
-                    log.debug("Updating the status of the user for authorization ID:" +
-                            authorizationID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Updating the status of the user for authorization ID: %s",
+                            authorizationID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.updateAuthorizationUser(connection, authorizationID, userID);
                 AuthorizationResource updatedAuthResource = consentCoreDAO
@@ -600,16 +603,16 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                 // Update authorization resource of current consent
                 if (log.isDebugEnabled()) {
-                    log.debug("Update authorization status and authorization user for current consent ID: "
-                            + consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Update authorization status and authorization user for current " +
+                            "consent ID : %s", consentID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.updateAuthorizationUser(connection, authID, userID);
                 consentCoreDAO.updateAuthorizationStatus(connection, authID, newAuthStatus);
 
                 // Create account mappings for current consent
                 if (log.isDebugEnabled()) {
-                    log.debug("Creating account mappings for current consent ID: " +
-                            consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Creating account mappings for current consent ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 for (Map.Entry<String, ArrayList<String>> entry : accountIDsMapWithPermissions.entrySet()) {
                     String accountID = entry.getKey();
@@ -625,7 +628,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                 // Update current consent status
                 if (log.isDebugEnabled()) {
-                    log.debug("Update the status of the current consent ID: " + consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Update the status of the current consent ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.updateConsentStatus(connection, consentID, newCurrentConsentStatus);
 
@@ -672,20 +676,21 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Get the existing consent to validate status
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving the consent for ID:" + consentId.replaceAll("[\r\n]", "")
-                            + " to validate status");
+                    log.debug(String.format("Retrieving the consent for ID: %s to validate status",
+                            consentId.replaceAll("[\r\n]", "")));
                 }
 
                 // Update consent status with new status
                 if (log.isDebugEnabled()) {
-                    log.debug("Updating the status of the consent for ID:" + consentId.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Updating the status of the consent for ID: %s",
+                            consentId.replaceAll("[\r\n]", "")));
                 }
 
                 consentCoreDAO.updateConsentStatus(connection, consentId, newConsentStatus);
                 DetailedConsentResource existingConsentResource = consentCoreDAO
                         .getDetailedConsentResource(connection, consentId);
                 String existingConsentStatus = existingConsentResource.getCurrentStatus();
-                ArrayList<AuthorizationResource>  authResources = existingConsentResource.getAuthorizationResources();
+                ArrayList<AuthorizationResource> authResources = existingConsentResource.getAuthorizationResources();
 
                 // Previous consent status is not added in reason because it can be null
                 String auditMessage = "Consent status updated to " + newConsentStatus;
@@ -738,8 +743,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Create account mapping resources
                 if (log.isDebugEnabled()) {
-                    log.debug("Creating consent account mapping resources for authorization ID: " +
-                            authID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Creating consent account mapping resources for authorization ID: %s",
+                            authID.replaceAll("[\r\n]", "")));
                 }
                 for (Map.Entry<String, ArrayList<String>> entry : accountIDsMapWithPermissions.entrySet()) {
                     String accountID = entry.getKey();
@@ -801,9 +806,10 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             DatabaseUtil.closeConnection(connection);
         }
     }
+
     @Override
     public boolean updateAccountMappingStatus(ArrayList<String> accountMappingIDs,
-                                                                   String newMappingStatus)
+                                              String newMappingStatus)
             throws ConsentManagementException {
 
         if (accountMappingIDs.isEmpty()) {
@@ -888,8 +894,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 // Get existing detailed consent
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving existing consent of ID: " + consentID.replaceAll("[\r\n]", "") +
-                            " for status validation");
+                    log.debug(String.format("Retrieving existing consent of ID: %s for status validation",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 DetailedConsentResource retrievedDetailedConsentResource = consentCoreDAO
                         .getDetailedConsentResource(connection, consentID);
@@ -897,7 +903,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                 // Update consent status as revoked
                 if (log.isDebugEnabled()) {
-                    log.debug("Updating the status of the consent of ID: " + consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Updating the status of the consent of ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.updateConsentStatus(connection, consentID, revokedConsentStatus);
 
@@ -938,8 +945,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                     // Update account mapping status as inactive
                     if (log.isDebugEnabled()) {
-                        log.debug("Updating the account mappings of consent ID: " +
-                                consentID.replaceAll("[\r\n]", "") + " as inactive");
+                        log.debug(String.format("Updating the account mappings of consent ID: %s as inactive",
+                                consentID.replaceAll("[\r\n]", "")));
                     }
                     consentCoreDAO.updateConsentMappingStatus(connection, mappingIDs,
                             ConsentCoreServiceConstants.INACTIVE_MAPPING_STATUS);
@@ -977,8 +984,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
                 DatabaseUtil.rollbackTransaction(connection);
                 throw new ConsentManagementException(ConsentCoreServiceConstants.DATA_UPDATE_ROLLBACK_ERROR_MSG, e);
             } catch (IdentityOAuth2Exception e) {
-                log.error("Error while revoking tokens for the consent ID: "
-                        + consentID.replaceAll("[\r\n]", ""), e);
+                log.error(String.format("Error while revoking tokens for the consent ID: %s",
+                        consentID.replaceAll("[\r\n]", "")), e);
                 throw new ConsentManagementException("Error occurred while revoking tokens for the consent ID: "
                         + consentID);
             }
@@ -1028,8 +1035,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                     // Update consent status
                     if (log.isDebugEnabled()) {
-                        log.debug("Updating consent status for consent ID: " +
-                                resource.getConsentID().replaceAll("[\r\n]", ""));
+                        log.debug(String.format("Updating consent status for consent ID: %s",
+                                resource.getConsentID().replaceAll("[\r\n]", "")));
                     }
                     consentCoreDAO.updateConsentStatus(connection, resource.getConsentID(), revokedConsentStatus);
 
@@ -1040,8 +1047,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                     // Create an audit record for consent update
                     if (log.isDebugEnabled()) {
-                        log.debug("Creating audit record for the status change of consent ID: "
-                                + resource.getConsentID().replaceAll("[\r\n]", ""));
+                        log.debug(String.format("Creating audit record for the status change of consent ID: %s",
+                                resource.getConsentID().replaceAll("[\r\n]", "")));
                     }
                     // Create an audit record execute state change listener
                     HashMap<String, Object> consentDataMap = new HashMap<>();
@@ -1052,8 +1059,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
 
                     // Extract account mapping IDs for retrieved applicable consents
                     if (log.isDebugEnabled()) {
-                        log.debug("Extracting account mapping IDs from consent ID: " +
-                                resource.getConsentID().replaceAll("[\r\n]", ""));
+                        log.debug(String.format("Extracting account mapping IDs from consent ID: %s",
+                                resource.getConsentID().replaceAll("[\r\n]", "")));
                     }
                     for (ConsentMappingResource mappingResource : resource.getConsentMappingResources()) {
                         accountMappingIDsList.add(mappingResource.getMappingID());
@@ -1261,8 +1268,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
                 consentAttributesObject.setConsentAttributes(consentAttributes);
 
                 if (log.isDebugEnabled()) {
-                    log.debug("Storing consent attributes for the consent of ID: " +
-                            consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Storing consent attributes for the consent of ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 isConsentAttributesStored = consentCoreDAO.storeConsentAttributes(connection, consentAttributesObject);
                 DatabaseUtil.commitTransaction(connection);
@@ -1296,17 +1303,19 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 ConsentResource retrievedConsentResource = consentCoreDAO.getConsentResource(connection, consentID);
                 if (retrievedConsentResource == null) {
-                    log.error("Consent ID  : " + consentID + " is not available in the database");
-                    throw new ConsentManagementException("Consent ID  : " + consentID + " is not available in the" +
-                            " database");
+                    String errorMessage = String.format("Consent ID  : %s is not available in the database",
+                            consentID.replaceAll("[\r\n]", ""));
+                    log.error(errorMessage);
+                    throw new ConsentManagementException(errorMessage);
                 }
                 if (log.isDebugEnabled()) {
-                    log.debug("Consent ID  : " + consentID + " is available in the database");
+                    log.debug(String.format("Consent ID  : %s is available in the database",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 ConsentAttributes retrievedConsentAttributes;
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving consent attributes for given keys for consent ID: " +
-                            consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Retrieving consent attributes for given keys for consent ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 retrievedConsentAttributes = consentCoreDAO.getConsentAttributes(connection, consentID,
                         consentAttributeKeys);
@@ -1341,18 +1350,20 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 ConsentResource retrievedConsentResource = consentCoreDAO.getConsentResource(connection, consentID);
                 if (retrievedConsentResource == null) {
-                    log.error("Consent ID  : " + consentID + " is not available in the database");
-                    throw new ConsentManagementException("Consent ID  : " + consentID + " is not available in the" +
-                            " database");
+                    String errorMessage = String.format("Consent ID  : %s is not available in the database",
+                            consentID.replaceAll("[\r\n]", ""));
+                    log.error(errorMessage);
+                    throw new ConsentManagementException(errorMessage);
                 }
                 if (log.isDebugEnabled()) {
-                    log.debug("Consent ID  : " + consentID + " is available in the database");
+                    log.debug(String.format("Consent ID  : %s is available in the database",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
 
                 ConsentAttributes retrievedConsentAttributes;
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving consent attributes for consent ID: " +
-                            consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Retrieving consent attributes for consent ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 retrievedConsentAttributes = consentCoreDAO.getConsentAttributes(connection, consentID);
 
@@ -1385,8 +1396,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 Map<String, String> retrievedAttributeValuesMap;
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving attribute values for the provided attribute key: " +
-                            attributeName.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Retrieving attribute values for the provided attribute key: %s",
+                            attributeName.replaceAll("[\r\n]", "")));
                 }
                 retrievedAttributeValuesMap = consentCoreDAO.getConsentAttributesByName(connection, attributeName);
 
@@ -1420,9 +1431,9 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             try {
                 ArrayList<String> retrievedConsentIdList;
                 if (log.isDebugEnabled()) {
-                    log.debug("Retrieving consent Id for the provided attribute key : " +
-                            attributeName.replaceAll("[\r\n]", "") + " and " +
-                            "attribute value : " + attributeValue.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Retrieving consent Id for the provided attribute key : %s and " +
+                                    "attribute value : %s", attributeName.replaceAll("[\r\n]", ""),
+                            attributeValue.replaceAll("[\r\n]", "")));
                 }
                 retrievedConsentIdList = consentCoreDAO.getConsentIdByConsentAttributeNameAndValue(connection,
                         attributeName, attributeValue);
@@ -1458,8 +1469,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
                 ConsentAttributes updatedAttributes;
                 if (log.isDebugEnabled()) {
                     if (log.isDebugEnabled()) {
-                        log.debug("Updating the attributes of the consent for ID:" +
-                                consentID.replaceAll("[\r\n]", ""));
+                        log.debug(String.format("Updating the attributes of the consent for ID: %s",
+                                consentID.replaceAll("[\r\n]", "")));
                     }
                 }
                 consentCoreDAO.updateConsentAttributes(connection, consentID, consentAttributes);
@@ -1498,7 +1509,8 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
             ConsentCoreDAO consentCoreDAO = ConsentStoreInitializer.getInitializedConsentCoreDAOImpl();
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug("Deleting attributes for the consent ID: " + consentID.replaceAll("[\r\n]", ""));
+                    log.debug(String.format("Deleting attributes for the consent ID: %s",
+                            consentID.replaceAll("[\r\n]", "")));
                 }
                 consentCoreDAO.deleteConsentAttributes(connection, consentID, attributeKeysList);
 

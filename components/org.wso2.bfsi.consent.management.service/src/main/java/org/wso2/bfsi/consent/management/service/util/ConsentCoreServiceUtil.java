@@ -95,8 +95,8 @@ public class ConsentCoreServiceUtil {
                     consentResource.getConsentAttributes());
 
             if (log.isDebugEnabled()) {
-                log.debug("Storing consent attributes for the consent of ID: " + consentAttributes
-                        .getConsentID().replaceAll("[\r\n]", ""));
+                log.debug(String.format("Storing consent attributes for the consent of ID: %s", consentAttributes
+                        .getConsentID().replaceAll("[\r\n]", "")));
             }
             isConsentAttributesStored = consentCoreDAO.storeConsentAttributes(connection, consentAttributes);
         }
@@ -368,7 +368,7 @@ public class ConsentCoreServiceUtil {
             ArrayList<String> mappingIDsToUpdate = new ArrayList<>();
             for (String accountID : accountsToRevoke) {
                 existingAccountMappings.stream()
-                        .filter(resource -> accountID.equalsIgnoreCase(resource.getAccountID()))
+                        .filter(resource -> accountID.equals(resource.getAccountID()))
                         .forEach(resource -> mappingIDsToUpdate.add(resource.getMappingID()));
             }
             consentCoreDAO.updateConsentMappingStatus(connection, mappingIDsToUpdate,
@@ -392,14 +392,16 @@ public class ConsentCoreServiceUtil {
 
         // delete existing consent attributes
         if (log.isDebugEnabled()) {
-            log.debug("Deleting attributes for the consent ID: " + consentID.replaceAll("[\r\n]", ""));
+            log.debug(String.format("Deleting attributes for the consent ID: %s",
+                    consentID.replaceAll("[\r\n]", "")));
         }
         consentCoreDAO.deleteConsentAttributes(connection, consentID, new ArrayList<>(consentAttributes.keySet()));
 
         // store new set of consent attributes
         ConsentAttributes consentAttributesObject = new ConsentAttributes(consentID, consentAttributes);
         if (log.isDebugEnabled()) {
-            log.debug("Storing consent attributes for the consent of ID: " + consentID.replaceAll("[\r\n]", ""));
+            log.debug(String.format("Storing consent attributes for the consent of ID: %s",
+                    consentID.replaceAll("[\r\n]", "")));
         }
         consentCoreDAO.storeConsentAttributes(connection, consentAttributesObject);
     }
@@ -415,7 +417,7 @@ public class ConsentCoreServiceUtil {
                                                       DetailedConsentResource oldConsentResource) {
 
         JSONObject changedConsentDataJson = new JSONObject();
-        if (!newConsentResource.getReceipt().equalsIgnoreCase(oldConsentResource.getReceipt())) {
+        if (!newConsentResource.getReceipt().equals(oldConsentResource.getReceipt())) {
             changedConsentDataJson.put(ConsentCoreServiceConstants.RECEIPT, oldConsentResource.getReceipt());
         }
         if (newConsentResource.getValidityPeriod() != oldConsentResource.getValidityPeriod()) {
@@ -426,7 +428,7 @@ public class ConsentCoreServiceUtil {
             changedConsentDataJson.put(ConsentCoreServiceConstants.UPDATED_TIME,
                     String.valueOf(oldConsentResource.getUpdatedTime()));
         }
-        if (!newConsentResource.getCurrentStatus().equalsIgnoreCase(oldConsentResource.getCurrentStatus())) {
+        if (!newConsentResource.getCurrentStatus().equals(oldConsentResource.getCurrentStatus())) {
             changedConsentDataJson.put(ConsentCoreServiceConstants.CURRENT_STATUS,
                     String.valueOf(oldConsentResource.getCurrentStatus()));
         }
@@ -477,9 +479,9 @@ public class ConsentCoreServiceUtil {
         for (ConsentMappingResource newMapping : newConsentMappings) {
             JSONObject changedConsentMappingJson = new JSONObject();
             for (ConsentMappingResource oldMapping : oldConsentMappings) {
-                if (newMapping.getMappingID().equalsIgnoreCase(oldMapping.getMappingID())) {
+                if (newMapping.getMappingID().equals(oldMapping.getMappingID())) {
                     existingConsentMappingIds.add(newMapping.getMappingID());
-                    if (!newMapping.getMappingStatus().equalsIgnoreCase(oldMapping.getMappingStatus())) {
+                    if (!newMapping.getMappingStatus().equals(oldMapping.getMappingStatus())) {
                         //store only the mapping-ids with a changed Mapping Status to the consent amendment history
                         changedConsentMappingJson.put(ConsentCoreServiceConstants.MAPPING_STATUS,
                                 oldMapping.getMappingStatus());
@@ -515,7 +517,7 @@ public class ConsentCoreServiceUtil {
         for (AuthorizationResource newAuthResource : newConsentAuthResources) {
             oldConsentAuthResources.stream()
                     .filter(oldAuthResource -> newAuthResource.getAuthorizationID().
-                            equalsIgnoreCase(oldAuthResource.getAuthorizationID()))
+                            equals(oldAuthResource.getAuthorizationID()))
                     .forEach(oldAuthResource ->
                             existingConsentAuthResourceIds.add(newAuthResource.getAuthorizationID()));
 
@@ -574,7 +576,7 @@ public class ConsentCoreServiceUtil {
                 String consentDataType = consentHistoryDataTypeEntry.getKey();
                 Object changedAttributes = consentHistoryDataTypeEntry.getValue();
 
-                if (ConsentCoreServiceConstants.TYPE_CONSENT_BASIC_DATA.equalsIgnoreCase(consentDataType)) {
+                if (ConsentCoreServiceConstants.TYPE_CONSENT_BASIC_DATA.equals(consentDataType)) {
                     JSONObject changedValuesJSON = parseChangedAttributeJsonString(changedAttributes.toString());
                     if (changedValuesJSON.containsKey(ConsentCoreServiceConstants.RECEIPT)) {
                         currentConsentResource.setReceipt(
@@ -593,7 +595,7 @@ public class ConsentCoreServiceUtil {
                                 changedValuesJSON.get(ConsentCoreServiceConstants.CURRENT_STATUS));
                     }
 
-                } else if (ConsentCoreServiceConstants.TYPE_CONSENT_ATTRIBUTES_DATA.equalsIgnoreCase(consentDataType)) {
+                } else if (ConsentCoreServiceConstants.TYPE_CONSENT_ATTRIBUTES_DATA.equals(consentDataType)) {
                     JSONObject changedValuesJSON = parseChangedAttributeJsonString(changedAttributes.toString());
                     for (Map.Entry<String, Object> attribute : changedValuesJSON.entrySet()) {
                         Object attributeValue = attribute.getValue();
@@ -606,7 +608,7 @@ public class ConsentCoreServiceUtil {
                         }
                     }
 
-                } else if (ConsentCoreServiceConstants.TYPE_CONSENT_MAPPING_DATA.equalsIgnoreCase(consentDataType)) {
+                } else if (ConsentCoreServiceConstants.TYPE_CONSENT_MAPPING_DATA.equals(consentDataType)) {
                     Map<String, Object> changedConsentMappingsDataMap = (Map<String, Object>) changedAttributes;
                     ArrayList<ConsentMappingResource> consentMappings =
                             currentConsentResource.getConsentMappingResources();
@@ -628,8 +630,7 @@ public class ConsentCoreServiceUtil {
                     }
                     currentConsentResource.setConsentMappingResources(consentMappingsHistory);
 
-                } else if (ConsentCoreServiceConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA.
-                        equalsIgnoreCase(consentDataType)) {
+                } else if (ConsentCoreServiceConstants.TYPE_CONSENT_AUTH_RESOURCE_DATA.equals(consentDataType)) {
                     Map<String, Object> changedConsentAuthResourceDataMap = (Map<String, Object>) changedAttributes;
                     ArrayList<AuthorizationResource> consentAuthResources = currentConsentResource
                             .getAuthorizationResources();

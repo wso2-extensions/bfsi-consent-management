@@ -37,6 +37,7 @@ public class TokenRevocationUtil {
         AuthenticatedUser authenticatedUser = getAuthenticatedUser(userID);
         Set<AccessTokenDO> accessTokenDOSet = getAccessTokenDOSet(detailedConsentResource, authenticatedUser);
 
+        //TODO
 //        String consentIdClaim = OpenBankingConfigParser.getInstance().getConfiguration()
 //                .get(OpenBankingConstants.CONSENT_ID_CLAIM_NAME).toString();
         String consentIdClaim = "consent_id";
@@ -72,8 +73,8 @@ public class TokenRevocationUtil {
                             revokeTokenByClient(oAuth2Service, revokeRequestDTO);
 
                     if (oAuthRevocationResponseDTO.isError()) {
-                        log.error("Error while revoking access token for consent ID: "
-                                + consentId.replaceAll("[\r\n]", ""));
+                        log.error(String.format("Error while revoking access token for consent ID: %s",
+                                consentId.replaceAll("[\r\n]", "")));
                         throw new IdentityOAuth2Exception(
                                 String.format("Error while revoking access token for consent ID: %s. Caused by, %s",
                                         consentId, oAuthRevocationResponseDTO.getErrorMsg()));
