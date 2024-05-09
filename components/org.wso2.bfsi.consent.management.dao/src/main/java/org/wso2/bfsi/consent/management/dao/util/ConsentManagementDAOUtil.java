@@ -18,12 +18,12 @@
 
 package org.wso2.bfsi.consent.management.dao.util;
 
-import net.minidev.json.JSONValue;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.consent.management.dao.constants.ConsentMgtDAOConstants;
 import org.wso2.bfsi.consent.management.dao.exceptions.ConsentDataInsertionException;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
@@ -131,7 +131,7 @@ public class ConsentManagementDAOUtil {
                 String attributeValue = resultSet.getString(ConsentMgtDAOConstants.ATT_VALUE);
 
                 // skip adding all temporary session data to consent attributes
-                if (!(JSONValue.isValidJson(attributeValue) &&
+                if (!(CommonUtils.isValidJson(attributeValue) &&
                         attributeValue.contains(ConsentMgtDAOConstants.SESSION_DATA_KEY))) {
                     consentAttributesMap.put(resultSet.getString(ConsentMgtDAOConstants.ATT_KEY),
                             attributeValue);

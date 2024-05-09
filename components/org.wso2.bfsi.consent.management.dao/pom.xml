@@ -42,8 +42,12 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

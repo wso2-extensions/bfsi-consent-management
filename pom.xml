@@ -190,9 +190,14 @@
                 <version>${commons-lang.version}</version>
             </dependency>
             <dependency>
-                <groupId>net.minidev</groupId>
-                <artifactId>json-smart</artifactId>
-                <version>${json-smart.version}</version>
+                <groupId>org.json.wso2</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${com.googlecode.json.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -271,7 +276,8 @@
         <commons.logging.version>1.2</commons.logging.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
         <commons-lang.version>3.4</commons-lang.version>
-        <json-smart.version>2.4.9</json-smart.version>
+        <json.wso2.version>3.0.0.wso2v4</json.wso2.version>
+        <com.googlecode.json.version>1.1.1</com.googlecode.json.version>
         <commons-collections.version>4.4</commons-collections.version>
         <org.testng.version>7.7.0</org.testng.version>
         <jacoco.version>0.8.6</jacoco.version>

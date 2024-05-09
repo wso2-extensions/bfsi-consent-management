@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.consent.management.dao.util;
 
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentAttributes;
 import org.wso2.bfsi.consent.management.dao.models.ConsentFile;
