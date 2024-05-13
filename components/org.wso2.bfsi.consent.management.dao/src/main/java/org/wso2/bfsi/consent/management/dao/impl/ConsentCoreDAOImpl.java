@@ -1343,7 +1343,8 @@ public class ConsentCoreDAOImpl implements ConsentCoreDAO {
 
     @Override
     public boolean storeConsentAmendmentHistory(Connection connection, String historyID, long timestamp,
-                                                String recordID, String consentDataType, String changedAttributesJsonString, String amendmentReason)
+                                                String recordID, String consentDataType,
+                                                String changedAttributesJsonString, String amendmentReason)
             throws ConsentDataInsertionException {
 
         String tableID = ConsentManagementDAOUtil.generateConsentTableId(consentDataType.replaceAll("[\r\n]", ""));
@@ -1390,7 +1391,8 @@ public class ConsentCoreDAOImpl implements ConsentCoreDAO {
     // Suppression reason - False Positive : Cannot bind variables separately as the query is complex
     // Suppressed warning count - 1
     public Map<String, ConsentHistoryResource> retrieveConsentAmendmentHistory(Connection connection,
-                                                                               List<String> recordIDsList) throws ConsentDataRetrievalException {
+                                                                               List<String> recordIDsList)
+            throws ConsentDataRetrievalException {
 
         String whereClause = ConsentManagementDAOUtil.constructConsentHistoryPreparedStatement(recordIDsList.size());
         String getConsentHistoryPrepStatement = sqlStatements.getGetConsentHistoryPreparedStatement(whereClause);
