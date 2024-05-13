@@ -78,4 +78,16 @@ public class ConsentManagementConfigParserTests {
         System.setProperty("carbon.config.dir.path", carbonConfigDirPath);
         Assert.assertEquals(CarbonUtils.getCarbonConfigDirPath(), carbonConfigDirPath);
     }
+
+    @Test(priority = 5)
+    public void testGetDataSourceName() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getDataSourceName(), "jdbc/WSO2OB_DB");
+    }
+
+    @Test(priority = 5)
+    public void testGetConnectionVerificationTimeout() {
+
+            Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConnectionVerificationTimeout(), 2);
+    }
 }

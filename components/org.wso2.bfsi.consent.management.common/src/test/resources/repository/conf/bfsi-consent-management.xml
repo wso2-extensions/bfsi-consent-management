@@ -23,6 +23,7 @@
             <DataSource>
                 <Name>jdbc/WSO2OB_DB</Name>
             </DataSource>
+            <ConnectionVerificationTimeout>2</ConnectionVerificationTimeout>
         </JDBCPersistenceManager>
         <UserName>${admin.username}</UserName>
         <AuthorizeSteps>
