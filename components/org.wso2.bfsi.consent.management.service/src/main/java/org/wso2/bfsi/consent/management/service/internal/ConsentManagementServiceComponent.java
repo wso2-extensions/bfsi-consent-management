@@ -27,6 +27,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 import org.wso2.bfsi.consent.management.common.persistence.JDBCPersistenceManager;
 import org.wso2.bfsi.consent.management.service.ConsentCoreService;
@@ -51,12 +52,8 @@ public class ConsentManagementServiceComponent {
 
         // Verify Open Banking consent database connection when the server starts up
         try {
-            // TODO:
-//            boolean isConnectionActive = JDBCPersistenceManager.getInstance().getDBConnection()
-//                    .isValid(OpenBankingConfigParser.getInstance().getConnectionVerificationTimeout());
             boolean isConnectionActive = JDBCPersistenceManager.getInstance().getDBConnection()
-                    .isValid(1);
-
+                    .isValid(ConsentManagementConfigParser.getInstance().getConnectionVerificationTimeout());
             if (!isConnectionActive) {
                 log.error("The connection is not active");
                 throw new ConsentManagementRuntimeException("The connection is not active");
@@ -93,23 +90,4 @@ public class ConsentManagementServiceComponent {
 
         ConsentManagementDataHolder.getInstance().setOAuth2Service(oAuth2Service);
     }
-
-//    @Reference(
-//            service = OBEventQueue.class,
-//            cardinality = ReferenceCardinality.MANDATORY,
-//            policy = ReferencePolicy.DYNAMIC,
-//            unbind = "unsetOBEventQueue"
-//    )
-//
-//    protected void setOBEventQueue(OBEventQueue obEventQueue) {
-//
-//        ConsentManagementDataHolder.getInstance().setOBEventQueue(obEventQueue);
-//    }
-//
-//    protected void unsetOBEventQueue(OBEventQueue obEventQueue) {
-//
-//        ConsentManagementDataHolder.getInstance().setOBEventQueue(null);
-//    }
-
-
 }

@@ -27,12 +27,6 @@ public class ConsentManagementDataHolder {
 
     private OAuth2Service oAuth2Service;
     private static volatile ConsentManagementDataHolder instance;
-//    private OBEventQueue obEventQueue;
-//    private final AccessTokenDAOImpl accessTokenDAO;
-
-//    private ConsentManagementDataHolder() {
-//        this.accessTokenDAO = new AccessTokenDAOImpl();
-//    }
 
     public static ConsentManagementDataHolder getInstance() {
 
@@ -55,18 +49,4 @@ public class ConsentManagementDataHolder {
 
         this.oAuth2Service = oAuth2Service;
     }
-
-//    public void setOBEventQueue(OBEventQueue obEventQueue) {
-//
-//        this.obEventQueue = obEventQueue;
-//    }
-//
-//    public OBEventQueue getOBEventQueue() {
-//
-//        return obEventQueue;
-//    }
-//
-//    public AccessTokenDAOImpl getAccessTokenDAO() {
-//        return accessTokenDAO;
-//    }
 }

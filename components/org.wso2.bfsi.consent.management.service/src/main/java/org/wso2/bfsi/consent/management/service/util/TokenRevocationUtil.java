@@ -37,9 +37,7 @@ public class TokenRevocationUtil {
         AuthenticatedUser authenticatedUser = getAuthenticatedUser(userID);
         Set<AccessTokenDO> accessTokenDOSet = getAccessTokenDOSet(detailedConsentResource, authenticatedUser);
 
-        //TODO
-//        String consentIdClaim = OpenBankingConfigParser.getInstance().getConfiguration()
-//                .get(OpenBankingConstants.CONSENT_ID_CLAIM_NAME).toString();
+        //TODO : Get consent id claim name from configuration
         String consentIdClaim = "consent_id";
 
         if (!accessTokenDOSet.isEmpty()) {
@@ -96,17 +94,8 @@ public class TokenRevocationUtil {
         if (UserCoreUtil.getDomainFromThreadLocal() == null) {
             UserCoreUtil.setDomainInThreadLocal(UserCoreUtil.extractDomainFromName(userID));
         }
-//        if (OpenBankingConfigParser.getInstance().isPSUFederated()) {
-//            AuthenticatedUser authenticatedUser =
-//                    AuthenticatedUser.createFederateAuthenticatedUserFromSubjectIdentifier(userID);
-//            authenticatedUser.setUserStoreDomain(OAuth2Util.getUserStoreForFederatedUser(authenticatedUser));
-//            authenticatedUser.setTenantDomain(MultitenantUtils.getTenantDomain(userID));
-//            authenticatedUser.setFederatedIdPName(OpenBankingConfigParser.getInstance().getFederatedIDPName());
-//            authenticatedUser.setUserName(MultitenantUtils.getTenantAwareUsername(userID));
-//            return authenticatedUser;
-//        } else {
+        // TODO: Set federated user details
         return AuthenticatedUser.createLocalAuthenticatedUserFromSubjectIdentifier(userID);
-//        }
     }
 
     @Generated(message = "Excluded from code coverage since used for testing purposes")

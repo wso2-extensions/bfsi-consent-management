@@ -213,4 +213,16 @@ public class ConsentManagementConfigParser {
                 ((String) getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG)).trim();
     }
 
+    /**
+     * Returns the database connection verification timeout in seconds configured.
+     *
+     * @return 1 if nothing is configured
+     */
+    public int getConnectionVerificationTimeout() {
+
+        return getConfigElementFromKey(ConsentManagementConstants.DB_CONNECTION_VERIFICATION_TIMEOUT) == null ? 1 :
+                Integer.parseInt(getConfigElementFromKey(
+                        ConsentManagementConstants.DB_CONNECTION_VERIFICATION_TIMEOUT).toString().trim());
+    }
+
 }
