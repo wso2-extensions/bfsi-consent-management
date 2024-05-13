@@ -18,4 +18,16 @@
  -->
 
 <FindBugsFilter>
+    <Match>
+        <Class name="org.wso2.bfsi.consent.management.dao.impl.ConsentCoreDAOImpl"/>
+        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
+    </Match>
+    <Match>
+        <Class name="org.wso2.bfsi.consent.management.dao.impl.MssqlConsentCoreDAOImpl"/>
+        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
+    </Match>
+    <Match>
+        <Class name="org.wso2.bfsi.consent.management.dao.impl.OracleConsentCoreDAOImpl"/>
+        <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
+    </Match>
 </FindBugsFilter>

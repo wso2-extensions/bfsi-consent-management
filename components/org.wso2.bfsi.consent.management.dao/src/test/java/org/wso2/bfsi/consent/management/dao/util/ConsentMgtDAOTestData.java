@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.consent.management.dao.util;
 
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentAttributes;
 import org.wso2.bfsi.consent.management.dao.models.ConsentFile;
@@ -39,58 +39,32 @@ public class ConsentMgtDAOTestData {
 
     public static final String SAMPLE_CONSENT_RECEIPT = "{\"validUntil\": \"2020-10-20\", \"frequencyPerDay\": 1," +
             " \"recurringIndicator\": false, \"combinedServiceIndicator\": true}";
-
     public static final String SAMPLE_CONSENT_TYPE = "accounts";
-
     public static final int SAMPLE_CONSENT_FREQUENCY = 1;
-
     public static final Long SAMPLE_CONSENT_VALIDITY_PERIOD = 1638337852L;
-
     public static final String SAMPLE_CONSENT_ID = "2222";
-
     public static final String SAMPLE_AUTHORIZATION_ID = "3333";
-
     public static final boolean SAMPLE_RECURRING_INDICATOR = true;
-
     public static final String SAMPLE_CURRENT_STATUS = "Authorized";
-
     public static final String  SAMPLE_PREVIOUS_STATUS = "Received";
-
     public static final String SAMPLE_AUTHORIZATION_TYPE = "authorizationType";
-
     public static final String SAMPLE_USER_ID = "admin@wso2.com";
-
     public static final String SAMPLE_AUDIT_ID = "4321234";
-
     public static final String SAMPLE_NEW_USER_ID = "ann@gold.com";
-
     public static final String SAMPLE_AUTHORIZATION_STATUS = "awaitingAuthorization";
-
     public static final String  SAMPLE_EXPIRED_STATUS = "Expired";
-
     public static final String SAMPLE_ACCOUNT_ID = "123456789";
-
     public static final String SAMPLE_MAPPING_ID = "12345";
-
     public static final String SAMPLE_MAPPING_ID_2 = "67890";
-
     public static final String SAMPLE_MAPPING_STATUS = "active";
-
     public static final String SAMPLE_NEW_MAPPING_STATUS = "inactive";
-
     public static final String SAMPLE_PERMISSION = "samplePermission";
-
     public static final String SAMPLE_REASON = "sample reason";
-
     public static final String SAMPLE_ACTION_BY = "admin@wso2.com";
-
     public static final String SAMPLE_HISTORY_ID = "1234";
-
     public static final Long SAMPLE_UPDATED_TIME = 1638337892L;
-
     public static final String SAMPLE_AMENDMENT_REASON = "sampleReason";
     public static final String SAMPLE_CONSENT_FILE = "sample file content";
-
     public static final Map<String, String> SAMPLE_CONSENT_ATTRIBUTES_MAP = new HashMap<>() {
         {
             put("x-request-id", UUID.randomUUID().toString());
@@ -99,27 +73,23 @@ public class ConsentMgtDAOTestData {
             put("sessionDataKey", "{\"sessionDataKey\":\"a0c8cd6d-eca0-4c4d-9544-2b39e7e1c180\",\"userId\":\"01Z79\"}");
         }
     };
-
     public static final Map<String, String> CONSENT_ATTRIBUTES_MAP_FOR_UPDATE = new HashMap<>() {
         {
             put("payment-type", "international-payments");
         }
     };
-
     public static final ArrayList<String> SAMPLE_CONSENT_ATTRIBUTES_KEYS = new ArrayList<>() {
         {
             add("x-request-id");
             add("idempotency-key");
         }
     };
-
     public static final ArrayList<String> UNMATCHED_MAPPING_IDS = new ArrayList<>() {
         {
             add("4444");
             add("5555");
         }
     };
-
     private static final ArrayList<String> SAMPLE_CONSENT_RECEIPTS_LIST = new ArrayList<>() {
         {
             add("{\"element1\": \"value1\"}");
@@ -127,7 +97,6 @@ public class ConsentMgtDAOTestData {
             add("{\"element3\": \"value3\"}");
         }
     };
-
     public static final ArrayList<String> SAMPLE_CONSENT_TYPES_LIST = new ArrayList<>() {
         {
             add("accounts");
@@ -135,7 +104,6 @@ public class ConsentMgtDAOTestData {
             add("cof");
         }
     };
-
     public static final ArrayList<String> SAMPLE_CONSENT_STATUSES_LIST = new ArrayList<>() {
         {
             add("created");
@@ -144,7 +112,6 @@ public class ConsentMgtDAOTestData {
 
         }
     };
-
     public static final ArrayList<String> SAMPLE_CLIENT_IDS_LIST = new ArrayList<>() {
         {
             add("clientID1");
@@ -153,7 +120,6 @@ public class ConsentMgtDAOTestData {
 
         }
     };
-
     public static final ArrayList<String> SAMPLE_USER_IDS_LIST = new ArrayList<>() {
         {
             add("userID1");
@@ -161,7 +127,6 @@ public class ConsentMgtDAOTestData {
             add("userID3");
         }
     };
-
     private static final ArrayList<Long> SAMPLE_VALIDITY_PERIOD_LIST = new ArrayList<>() {
         {
             add(1613454661L);
@@ -169,7 +134,6 @@ public class ConsentMgtDAOTestData {
             add(1633654671L);
         }
     };
-
     public static final JSONObject SAMPLE_CONSENT_BASIC_DATA_CHANGED_ATTRIBUTES_JSON = new JSONObject() {
         {
             put("RECEIPT", SAMPLE_CONSENT_RECEIPT);
@@ -177,20 +141,17 @@ public class ConsentMgtDAOTestData {
             put("UPDATED_TIME", SAMPLE_UPDATED_TIME);
         }
     };
-
     public static final JSONObject SAMPLE_CONSENT_ATTRIBUTES_CHANGED_ATTRIBUTES_JSON = new JSONObject() {
         {
             put("x-request-id", UUID.randomUUID().toString());
             put("idempotency-key", UUID.randomUUID().toString());
         }
     };
-
     public static final JSONObject SAMPLE_CONSENT_MAPPINGS_CHANGED_ATTRIBUTES_JSON = new JSONObject() {
         {
             put("MAPPING_STATUS", SAMPLE_MAPPING_STATUS);
         }
     };
-
     public static List<String> getRecordIDListOfSampleConsentHistory() {
        return new ArrayList<>() {
             {

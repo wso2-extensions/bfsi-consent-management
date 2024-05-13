@@ -18,6 +18,7 @@
 
 package org.wso2.bfsi.consent.management.common.config;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -79,11 +80,14 @@ public class ConsentManagementConfigParser {
     /**
      * Method to read the configuration (in a recursive manner) as a model and put them in the configuration map.
      */
+    @SuppressFBWarnings("PATH_TRAVERSAL_IN")
+    // Suppressed content - new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
+    // Suppression reason - False Positive : File path is constructed using CarbonUtils.getCarbonConfigDirPath()
+    // Suppressed warning count - 1
     private void buildConfiguration() {
 
         StAXOMBuilder builder;
         File configXml = new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
-
         if (configXml.exists()) {
             try (FileInputStream fileInputStream = new FileInputStream(configXml)) {
 
