@@ -17,12 +17,11 @@
  -->
 
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="consent-mgt-common-unit-test-suite" verbose="1">
-    <test name="consent.mgt.common.tests" preserve-order="false" parallel="false">
+<suite name="consent-mgt-dao-unit-test-suite" verbose="1">
+    <test name="consent.mgt.dao.tests" preserve-order="false" parallel="false">
         <parameter name="log-level" value="info"/>
         <classes>
-            <class name="org.wso2.bfsi.consent.management.common.ConsentManagementConfigParserTests"/>
-            <class name="org.wso2.bfsi.consent.management.common.CommonUtilsTests"/>
+            <class name="org.wso2.bfsi.consent.management.dao.impl.ConsentCoreDAOTests"/>
         </classes>
     </test>
 </suite>

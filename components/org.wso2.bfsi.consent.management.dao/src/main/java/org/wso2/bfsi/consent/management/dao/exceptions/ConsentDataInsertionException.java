@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2024, WSO2 LLC. (https://www.wso2.com).
- * <p
+ * <p>
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -16,14 +16,18 @@
  * under the License.
  */
 
-package org.wso2.bfsi.consent.management.common.util;
+package org.wso2.bfsi.consent.management.dao.exceptions;
 
 /**
- * An annotation to make methods skip code coverage. Use only with a valid reason to skip
- * code coverage.
+ * ConsentDataInsertionException.
  */
-@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface Generated {
+public class ConsentDataInsertionException extends Exception {
 
-    String message();
+    public ConsentDataInsertionException(String message) {
+        super(message);
+    }
+
+    public ConsentDataInsertionException(String message, Throwable e) {
+        super(message, e);
+    }
 }

@@ -32,6 +32,7 @@
 
     <modules>
         <module>components/org.wso2.bfsi.consent.management.common</module>
+        <module>components/org.wso2.bfsi.consent.management.dao</module>
     </modules>
 
     <name>BFSI Consent Management Connector for Identity Server</name>
@@ -184,12 +185,37 @@
                 <version>${axiom.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.json.wso2</groupId>
+                <artifactId>json</artifactId>
+                <version>${json.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.json-simple</groupId>
+                <artifactId>json-simple</artifactId>
+                <version>${com.googlecode.json.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-annotations</artifactId>
+                <version>${spotbugs.annotations.version}</version>
+            </dependency>
+
+            <!-- Add Base Product dependencies here -->
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.core</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
-
-            <!-- Add Base Product dependencies here -->
 
             <!-- Add BFSI Consent Management dependencies here -->
             <dependency>
@@ -206,6 +232,30 @@
                 <version>${org.testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+                <version>${commons-dbcp.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.agent</artifactId>
+                <classifier>runtime</classifier>
+                <version>${jacoco.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database.wso2</groupId>
+                <artifactId>h2-database-engine</artifactId>
+                <version>${orbit.version.h2.engine}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -218,12 +268,23 @@
 
     <properties>
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.9</carbon.kernel.version>
+        <carbon.kernel.version>4.10.14</carbon.kernel.version>
         <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
         <maven.spotbugs.plugin.version>4.2.3</maven.spotbugs.plugin.version>
+        <spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
         <com.h3xstream.findsecbugs.version>1.12.0</com.h3xstream.findsecbugs.version>
         <commons.logging.version>1.2</commons.logging.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
+        <commons-lang.version>3.4</commons-lang.version>
+        <json.wso2.version>3.0.0.wso2v4</json.wso2.version>
+        <com.googlecode.json.version>1.1.1</com.googlecode.json.version>
+        <commons-collections.version>4.4</commons-collections.version>
+        <org.testng.version>7.7.0</org.testng.version>
+        <jacoco.version>0.8.6</jacoco.version>
+        <commons-dbcp.version>1.4</commons-dbcp.version>
+        <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
+        <mockito.version>1.10.19</mockito.version>
+        <powermock.version>1.7.1</powermock.version>
         <org.testng.version>7.7.0</org.testng.version>
         <jacoco.version>0.8.6</jacoco.version>
     </properties>

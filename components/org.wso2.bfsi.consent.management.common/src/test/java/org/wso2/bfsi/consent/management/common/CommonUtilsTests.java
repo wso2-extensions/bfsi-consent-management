@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2024, WSO2 LLC. (https://www.wso2.com).
- * <p
+ * <p>
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -16,14 +16,26 @@
  * under the License.
  */
 
-package org.wso2.bfsi.consent.management.common.util;
+package org.wso2.bfsi.consent.management.common;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 
 /**
- * An annotation to make methods skip code coverage. Use only with a valid reason to skip
- * code coverage.
+ * Common Util test.
  */
-@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface Generated {
+public class CommonUtilsTests {
 
-    String message();
+    @Test
+    public void testIsValidJson() {
+        String validJson = "{\"key\":\"value\"}";
+        Assert.assertTrue(CommonUtils.isValidJson(validJson));
+    }
+
+    @Test
+    public void testIsValidJsonWithInvalidJsin() {
+        String validJson = "key:value";
+        Assert.assertFalse(CommonUtils.isValidJson(validJson));
+    }
 }

@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2024, WSO2 LLC. (https://www.wso2.com).
- * <p
+ * <p>
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
@@ -18,12 +18,26 @@
 
 package org.wso2.bfsi.consent.management.common.util;
 
-/**
- * An annotation to make methods skip code coverage. Use only with a valid reason to skip
- * code coverage.
- */
-@java.lang.annotation.Retention(java.lang.annotation.RetentionPolicy.RUNTIME)
-public @interface Generated {
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-    String message();
+/**
+ * Common utility methods.
+ */
+public class CommonUtils {
+
+    /**
+     * Method to check whether the given string is a valid JSON.
+     *
+     * @param stringValue  string value
+     * @return `true` if the given string is a valid JSON, `false` otherwise
+     */
+    public static boolean isValidJson(String stringValue) {
+        try {
+            (new JSONParser()).parse(stringValue);
+            return true;
+        } catch (ParseException E) {
+            return false;
+        }
+    }
 }
