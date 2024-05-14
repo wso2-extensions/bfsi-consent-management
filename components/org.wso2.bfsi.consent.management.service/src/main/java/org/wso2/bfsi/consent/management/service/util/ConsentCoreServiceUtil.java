@@ -297,7 +297,7 @@ public class ConsentCoreServiceUtil {
      * @return  ArrayList with a single field
      */
     public static ArrayList<String> constructArrayList(String field) {
-        return new ArrayList<>() {
+        return new ArrayList<String>() {
             {
                 add(field);
             }

@@ -31,6 +31,7 @@
     <name>WSO2 BFSI - Consent DAO</name>
     <description>WSO2 BFSI - Consent DAO Module</description>
     <url>http://maven.apache.org</url>
+    <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
@@ -204,9 +205,36 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <target>11</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>
+                            ${project.artifactId}
+                        </Bundle-SymbolicName>
+                        <Private-Package>
+                            org.wso2.bfsi.consent.management.dao.internal
+                        </Private-Package>
+                        <Import-Package>
+                            org.osgi.framework;version="${osgi.framework.imp.pkg.version.range}",
+                            org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
+                            org.wso2.bfsi.consent.management.common.*;version="${project.version}",
+                            org.apache.commons.lang3;version="${commons-lang.version}"
+                        </Import-Package>
+                        <Export-Package>
+                            !org.wso2.bfsi.consent.management.dao.internal,
+                            org.wso2.bfsi.consent.management.dao.*;version="${project.version}",
+                        </Export-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <_dsannotations>*</_dsannotations>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>
