@@ -214,7 +214,6 @@
                             !org.wso2.bfsi.consent.management.common.internal,
                             org.wso2.bfsi.consent.management.common.*;version="${project.version}",
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                         <_dsannotations>*</_dsannotations>
                     </instructions>
                 </configuration>

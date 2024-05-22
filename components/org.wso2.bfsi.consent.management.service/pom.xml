@@ -242,7 +242,6 @@
                             !org.wso2.bfsi.consent.management.service.internal,
                             org.wso2.bfsi.consent.management.service.*;version="${project.version}",
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                         <_dsannotations>*</_dsannotations>
                     </instructions>
                 </configuration>

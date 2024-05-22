@@ -39,7 +39,7 @@ import java.sql.SQLException;
 /**
  * Consent Management Core Service Component.
  */
-@Component(name = "com.wso2.openbanking.accelerator.consent.mgt.service.ConsentManagementServiceComponent",
+@Component(name = "org.wso2.bfsi.consent.management.service.internal.ConsentManagementServiceComponent",
         immediate = true)
 public class ConsentManagementServiceComponent {
 
@@ -50,7 +50,7 @@ public class ConsentManagementServiceComponent {
 
         ConsentCoreService consentCoreService = new ConsentCoreServiceImpl();
 
-        // Verify Open Banking consent database connection when the server starts up
+        // Verify BFSI consent database connection when the server starts up
         try {
             boolean isConnectionActive = JDBCPersistenceManager.getInstance().getDBConnection()
                     .isValid(ConsentManagementConfigParser.getInstance().getConnectionVerificationTimeout());

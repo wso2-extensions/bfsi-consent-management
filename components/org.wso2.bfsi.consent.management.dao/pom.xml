@@ -232,7 +232,6 @@
                             !org.wso2.bfsi.consent.management.dao.internal,
                             org.wso2.bfsi.consent.management.dao.*;version="${project.version}",
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                         <_dsannotations>*</_dsannotations>
                     </instructions>
                 </configuration>

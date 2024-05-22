@@ -61,7 +61,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Test for Open Banking consent management core service.
+ * Test for BFSI consent management core service.
  */
 @PowerMockIgnore("jdk.internal.reflect.*")
 @PrepareForTest({DatabaseUtil.class, ConsentStoreInitializer.class, ConsentManagementDataHolder.class,
