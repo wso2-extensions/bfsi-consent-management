@@ -314,6 +314,7 @@
         <commons-lang.version>3.4</commons-lang.version>
         <json.wso2.version>3.0.0.wso2v4</json.wso2.version>
         <com.googlecode.json.version>1.1.1</com.googlecode.json.version>
+        <json-smart.version>2.4.9</json-smart.version>
         <commons-collections.version>4.4</commons-collections.version>
         <org.testng.version>7.7.0</org.testng.version>
         <jacoco.version>0.8.6</jacoco.version>

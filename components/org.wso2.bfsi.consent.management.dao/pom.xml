@@ -142,6 +142,7 @@
                 <configuration>
                     <excludes>
                         <!--Excluding them in coverage reports-->
+                        <exclude>**/*ServiceComponent.class</exclude>
                         <exclude>**/*Constants.class</exclude>
                         <exclude>**/*Exception.class</exclude>
                         <!-- Excluded since involves datasource initialization -->
@@ -226,7 +227,9 @@
                             org.osgi.framework;version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
                             org.wso2.bfsi.consent.management.common.*;version="${project.version}",
-                            org.apache.commons.lang3;version="${commons-lang.version}"
+                            org.apache.commons.lang3;version="${commons-lang.version}",
+                            org.apache.commons.collections;version="${commons-collections.version}",
+                            org.apache.commons.logging;version="${commons.logging.version}",
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.dao.internal,
