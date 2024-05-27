@@ -235,7 +235,6 @@
                             org.osgi.framework;version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
                             org.apache.commons.lang3;version="${commons-lang.version}"
-                            com.google.gson;version="${com.googlecode.json.version}",
                             net.minidev.json;version="${json-smart.version}",
                             org.apache.commons.collections;version="${commons-collections.version}",
                             org.apache.commons.logging;version="${commons.logging.version}",

@@ -18,26 +18,10 @@
 
 package org.wso2.bfsi.consent.management.common.util;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 /**
  * Common utility methods.
  */
 public class CommonUtils {
 
-    /**
-     * Method to check whether the given string is a valid JSON.
-     *
-     * @param stringValue  string value
-     * @return `true` if the given string is a valid JSON, `false` otherwise
-     */
-    public static boolean isValidJson(String stringValue) {
-        try {
-            (new JSONParser()).parse(stringValue);
-            return true;
-        } catch (ParseException E) {
-            return false;
-        }
-    }
 }
