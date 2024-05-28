@@ -18,10 +18,34 @@
 
 package org.wso2.bfsi.consent.management.common.util;
 
+import com.nimbusds.jose.JWSObject;
+import net.minidev.json.JSONObject;
 
 /**
  * Common utility methods.
  */
 public class CommonUtils {
 
+    /**
+     * Decode request JWT.
+     *
+     * @param jwtToken jwt sent by the tpp
+     * @param jwtPart  expected jwt part (header, body)
+     * @return json object containing requested jwt part
+     * @throws java.text.ParseException if an error occurs while parsing the jwt
+     */
+    public static JSONObject decodeRequestJWT(String jwtToken, String jwtPart) throws java.text.ParseException {
+
+        JSONObject jsonObject =  new JSONObject();
+
+        JWSObject plainObject = JWSObject.parse(jwtToken);
+
+        if ("head".equals(jwtPart)) {
+            jsonObject = plainObject.getHeader().toJSONObject();
+        } else if ("body".equals(jwtPart)) {
+            jsonObject = plainObject.getPayload().toJSONObject();
+        }
+
+        return jsonObject;
+    }
 }

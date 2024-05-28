@@ -34,6 +34,7 @@
         <module>components/org.wso2.bfsi.consent.management.common</module>
         <module>components/org.wso2.bfsi.consent.management.dao</module>
         <module>components/org.wso2.bfsi.consent.management.service</module>
+        <module>components/org.wso2.bfsi.consent.management.extensions</module>
     </modules>
 
     <name>BFSI Consent Management Connector for Identity Server</name>
@@ -217,6 +218,16 @@
                 <artifactId>spotbugs-annotations</artifactId>
                 <version>${spotbugs.annotations.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${org.wso2.orbit.nimbus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
+                <artifactId>encoder</artifactId>
+                <version>${encoder.wso2.version}</version>
+            </dependency>
 
             <!-- Add Base Product dependencies here -->
             <dependency>
@@ -239,6 +250,16 @@
             <dependency>
                 <groupId>org.wso2.bfsi.consent.management</groupId>
                 <artifactId>org.wso2.bfsi.consent.management.dao</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.bfsi.consent.management</groupId>
+                <artifactId>org.wso2.bfsi.consent.management.service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.bfsi.consent.management</groupId>
+                <artifactId>org.wso2.bfsi.consent.management.extensions</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -298,11 +319,15 @@
     <properties>
         <!-- Carbon Kernel -->
         <carbon.kernel.version>4.10.14</carbon.kernel.version>
+        <!-- Maven Plugin Versions -->
         <maven.checkstyle.plugin.version>3.1.0</maven.checkstyle.plugin.version>
         <maven.spotbugs.plugin.version>4.2.3</maven.spotbugs.plugin.version>
         <spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
         <com.h3xstream.findsecbugs.version>1.12.0</com.h3xstream.findsecbugs.version>
+        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
+        <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
+        <!-- Common Dependency versions -->
         <commons.logging.version>1.2</commons.logging.version>
         <axiom.wso2.version>1.2.11-wso2v28</axiom.wso2.version>
         <commons-lang.version>3.4</commons-lang.version>
@@ -321,9 +346,13 @@
         <powermock.version>2.0.9</powermock.version>
         <identity.inbound.auth.oauth.version>7.0.26</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
+        <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
+        <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <!-- OSGi Version ranges -->
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
+        <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
+        <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <axiom.osgi.version.range>[1.2.11, 2.0.0)</axiom.osgi.version.range>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <commons-collections.version.range>[4.4.0, 5.0.0)</commons-collections.version.range>
