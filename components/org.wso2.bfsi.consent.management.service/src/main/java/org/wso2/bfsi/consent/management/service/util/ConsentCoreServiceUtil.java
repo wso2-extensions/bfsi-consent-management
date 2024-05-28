@@ -242,7 +242,7 @@ public class ConsentCoreServiceUtil {
 
         createAuditRecord(connection, consentCoreDAO, consentID, userID, newConsentStatus, previousConsentStatus,
                 reason);
-        // TODO:
+        // TODO: Uncomment and test when ConsentStateChangeListenerImpl is implemented
 //        ConsentStateChangeListenerImpl.getInstance().onStateChange(consentID, userID, newConsentStatus,
 //                previousConsentStatus, reason, clientId, consentDataMap);
     }

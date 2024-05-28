@@ -930,7 +930,6 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
                         log.error(errorMsg);
                         throw new ConsentManagementException(errorMsg);
                     }
-                    //TODO
                     TokenRevocationUtil.revokeTokens(retrievedDetailedConsentResource, consentUserID);
                 }
 

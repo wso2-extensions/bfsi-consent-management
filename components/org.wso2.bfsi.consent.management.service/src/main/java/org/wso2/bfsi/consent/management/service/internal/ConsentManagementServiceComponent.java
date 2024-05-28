@@ -70,6 +70,7 @@ public class ConsentManagementServiceComponent {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
+
          log.debug("Consent Management Service is deactivated");
     }
 

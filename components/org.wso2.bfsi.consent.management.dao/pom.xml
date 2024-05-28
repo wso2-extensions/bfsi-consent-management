@@ -224,7 +224,7 @@
                             org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
                             org.wso2.bfsi.consent.management.common.*;version="${project.version}",
                             org.apache.commons.lang3;version="${commons-lang.version}",
-                            org.apache.commons.collections;version="${commons-collections.version}",
+                            org.apache.commons.collections4;version="${commons-collections.version.range}",
                             org.apache.commons.logging;version="${commons.logging.version}",
                             net.minidev.json; version="${json-smart.version}"
                         </Import-Package>

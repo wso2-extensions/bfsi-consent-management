@@ -235,12 +235,12 @@
                             org.osgi.framework;version="${osgi.framework.imp.pkg.version.range}",
                             org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
                             org.apache.commons.lang3;version="${commons-lang.version}"
-                            net.minidev.json;version="${json-smart.version}",
-                            org.apache.commons.collections;version="${commons-collections.version}",
+                            net.minidev.json.*;version="${json-smart.version}",
+                            org.apache.commons.collections4;version="${commons-collections.version.range}",
                             org.apache.commons.logging;version="${commons.logging.version}",
                             org.wso2.carbon.identity.oauth2.*;version="${identity.inbound.auth.oauth.version.range}",
                             org.wso2.bfsi.consent.management.common.*;version="${project.version}",
-                            org.wso2.bfsi.consent.management.dao.*;version="${project.version}",
+                            org.wso2.bfsi.consent.management.dao.*;version="${project.version}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.service.internal,
