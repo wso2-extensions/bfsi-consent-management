@@ -18,8 +18,13 @@
 
 package org.wso2.bfsi.consent.management.common.util;
 
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.nimbusds.jose.JWSObject;
+import net.minidev.json.JSONObject;
+import org.wso2.carbon.identity.oauth.common.OAuth2ErrorCodes;
+import org.wso2.carbon.identity.oauth.common.exception.InvalidOAuthClientException;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
+import org.wso2.carbon.identity.oauth2.RequestObjectException;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
 /**
  * Common utility methods.
@@ -27,17 +32,45 @@ import org.json.simple.parser.ParseException;
 public class CommonUtils {
 
     /**
-     * Method to check whether the given string is a valid JSON.
+     * Decode request JWT.
      *
-     * @param stringValue  string value
-     * @return `true` if the given string is a valid JSON, `false` otherwise
+     * @param jwtToken jwt sent by the tpp
+     * @param jwtPart  expected jwt part (header, body)
+     * @return json object containing requested jwt part
+     * @throws java.text.ParseException if an error occurs while parsing the jwt
      */
-    public static boolean isValidJson(String stringValue) {
+    public static JSONObject decodeRequestJWT(String jwtToken, String jwtPart) throws java.text.ParseException {
+
+        JSONObject jsonObject =  new JSONObject();
+
+        JWSObject plainObject = JWSObject.parse(jwtToken);
+
+        if ("head".equals(jwtPart)) {
+            jsonObject = plainObject.getHeader().toJSONObject();
+        } else if ("body".equals(jwtPart)) {
+            jsonObject = plainObject.getPayload().toJSONObject();
+        }
+
+        return jsonObject;
+    }
+
+    /**
+     * Check whether the client ID belongs to a regulatory app.
+     * @param clientId  client ID
+     * @return true if the client ID belongs to a regulatory app
+     * @throws RequestObjectException If an error occurs while checking the client ID
+     */
+    @Generated(message = "Excluding from code coverage since it requires a service call")
+    public static boolean isRegulatoryApp(String clientId) throws RequestObjectException {
+
         try {
-            (new JSONParser()).parse(stringValue);
-            return true;
-        } catch (ParseException E) {
-            return false;
+            return OAuth2Util.isFapiConformantApp(clientId);
+        } catch (InvalidOAuthClientException e) {
+            throw new RequestObjectException(OAuth2ErrorCodes.INVALID_CLIENT, "Could not find an existing app for " +
+                    "clientId: " + clientId, e);
+        } catch (IdentityOAuth2Exception e) {
+            throw new RequestObjectException(OAuth2ErrorCodes.SERVER_ERROR, "Error while obtaining the service " +
+                    "provider for clientId: " + clientId, e);
         }
     }
 }

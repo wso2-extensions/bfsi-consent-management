@@ -18,24 +18,47 @@
 
 package org.wso2.bfsi.consent.management.common;
 
+import net.minidev.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.bfsi.consent.management.common.util.CarbonUtils;
+import org.wso2.bfsi.consent.management.common.util.CommonTestDataProvider;
+import org.wso2.bfsi.consent.management.common.util.CommonTestUtil;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
+
+import java.text.ParseException;
 
 /**
  * Common Util test.
  */
 public class CommonUtilsTests {
 
-    @Test
-    public void testIsValidJson() {
-        String validJson = "{\"key\":\"value\"}";
-        Assert.assertTrue(CommonUtils.isValidJson(validJson));
+    @BeforeClass
+    public void beforeClass() throws ReflectiveOperationException {
+
+        //to execute util class initialization
+        new CarbonUtils();
+        CommonTestUtil.injectEnvironmentVariable("CARBON_HOME", ".");
+    }
+
+    @Test(dataProvider = "jwtData", dataProviderClass = CommonTestDataProvider.class)
+    public void testDecodeRequestJWT(String jwtToken, String jwtPart) throws ParseException {
+
+        JSONObject result = CommonUtils.decodeRequestJWT(jwtToken, jwtPart);
+        Assert.assertNotNull(result);
+    }
+
+    @Test(expectedExceptions = ParseException.class)
+    public void testDecodeRequestJWTInvalidScenario() throws ParseException {
+
+        CommonUtils.decodeRequestJWT("invalid_jwt", "header");
     }
 
     @Test
-    public void testIsValidJsonWithInvalidJsin() {
-        String validJson = "key:value";
-        Assert.assertFalse(CommonUtils.isValidJson(validJson));
+    public void testGetCarbonHome()  {
+
+        String carbonHome = CarbonUtils.getCarbonHome();
+        Assert.assertNotNull(carbonHome);
     }
 }

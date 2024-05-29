@@ -51,6 +51,8 @@ public class ConsentManagementConfigParser {
     private static final Object lock = new Object();
     private static volatile ConsentManagementConfigParser parser;
     private static final Map<String, Object> configuration = new HashMap<>();
+    private OMElement rootElement;
+    private static final Map<String, Map<Integer, String>> authorizeSteps = new HashMap<>();
 
     /**
      * Private Constructor of config parser.
@@ -92,7 +94,7 @@ public class ConsentManagementConfigParser {
             try (FileInputStream fileInputStream = new FileInputStream(configXml)) {
 
                 builder = new StAXOMBuilder(fileInputStream);
-                OMElement rootElement = builder.getDocumentElement();
+                rootElement = builder.getDocumentElement();
                 Stack<String> nameStack = new Stack<>();
                 readChildElements(rootElement, nameStack);
             } catch (IOException | XMLStreamException | OMException e) {
@@ -213,4 +215,61 @@ public class ConsentManagementConfigParser {
                 ((String) getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG)).trim();
     }
 
+    /**
+     * Returns the database connection verification timeout in seconds configured.
+     *
+     * @return 1 if nothing is configured
+     */
+    public int getConnectionVerificationTimeout() {
+
+        return getConfigElementFromKey(ConsentManagementConstants.DB_CONNECTION_VERIFICATION_TIMEOUT) == null ? 1 :
+                Integer.parseInt(getConfigElementFromKey(
+                        ConsentManagementConstants.DB_CONNECTION_VERIFICATION_TIMEOUT).toString().trim());
+    }
+
+    public Map<String, Map<Integer, String>> getConsentAuthorizeSteps() {
+
+        return authorizeSteps;
+    }
+
+    public String getConsentValidationConfig() {
+
+        return getConfigElementFromKey(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION) == null ? "" :
+                ((String) getConfigElementFromKey(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION)).trim();
+    }
+
+    public int getConsentCacheAccessExpiry() {
+
+        Object cacheAccessExpiry = getConfigElementFromKey(ConsentManagementConstants.CACHE_ACCESS_EXPIRY);
+
+        return cacheAccessExpiry == null ? 60 : Integer.parseInt(((String) cacheAccessExpiry).trim());
+    }
+
+    public int getConsentCacheModifiedExpiry() {
+
+        Object cacheModifyExpiry = getConfigElementFromKey(ConsentManagementConstants.CACHE_MODIFY_EXPIRY);
+
+        return cacheModifyExpiry == null ? 60 : Integer.parseInt(((String) cacheModifyExpiry).trim());
+    }
+
+    public String getPreserveConsent() {
+
+        return getConfigElementFromKey(ConsentManagementConstants.PRESERVE_CONSENT) == null ? "false" :
+                ((String) getConfigElementFromKey(ConsentManagementConstants.PRESERVE_CONSENT)).trim();
+    }
+
+    public String getAuthServletExtension() {
+        return getConfigElementFromKey(ConsentManagementConstants.AUTH_SERVLET_EXTENSION) == null ? "" :
+                ((String) getConfigElementFromKey(ConsentManagementConstants.AUTH_SERVLET_EXTENSION)).trim();
+    }
+
+    public String getConsentAPIUsername() {
+        return getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_USERNAME) == null ? "admin" :
+                ((String) getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_USERNAME)).trim();
+    }
+
+    public String getConsentAPIPassword() {
+        return getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_PASSWORD) == null ? "admin" :
+                ((String) getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_PASSWORD)).trim();
+    }
 }
