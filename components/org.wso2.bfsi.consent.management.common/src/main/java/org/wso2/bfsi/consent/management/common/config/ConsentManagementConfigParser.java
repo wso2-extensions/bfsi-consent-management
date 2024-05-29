@@ -199,6 +199,16 @@ public class ConsentManagementConfigParser {
     }
 
     /**
+     * Method to obtain map of configs.
+     *
+     * @return Config map
+     */
+    public Map<String, Object> getConfiguration() {
+
+        return configuration;
+    }
+
+    /**
      * Returns the element with the provided key.
      *
      * @param key local part name

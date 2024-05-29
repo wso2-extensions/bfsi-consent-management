@@ -26,6 +26,4 @@ import java.util.Map;
 public interface ConsentManagementConfigurationService {
 
     Map<String, Object> getConfigurations();
-
-    Map<String, Map<Integer, String>> getConsentAuthorizeSteps();
 }
