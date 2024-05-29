@@ -42,6 +42,7 @@ public class ConsentManagementDaoServiceComponent {
 
     @Deactivate
     protected void deactivate(ComponentContext context) {
+
         log.debug("Consent Management DAO is deactivated");
     }
 

@@ -221,7 +221,7 @@
                             org.apache.commons.lang3;version="${commons-lang.version}",
                             org.apache.commons.logging;version="${commons.logging.version}",
                             org.apache.axiom.*;version="${axiom.osgi.version.range}",
-                            net.minidev.json; version="${json-smart.version}"
+                            net.minidev.json.*; version="${json-smart.version}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.common.internal,
