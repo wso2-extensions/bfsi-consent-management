@@ -25,5 +25,7 @@ public class ConsentManagementConstants {
 
     public static final String CONFIG_FILE = "/bfsi-consent-management.xml";
     public static final String CARBON_HOME = "carbon.home";
-    public static final String JDBC_PERSISTENCE_CONFIG = "JDBCPersistenceManager.DataSource.Name";
+    public static final String JDBC_PERSISTENCE_CONFIG = "ConsentManagement.JDBCPersistenceManager.DataSource.Name";
+    public static final String DB_CONNECTION_VERIFICATION_TIMEOUT =
+            "ConsentManagement.JDBCPersistenceManager.ConnectionVerificationTimeout";
 }

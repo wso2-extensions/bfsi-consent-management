@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.consent.management.dao.util;
 
-import org.json.JSONObject;
+import net.minidev.json.JSONObject;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentAttributes;
 import org.wso2.bfsi.consent.management.dao.models.ConsentFile;
@@ -65,7 +65,7 @@ public class ConsentMgtDAOTestData {
     public static final Long SAMPLE_UPDATED_TIME = 1638337892L;
     public static final String SAMPLE_AMENDMENT_REASON = "sampleReason";
     public static final String SAMPLE_CONSENT_FILE = "sample file content";
-    public static final Map<String, String> SAMPLE_CONSENT_ATTRIBUTES_MAP = new HashMap<>() {
+    public static final Map<String, String> SAMPLE_CONSENT_ATTRIBUTES_MAP = new HashMap<String, String>() {
         {
             put("x-request-id", UUID.randomUUID().toString());
             put("idempotency-key", UUID.randomUUID().toString());
@@ -73,38 +73,38 @@ public class ConsentMgtDAOTestData {
             put("sessionDataKey", "{\"sessionDataKey\":\"a0c8cd6d-eca0-4c4d-9544-2b39e7e1c180\",\"userId\":\"01Z79\"}");
         }
     };
-    public static final Map<String, String> CONSENT_ATTRIBUTES_MAP_FOR_UPDATE = new HashMap<>() {
+    public static final Map<String, String> CONSENT_ATTRIBUTES_MAP_FOR_UPDATE = new HashMap<String, String>() {
         {
             put("payment-type", "international-payments");
         }
     };
-    public static final ArrayList<String> SAMPLE_CONSENT_ATTRIBUTES_KEYS = new ArrayList<>() {
+    public static final ArrayList<String> SAMPLE_CONSENT_ATTRIBUTES_KEYS = new ArrayList<String>() {
         {
             add("x-request-id");
             add("idempotency-key");
         }
     };
-    public static final ArrayList<String> UNMATCHED_MAPPING_IDS = new ArrayList<>() {
+    public static final ArrayList<String> UNMATCHED_MAPPING_IDS = new ArrayList<String>() {
         {
             add("4444");
             add("5555");
         }
     };
-    private static final ArrayList<String> SAMPLE_CONSENT_RECEIPTS_LIST = new ArrayList<>() {
+    private static final ArrayList<String> SAMPLE_CONSENT_RECEIPTS_LIST = new ArrayList<String>() {
         {
             add("{\"element1\": \"value1\"}");
             add("{\"element2\": \"value2\"}");
             add("{\"element3\": \"value3\"}");
         }
     };
-    public static final ArrayList<String> SAMPLE_CONSENT_TYPES_LIST = new ArrayList<>() {
+    public static final ArrayList<String> SAMPLE_CONSENT_TYPES_LIST = new ArrayList<String>() {
         {
             add("accounts");
             add("payments");
             add("cof");
         }
     };
-    public static final ArrayList<String> SAMPLE_CONSENT_STATUSES_LIST = new ArrayList<>() {
+    public static final ArrayList<String> SAMPLE_CONSENT_STATUSES_LIST = new ArrayList<String>() {
         {
             add("created");
             add("authorized");
@@ -112,7 +112,7 @@ public class ConsentMgtDAOTestData {
 
         }
     };
-    public static final ArrayList<String> SAMPLE_CLIENT_IDS_LIST = new ArrayList<>() {
+    public static final ArrayList<String> SAMPLE_CLIENT_IDS_LIST = new ArrayList<String>() {
         {
             add("clientID1");
             add("clientID2");
@@ -120,14 +120,14 @@ public class ConsentMgtDAOTestData {
 
         }
     };
-    public static final ArrayList<String> SAMPLE_USER_IDS_LIST = new ArrayList<>() {
+    public static final ArrayList<String> SAMPLE_USER_IDS_LIST = new ArrayList<String>() {
         {
             add("userID1");
             add("userID2");
             add("userID3");
         }
     };
-    private static final ArrayList<Long> SAMPLE_VALIDITY_PERIOD_LIST = new ArrayList<>() {
+    private static final ArrayList<Long> SAMPLE_VALIDITY_PERIOD_LIST = new ArrayList<Long>() {
         {
             add(1613454661L);
             add(1623654661L);
@@ -153,7 +153,7 @@ public class ConsentMgtDAOTestData {
         }
     };
     public static List<String> getRecordIDListOfSampleConsentHistory() {
-       return new ArrayList<>() {
+       return new ArrayList<String>() {
             {
                 add(ConsentMgtDAOTestData.SAMPLE_CONSENT_ID);
                 add(ConsentMgtDAOTestData.SAMPLE_MAPPING_ID);
@@ -199,7 +199,7 @@ public class ConsentMgtDAOTestData {
      */
     public static ArrayList<ConsentResource> getSampleConsentResourcesList() {
 
-        ArrayList<ConsentResource> consentResources = new ArrayList<>();
+        ArrayList<ConsentResource> consentResources = new ArrayList<ConsentResource>();
 
         for (int i = 0; i < 3; i++) {
             ConsentResource consentResource = new ConsentResource();
@@ -217,7 +217,7 @@ public class ConsentMgtDAOTestData {
 
     public static ArrayList<AuthorizationResource> getSampleAuthorizationResourcesList(ArrayList<String> consentIDs) {
 
-        ArrayList<AuthorizationResource> authorizationResources = new ArrayList<>();
+        ArrayList<AuthorizationResource> authorizationResources = new ArrayList<AuthorizationResource>();
 
         for (int i = 0; i < consentIDs.size(); i++) {
             for (int j = 0; j < 2; j++) {
@@ -234,7 +234,7 @@ public class ConsentMgtDAOTestData {
 
     public static ArrayList<ConsentMappingResource> getSampleConsentMappingResourcesList(ArrayList<String> authIDs) {
 
-        ArrayList<ConsentMappingResource> consentMappingResources = new ArrayList<>();
+        ArrayList<ConsentMappingResource> consentMappingResources = new ArrayList<ConsentMappingResource>();
 
         for (int i = 0; i < authIDs.size(); i++) {
             for (int j = 0; j < 2; j++) {

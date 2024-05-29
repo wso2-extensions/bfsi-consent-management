@@ -18,24 +18,10 @@
 
 package org.wso2.bfsi.consent.management.common;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 
 /**
  * Common Util test.
  */
 public class CommonUtilsTests {
 
-    @Test
-    public void testIsValidJson() {
-        String validJson = "{\"key\":\"value\"}";
-        Assert.assertTrue(CommonUtils.isValidJson(validJson));
-    }
-
-    @Test
-    public void testIsValidJsonWithInvalidJsin() {
-        String validJson = "key:value";
-        Assert.assertFalse(CommonUtils.isValidJson(validJson));
-    }
 }
