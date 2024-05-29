@@ -34,6 +34,7 @@
         <module>components/org.wso2.bfsi.consent.management.common</module>
         <module>components/org.wso2.bfsi.consent.management.dao</module>
         <module>components/org.wso2.bfsi.consent.management.service</module>
+        <module>components/org.wso2.bfsi.identity.extensions</module>
     </modules>
 
     <name>BFSI Consent Management Connector for Identity Server</name>
