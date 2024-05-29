@@ -34,14 +34,29 @@
 
     <dependencies>
         <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
-            <version>7.0.75</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
             <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.bfsi.consent.management</groupId>
+            <artifactId>org.wso2.bfsi.consent.management.common</artifactId>
         </dependency>
     </dependencies>
 
@@ -170,6 +185,11 @@
                             org.wso2.bfsi.identity.extensions.internal
                         </Private-Package>
                         <Import-Package>
+                            org.osgi.framework;version="${osgi.framework.imp.pkg.version.range}",
+                            org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
+                            javax.validation.*;version="0",
+                            org.apache.commons.beanutils.*;version="0",
+                            org.hibernate.validator.*;version="0",
                             *
                         </Import-Package>
                         <Export-Package>

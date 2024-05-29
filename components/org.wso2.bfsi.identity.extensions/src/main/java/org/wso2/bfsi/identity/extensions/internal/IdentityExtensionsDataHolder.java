@@ -89,7 +89,8 @@ public class IdentityExtensionsDataHolder {
 //                this.configurationMap.get(ConsentManagementConstants.REQUEST_VALIDATOR).toString());
 //        obResponseTypeHandler = (OBResponseTypeHandler) IdentityCommonUtils.getClassInstanceFromFQN(
 //                this.configurationMap.get(ConsentManagementConstants.RESPONSE_HANDLER).toString());
-////        this.setClaimProvider((ClaimProvider) OpenBankingUtils.getClassInstanceFromFQN(openBankingConfigurationService
+////        this.setClaimProvider((ClaimProvider) OpenBankingUtils.getClassInstanceFromFQN(
+// openBankingConfigurationService
 ////                .getConfigurations().get(IdentityCommonConstants.CLAIM_PROVIDER).toString()));
 ////        OBClaimProvider.setClaimProvider(getClaimProvider());
 //    }
