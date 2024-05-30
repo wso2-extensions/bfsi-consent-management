@@ -24,6 +24,8 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationServiceImpl;
 
 /**
  * Consent Management Common Service Component.
@@ -38,6 +40,11 @@ public class ConsentManagementCommonServiceComponent {
     protected void activate(ComponentContext context) {
 
         log.debug("Consent Management Common is registered successfully.");
+
+        ConsentManagementConfigurationService configurationService
+                = new ConsentManagementConfigurationServiceImpl();
+        context.getBundleContext().registerService(ConsentManagementConfigurationService.class.getName(),
+                configurationService, null);
     }
 
     @Deactivate

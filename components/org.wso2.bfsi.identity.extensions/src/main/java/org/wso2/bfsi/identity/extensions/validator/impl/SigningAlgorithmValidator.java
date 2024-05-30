@@ -21,9 +21,15 @@ package org.wso2.bfsi.identity.extensions.validator.impl;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.NestedNullException;
 import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
+import org.wso2.bfsi.consent.management.common.util.CommonUtils;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonHelper;
 import org.wso2.bfsi.identity.extensions.validator.annotation.ValidSigningAlgorithm;
+import org.wso2.carbon.identity.oauth2.RequestObjectException;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -64,19 +70,24 @@ public class SigningAlgorithmValidator implements ConstraintValidator<ValidSigni
 
      boolean algorithmValidate(String requestedAlgo, String clientId) {
 
-//        try {
-//            if (!(StringUtils.isNotEmpty(new IdentityCommonHelper().getCertificateContent(clientId))
-//                    && CommonUtils.isRegulatoryApp(clientId))) {
-//                String registeredAlgo = new IdentityCommonHelper().getAppPropertyFromSPMetaData(
-//                        clientId, IdentityCommonConstants.REQUEST_OBJECT_SIGNING_ALG);
-//
-//                return requestedAlgo.equals(registeredAlgo);
-//            } else {
-//                return true;
-//            }
-//        } catch (RequestObjectException | ConsentManagementException e) {
-//            log.error("Error while getting signing SP metadata", e);
-//        }
+        try {
+            if (!(StringUtils.isNotEmpty(new IdentityCommonHelper().getCertificateContent(clientId))
+                    && CommonUtils.isRegulatoryApp(clientId))) {
+                String registeredAlgo = new IdentityCommonHelper().getAppPropertyFromSPMetaData(
+                        clientId, IdentityCommonConstants.REQUEST_OBJECT_SIGNING_ALG);
+
+                if (StringUtils.isBlank(registeredAlgo)) {
+                    // TODO: check with DCR API
+                    return true;
+                }
+
+                return requestedAlgo.equals(registeredAlgo);
+            } else {
+                return true;
+            }
+        } catch (RequestObjectException | ConsentManagementException e) {
+            log.error("Error while getting signing SP metadata", e);
+        }
         return false;
     }
 }

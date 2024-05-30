@@ -58,6 +58,11 @@
             <groupId>org.wso2.bfsi.consent.management</groupId>
             <artifactId>org.wso2.bfsi.consent.management.common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.core</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -190,6 +195,7 @@
                             javax.validation.*;version="0",
                             org.apache.commons.beanutils.*;version="0",
                             org.hibernate.validator.*;version="0",
+                            org.wso2.carbon.identity.base.*;version="${carbon.identity.framework.version.range}",
                             *
                         </Import-Package>
                         <Export-Package>

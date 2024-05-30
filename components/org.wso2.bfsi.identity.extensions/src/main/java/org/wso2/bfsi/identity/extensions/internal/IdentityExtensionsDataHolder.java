@@ -18,6 +18,11 @@
 
 package org.wso2.bfsi.identity.extensions.internal;
 
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
+import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
+import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.OBRequestObjectValidator;
+import org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.OBResponseTypeHandler;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.identity.oauth2.OAuth2Service;
 import org.wso2.carbon.identity.openidconnect.RequestObjectService;
@@ -32,10 +37,10 @@ public class IdentityExtensionsDataHolder {
 
     private static volatile IdentityExtensionsDataHolder instance;
     private static ApplicationManagementService applicationManagementService;
-//    private static ConsentManagementConfigurationService configurationService;
+    private static ConsentManagementConfigurationService configurationService;
     Map<String, Object> configurationMap;
-//    private OBRequestObjectValidator obRequestObjectValidator;
-//    private OBResponseTypeHandler obResponseTypeHandler;
+    private OBRequestObjectValidator obRequestObjectValidator;
+    private OBResponseTypeHandler obResponseTypeHandler;
     private static RealmService realmService;
     private static OAuth2Service oAuth2Service;
     private RequestObjectService requestObjectService;
@@ -76,24 +81,23 @@ public class IdentityExtensionsDataHolder {
         IdentityExtensionsDataHolder.applicationManagementService = applicationManagementService;
     }
 
-//    public ConsentManagementConfigurationService getOpenBankingConfigurationService() {
-//
-//        return configurationService;
-//    }
+    public ConsentManagementConfigurationService getOpenBankingConfigurationService() {
 
-//    public void setConfigurationService(ConsentManagementConfigurationService configurationService) {
-//
-//        IdentityExtensionsDataHolder.configurationService = configurationService;
-//        this.configurationMap = configurationService.getConfigurations();
-//        obRequestObjectValidator = (OBRequestObjectValidator) IdentityCommonUtils.getClassInstanceFromFQN(
-//                this.configurationMap.get(ConsentManagementConstants.REQUEST_VALIDATOR).toString());
-//        obResponseTypeHandler = (OBResponseTypeHandler) IdentityCommonUtils.getClassInstanceFromFQN(
-//                this.configurationMap.get(ConsentManagementConstants.RESPONSE_HANDLER).toString());
-////        this.setClaimProvider((ClaimProvider) OpenBankingUtils.getClassInstanceFromFQN(
-// openBankingConfigurationService
-////                .getConfigurations().get(IdentityCommonConstants.CLAIM_PROVIDER).toString()));
-////        OBClaimProvider.setClaimProvider(getClaimProvider());
-//    }
+        return configurationService;
+    }
+
+    public void setConfigurationService(ConsentManagementConfigurationService configurationService) {
+
+        IdentityExtensionsDataHolder.configurationService = configurationService;
+        this.configurationMap = configurationService.getConfigurations();
+        obRequestObjectValidator = (OBRequestObjectValidator) IdentityCommonUtils.getClassInstanceFromFQN(
+                this.configurationMap.get(ConsentManagementConstants.REQUEST_VALIDATOR).toString());
+        obResponseTypeHandler = (OBResponseTypeHandler) IdentityCommonUtils.getClassInstanceFromFQN(
+                this.configurationMap.get(ConsentManagementConstants.RESPONSE_HANDLER).toString());
+//        this.setClaimProvider((ClaimProvider) OpenBankingUtils.getClassInstanceFromFQN(openBankingConfigurationService
+//                .getConfigurations().get(IdentityCommonConstants.CLAIM_PROVIDER).toString()));
+//        OBClaimProvider.setClaimProvider(getClaimProvider());
+    }
 
     public void setConfigurationMap(Map<String, Object> confMap) {
 
@@ -105,13 +109,13 @@ public class IdentityExtensionsDataHolder {
         return configurationMap;
     }
 
-//    public OBRequestObjectValidator getObRequestObjectValidator() {
-//        return obRequestObjectValidator;
-//    }
-//
-//    public OBResponseTypeHandler getObResponseTypeHandler() {
-//        return obResponseTypeHandler;
-//    }
+    public OBRequestObjectValidator getObRequestObjectValidator() {
+        return obRequestObjectValidator;
+    }
+
+    public OBResponseTypeHandler getObResponseTypeHandler() {
+        return obResponseTypeHandler;
+    }
 
     public RealmService getRealmService() {
 

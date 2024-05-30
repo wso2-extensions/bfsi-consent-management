@@ -28,4 +28,8 @@ public class ConsentManagementConstants {
     public static final String JDBC_PERSISTENCE_CONFIG = "ConsentManagement.JDBCPersistenceManager.DataSource.Name";
     public static final String DB_CONNECTION_VERIFICATION_TIMEOUT =
             "ConsentManagement.JDBCPersistenceManager.ConnectionVerificationTimeout";
+
+    public static final String REQUEST_VALIDATOR = "Identity.Extensions.RequestObjectValidator";
+
+    public static final String RESPONSE_HANDLER = "Identity.Extensions.ResponseTypeHandler";
 }

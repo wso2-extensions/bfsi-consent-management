@@ -27,6 +27,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.identity.oauth2.OAuth2Service;
 import org.wso2.carbon.identity.openidconnect.RequestObjectService;
@@ -65,21 +66,22 @@ public class IdentityExtensionsServiceComponent {
 
         IdentityExtensionsDataHolder.getInstance().setApplicationManagementService(null);
     }
-//    @Reference(
-//            service = ConsentManagementConfigurationService.class,
-//            cardinality = ReferenceCardinality.MANDATORY,
-//            policy = ReferencePolicy.DYNAMIC,
-//            unbind = "unsetConfigService"
-//    )
-//    public void setConfigService(ConsentManagementConfigurationService configurationService) {
-//
-//        IdentityExtensionsDataHolder.getInstance().setConfigurationService(configurationService);
-//    }
-//
-//    public void unsetConfigService(ConsentManagementConfigurationService configurationService) {
-//
-//        IdentityExtensionsDataHolder.getInstance().setConfigurationService(configurationService);
-//    }
+
+    @Reference(
+            service = ConsentManagementConfigurationService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetConfigService"
+    )
+    public void setConfigService(ConsentManagementConfigurationService configurationService) {
+
+        IdentityExtensionsDataHolder.getInstance().setConfigurationService(configurationService);
+    }
+
+    public void unsetConfigService(ConsentManagementConfigurationService configurationService) {
+
+        IdentityExtensionsDataHolder.getInstance().setConfigurationService(configurationService);
+    }
 
     @Reference(
             name = "realm.service",

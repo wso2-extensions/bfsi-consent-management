@@ -20,6 +20,8 @@ package org.wso2.bfsi.identity.extensions.util;
 
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.Generated;
+import org.wso2.carbon.identity.base.IdentityRuntimeException;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth.common.exception.InvalidOAuthClientException;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
@@ -43,6 +45,14 @@ public class ServiceProviderUtils {
         } catch (InvalidOAuthClientException | IdentityOAuth2Exception e) {
             throw new ConsentManagementException("Error retrieving service provider tenant domain for client_id: "
                     + clientId, e);
+        }
+    }
+
+    public static int getTenantIdOfUser(String userId) throws ConsentManagementException {
+        try {
+            return IdentityTenantUtil.getTenantIdOfUser(userId);
+        } catch (IdentityRuntimeException e) {
+            throw new ConsentManagementException("Error retrieving tenant id for user: " + userId, e);
         }
     }
 }
