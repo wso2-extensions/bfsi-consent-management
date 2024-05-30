@@ -63,7 +63,6 @@ public class ConsentManagementServiceComponent {
             throw new ConsentManagementRuntimeException("Database connection is not active, cannot proceed");
         }
 
-
         context.getBundleContext().registerService(ConsentCoreService.class.getName(), consentCoreService, null);
         log.debug("Consent Management Service is registered successfully.");
     }

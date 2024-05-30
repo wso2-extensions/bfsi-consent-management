@@ -1039,7 +1039,6 @@ public class ConsentCoreServiceImpl implements ConsentCoreService {
                     }
                     consentCoreDAO.updateConsentStatus(connection, resource.getConsentID(), revokedConsentStatus);
 
-                    //TODO
                     if (shouldRevokeTokens) {
                         TokenRevocationUtil.revokeTokens(resource, userID);
                     }
