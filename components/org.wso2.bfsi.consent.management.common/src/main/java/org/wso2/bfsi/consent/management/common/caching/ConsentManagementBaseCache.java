@@ -83,7 +83,7 @@ public abstract class ConsentManagementBaseCache<K extends ConsentManagementBase
                 log.debug(String.format("Found cache entry `%s` in cache %s",
                         key.toString().replaceAll("[\r\n]", ""), cacheName.replaceAll("[\r\n]", "")));
             }
-            return cache.get(key);
+            return getFromCache(key);
         } else {
 
             if (log.isDebugEnabled()) {
@@ -126,7 +126,6 @@ public abstract class ConsentManagementBaseCache<K extends ConsentManagementBase
 
             return null;
         }
-
     }
 
     /**
@@ -191,9 +190,7 @@ public abstract class ConsentManagementBaseCache<K extends ConsentManagementBase
         return cacheBuilder.setExpiry(CacheConfiguration.ExpiryType.ACCESSED, accessExpiry)
                 .setExpiry(CacheConfiguration.ExpiryType.MODIFIED, modifiedExpiry)
                 .build();
-
     }
-
 
     /**
      * Get Cache expiry time upon access in minutes.
@@ -208,5 +205,4 @@ public abstract class ConsentManagementBaseCache<K extends ConsentManagementBase
      * @return integer denoting number of minutes.
      */
     public abstract int getCacheModifiedExpiryMinutes();
-
 }

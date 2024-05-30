@@ -28,7 +28,7 @@ public class ConsentManagementConstants {
     public static final String OB_CONFIG_QNAME = "http://wso2.org/projects/carbon/bfsi-consent-management.xml";
     public static final String CONSENT_CONFIG_TAG = "ConsentManagement";
     public static final String JDBC_PERSISTENCE_CONFIG = "ConsentManagement.JDBCPersistenceManager.DataSource.Name";
-    public static final String DB_CONNECTION_VERIFICATION_TIMEOUT =
+    public static final String DB_VERIFICATION_TIMEOUT =
             "ConsentManagement.JDBCPersistenceManager.ConnectionVerificationTimeout";
     public static final String MANAGE_HANDLER = "ConsentManagement.ManageHandler";
     public static final String AUTHORIZE_STEPS_CONFIG_TAG = "AuthorizeSteps";

@@ -87,6 +87,7 @@ public class ConsentManagementConfigParserTests {
 
         configService = new ConsentManagementConfigurationServiceImpl();
         Assert.assertNotNull(configService.getConfigurations());
+        Assert.assertNotNull(configService.getConsentAuthorizeSteps());
     }
 
     @Test(priority = 5)

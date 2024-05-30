@@ -31,4 +31,9 @@ public class ConsentManagementConfigurationServiceImpl implements ConsentManagem
         return configParser.getConfiguration();
     }
 
+    @Override
+    public Map<String, Map<Integer, String>> getConsentAuthorizeSteps() {
+        return configParser.getConsentAuthorizeSteps();
+    }
+
 }
