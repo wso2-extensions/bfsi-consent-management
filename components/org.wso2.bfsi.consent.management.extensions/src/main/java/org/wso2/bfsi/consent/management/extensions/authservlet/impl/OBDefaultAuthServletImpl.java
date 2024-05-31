@@ -23,6 +23,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.wso2.bfsi.consent.management.extensions.authservlet.OBAuthServletInterface;
 import org.wso2.bfsi.consent.management.extensions.authservlet.utils.Utils;
+import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -63,6 +64,11 @@ public class OBDefaultAuthServletImpl implements OBAuthServletInterface {
 
         String[] accounts = request.getParameter("accounts[]").replaceAll("[\r\n]", "").split(":");
         returnMaps.put("accountIds", (new JSONArray()).addAll(List.of(accounts)));
+
+        returnMaps.put(ConsentExtensionConstants.PAYMENT_ACCOUNT,
+                request.getParameter(ConsentExtensionConstants.PAYMENT_ACCOUNT).replaceAll("[\r\n]", ""));
+        returnMaps.put(ConsentExtensionConstants.COF_ACCOUNT,
+                request.getParameter(ConsentExtensionConstants.COF_ACCOUNT).replaceAll("[\r\n]", ""));
         return returnMaps;
     }
 

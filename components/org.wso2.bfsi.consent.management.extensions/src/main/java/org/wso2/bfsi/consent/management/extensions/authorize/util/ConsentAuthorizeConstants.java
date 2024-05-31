@@ -28,4 +28,6 @@ public class ConsentAuthorizeConstants {
     public static final String ACC_CONSENT_RETRIEVAL_ERROR = "Error occurred while retrieving the account initiation" +
             " request details";
     public static final String CONSENT_EXPIRED = "Provided consent is expired";
+    public static final String ACCOUNT_ID_NOT_FOUND_ERROR = "Account IDs not available in persist request";
+    public static final String ACCOUNT_ID_FORMAT_ERROR = "Account IDs format error in persist request";
 }

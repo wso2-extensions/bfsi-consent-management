@@ -85,4 +85,12 @@ public class ConsentExtensionConstants {
     public static final String CURRENCY_TITLE = "Currency";
     public static final String AMOUNT = "Amount";
     public static final String AMOUNT_TITLE = "Amount";
+    public static final String PAYMENT_ACCOUNT = "paymentAccount";
+    public static final String COF_ACCOUNT = "cofAccount";
+    public static final String PRIMARY = "primary";
+    public static final String ACCOUNT_IDS = "accountIds";
+    public static final String ERROR = "error";
+    public static final String ERROR_DESCRIPTION = "error_description";
+    public static final String STATE = "state";
+    public static final String REDIRECT_URI = "redirect_uri";
 }

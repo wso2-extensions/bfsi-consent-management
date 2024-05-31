@@ -48,7 +48,7 @@ public class ConsentAuthorizeUtil {
      * @param spQueryParams  Query params
      * @return  requestObject
      */
-    public static String extractRequestObject(String spQueryParams) {
+    public static String extractRequestObject(String spQueryParams) throws ConsentException {
 
         if (StringUtils.isNotBlank(spQueryParams)) {
             String requestObject = null;
@@ -72,7 +72,7 @@ public class ConsentAuthorizeUtil {
      * @param requestObject  Request object
      * @return consentId
      */
-    public static String extractConsentId(String requestObject) {
+    public static String extractConsentId(String requestObject) throws ConsentException {
 
         String consentId = null;
         try {
@@ -141,7 +141,7 @@ public class ConsentAuthorizeUtil {
             // Checking whether the request body is in JSON format
             if (!(receiptJSON instanceof JSONObject)) {
                 log.error("Not a Json Object");
-                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Not a Json Object");
+                throw new ConsentException(ResponseStatus.BAD_REQUEST, "Not a Json Object");
             }
 
             if (!"AwaitingAuthorization".equals(consentResource.getCurrentStatus())) {
@@ -289,7 +289,7 @@ public class ConsentAuthorizeUtil {
      * @param data            data request from the request
      * @param consentDataJSON Consent information
      */
-    private static void populateAccountData(JSONObject data, JSONArray consentDataJSON) {
+    private static void populateAccountData(JSONObject data, JSONArray consentDataJSON) throws ConsentException {
 
         //Adding Permissions
         JSONArray permissions = (JSONArray) data.get(ConsentExtensionConstants.PERMISSIONS);
@@ -355,7 +355,7 @@ public class ConsentAuthorizeUtil {
      * @param initiation      data from the request
      * @param consentDataJSON Consent information
      */
-    private static void populateCofData(JSONObject initiation, JSONArray consentDataJSON) {
+    private static void populateCofData(JSONObject initiation, JSONArray consentDataJSON) throws ConsentException {
 
         //Adding Expiration Date Time
         if (initiation.getAsString(ConsentExtensionConstants.EXPIRATION_DATE) != null) {

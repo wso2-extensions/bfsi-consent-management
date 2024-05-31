@@ -18,23 +18,14 @@
 
 package org.wso2.bfsi.consent.management.extensions.common;
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Consent exception class to be used in consent components and extensions.
  */
 public class ConsentException extends RuntimeException {
-
-    private static final Log log = LogFactory.getLog(ConsentException.class);
 
     private JSONObject payload;
     private ResponseStatus status;
@@ -50,13 +41,14 @@ public class ConsentException extends RuntimeException {
     public ConsentException(ResponseStatus status, String errorCode, String errorMessage) {
 
         this.status = status;
-        this.payload = createDefaultErrorObject(this.status, errorCode, errorMessage);
+        this.payload = createDefaultErrorObject(null, errorCode, errorMessage, null);
     }
 
     public ConsentException(ResponseStatus status, String errorMessage) {
 
         this.status = status;
-        this.payload = createDefaultErrorObject(this.status, String.valueOf(this.status.getStatusCode()), errorMessage);
+        this.payload = createDefaultErrorObject(null, String.valueOf(this.status.getStatusCode()),
+                errorMessage, null);
     }
 
     /**
@@ -71,40 +63,23 @@ public class ConsentException extends RuntimeException {
     public ConsentException(URI errorRedirectURI, AuthErrorCode error, String errorDescription, String state) {
 
         if (errorRedirectURI != null && error != null) {
-            try {
-                //add 302 as error code since this will be a redirect
-                this.status = ResponseStatus.FOUND;
-                //set parameters as uri fragments
-                //https://openid.net/specs/oauth-v2-multiple-response-types-1_0.html#rfc.section.5
-                String errorResponse = ConsentExtensionConstants.ERROR_URI_FRAGMENT
-                        .concat(URLEncoder.encode(error.toString(), StandardCharsets.UTF_8.toString()));
-                if (errorDescription != null) {
-                    errorResponse = errorResponse.concat(ConsentExtensionConstants.ERROR_DESCRIPTION_PARAMETER)
-                            .concat(URLEncoder.encode(errorDescription, StandardCharsets.UTF_8.toString()));
-                }
-                if (state != null) {
-                    errorResponse = errorResponse.concat(ConsentExtensionConstants.STATE_PARAMETER)
-                            .concat(URLEncoder.encode(state, StandardCharsets.UTF_8.toString()));
-                }
-                this.errorRedirectURI = new URI(errorRedirectURI.toString().concat(errorResponse));
-
-            } catch (URISyntaxException | UnsupportedEncodingException e) {
-                log.error("Error while building the uri", e);
-            }
+            //add 302 as error code since this will be a redirect
+            this.status = ResponseStatus.FOUND;
+            this.payload = createDefaultErrorObject(errorRedirectURI, error.toString(), errorDescription, state);
         }
     }
 
-    public JSONObject createDefaultErrorObject(ResponseStatus status, String errorCode, String errorMessage) {
+    public JSONObject createDefaultErrorObject(URI redirectURI, String errorCode, String errorMessage, String state) {
 
         JSONObject error = new JSONObject();
-        JSONArray errorList = new JSONArray();
-        JSONObject errorObj = new JSONObject();
-        error.put("Code", String.valueOf(status.getStatusCode()));
-        error.put("Message", status.getReasonPhrase());
-        errorObj.put("ErrorCode", errorCode);
-        errorObj.put("Message", errorMessage);
-        errorList.add(errorObj);
-        error.put("Errors", errorList);
+        error.put(ConsentExtensionConstants.ERROR, errorCode);
+        error.put(ConsentExtensionConstants.ERROR_DESCRIPTION, errorMessage);
+        if (state != null) {
+            error.put(ConsentExtensionConstants.STATE, state);
+        }
+        if (redirectURI != null) {
+            error.put(ConsentExtensionConstants.REDIRECT_URI, redirectURI.toString());
+        }
         return error;
     }
 

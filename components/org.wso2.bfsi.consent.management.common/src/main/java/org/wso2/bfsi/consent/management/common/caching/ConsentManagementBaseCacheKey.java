@@ -23,16 +23,19 @@ package org.wso2.bfsi.consent.management.common.caching;
  */
 public class ConsentManagementBaseCacheKey {
 
-    public ConsentManagementBaseCacheKey() {
-
-    }
+    private String cacheKey;
 
     public ConsentManagementBaseCacheKey(String cacheKey) {
 
+        this.cacheKey = cacheKey;
     }
 
     public static ConsentManagementBaseCacheKey of(String cacheKey) {
         return new ConsentManagementBaseCacheKey(cacheKey);
+    }
+
+    public String getCacheKey() {
+        return cacheKey;
     }
 
 }

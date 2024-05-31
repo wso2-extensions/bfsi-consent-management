@@ -226,7 +226,7 @@
                             org.apache.commons.lang3;version="${commons-lang.version}",
                             org.apache.commons.collections4;version="${commons-collections.version.range}",
                             org.apache.commons.logging;version="${commons.logging.version}",
-                            net.minidev.json.*; version="${json-smart.version}"
+                            net.minidev.json; version="${json-smart.version}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.dao.internal,

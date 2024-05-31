@@ -79,6 +79,10 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -133,6 +137,7 @@
                     <excludes>
                         <!-- Excluding them in coverage reports -->
                         <exclude>**/*ServiceComponent.class</exclude>
+                        <exclude>**/*DataHolder.class</exclude>
                         <exclude>**/*Constants.class</exclude>
                         <exclude>**/*Exception.class</exclude>
                         <exclude>**/*Cache.class</exclude>
@@ -216,7 +221,8 @@
                             org.apache.commons.lang3;version="${commons-lang.version}",
                             org.apache.commons.logging;version="${commons.logging.version}",
                             org.apache.axiom.*;version="${axiom.osgi.version.range}",
-                            net.minidev.json.*; version="${json-smart.version}"
+                            net.minidev.json.*; version="${json-smart.version}",
+                            *
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.common.internal,

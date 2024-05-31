@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
@@ -235,7 +236,7 @@ public class ConsentManagementConfigParser {
                             if (StringUtils.isEmpty(obExecutorClass)) {
                                 //Throwing exceptions since we cannot proceed without invalid executor names
                                 throw new ConsentManagementRuntimeException("Executor class is not defined " +
-                                        "correctly in bfsi-consent-management.xml");
+                                        "correctly in open-banking.xml");
                             }
                             int priority = Integer.MAX_VALUE;
                             if (!StringUtils.isEmpty(obExecutorPriority)) {
@@ -263,24 +264,32 @@ public class ConsentManagementConfigParser {
      */
     public Map<String, Object> getConfiguration() {
 
-        return configuration;
+        return this.configuration;
     }
 
     /**
-     * Returns the element with the provided key.
+     * Returns the element with the provided key as a String.
      *
      * @param key local part name
      * @return Corresponding value for key
      */
-    public Object getConfigElementFromKey(String key) {
+    private  Optional<String> getConfigurationFromKeyAsString(final String key) {
+        return Optional.ofNullable((String) this.configuration.get(key));
+    }
 
-        return configuration.get(key);
+    /**
+     * Returns the element with the provided key as a list.
+     *
+     * @param key local part name
+     * @return Corresponding value for key
+     */
+    private Optional getConfigurationFromKeyAsList(final String key) {
+        return Optional.of((ArrayList<String>) this.configuration.get(key));
     }
 
     public String getDataSourceName() {
-
-        return getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG) == null ? "" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG)).trim();
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG);
+        return source.map(String::trim).orElse("");
     }
 
     /**
@@ -290,9 +299,8 @@ public class ConsentManagementConfigParser {
      */
     public int getConnectionVerificationTimeout() {
 
-        return getConfigElementFromKey(ConsentManagementConstants.DB_CONNECTION_VERIFICATION_TIMEOUT) == null ? 1 :
-                Integer.parseInt(getConfigElementFromKey(
-                        ConsentManagementConstants.DB_CONNECTION_VERIFICATION_TIMEOUT).toString().trim());
+        Optional<String> timeout = getConfigurationFromKeyAsString(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT);
+        return timeout.map(Integer::parseInt).orElse(1);
     }
 
     public Map<String, Map<Integer, String>> getConsentAuthorizeSteps() {
@@ -302,42 +310,44 @@ public class ConsentManagementConfigParser {
 
     public String getConsentValidationConfig() {
 
-        return getConfigElementFromKey(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION) == null ? "" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION)).trim();
+        Optional<String> source =
+                getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION);
+        return source.map(String::trim).orElse("");
     }
 
     public int getConsentCacheAccessExpiry() {
 
-        Object cacheAccessExpiry = getConfigElementFromKey(ConsentManagementConstants.CACHE_ACCESS_EXPIRY);
-
-        return cacheAccessExpiry == null ? 60 : Integer.parseInt(((String) cacheAccessExpiry).trim());
+        Optional<String> expiryTime = getConfigurationFromKeyAsString(ConsentManagementConstants.CACHE_ACCESS_EXPIRY);
+        return expiryTime.map(Integer::parseInt).orElse(60);
     }
 
     public int getConsentCacheModifiedExpiry() {
 
-        Object cacheModifyExpiry = getConfigElementFromKey(ConsentManagementConstants.CACHE_MODIFY_EXPIRY);
-
-        return cacheModifyExpiry == null ? 60 : Integer.parseInt(((String) cacheModifyExpiry).trim());
+        Optional<String> expiryTime = getConfigurationFromKeyAsString(ConsentManagementConstants.CACHE_MODIFY_EXPIRY);
+        return expiryTime.map(Integer::parseInt).orElse(60);
     }
 
     public String getPreserveConsent() {
 
-        return getConfigElementFromKey(ConsentManagementConstants.PRESERVE_CONSENT) == null ? "false" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.PRESERVE_CONSENT)).trim();
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.PRESERVE_CONSENT);
+        return source.map(String::trim).orElse("false");
     }
 
     public String getAuthServletExtension() {
-        return getConfigElementFromKey(ConsentManagementConstants.AUTH_SERVLET_EXTENSION) == null ? "" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.AUTH_SERVLET_EXTENSION)).trim();
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.AUTH_SERVLET_EXTENSION);
+        return source.map(String::trim).orElse("");
     }
 
     public String getConsentAPIUsername() {
-        return getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_USERNAME) == null ? "admin" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_USERNAME)).trim();
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_USERNAME);
+        return source.map(String::trim).orElse("admin");
     }
 
     public String getConsentAPIPassword() {
-        return getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_PASSWORD) == null ? "admin" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.CONSENT_API_PASSWORD)).trim();
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_PASSWORD);
+        return source.map(String::trim).orElse("admin");
     }
 }

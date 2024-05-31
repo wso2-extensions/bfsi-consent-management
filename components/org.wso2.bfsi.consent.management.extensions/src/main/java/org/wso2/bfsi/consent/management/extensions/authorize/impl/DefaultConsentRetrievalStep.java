@@ -29,6 +29,7 @@ import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
 import org.wso2.bfsi.consent.management.extensions.authorize.ConsentRetrievalStep;
 import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentData;
 import org.wso2.bfsi.consent.management.extensions.authorize.util.ConsentAuthorizeUtil;
+import org.wso2.bfsi.consent.management.extensions.common.AuthErrorCode;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
 import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
 import org.wso2.bfsi.consent.management.extensions.internal.ConsentExtensionsDataHolder;
@@ -42,10 +43,10 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
     private static final Log log = LogFactory.getLog(DefaultConsentRetrievalStep.class);
     @Override
     public void execute(ConsentData consentData, JSONObject jsonObject) throws ConsentException {
-//        TODO:
-//        if (!consentData.isRegulatory()) {
-//            return;
-//        }
+
+        if (!consentData.isRegulatory()) {
+            return;
+        }
 
         ConsentCoreService consentCoreService = ConsentExtensionsDataHolder.getInstance().getConsentCoreService();
 
@@ -60,7 +61,8 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
                 //Currently throwing error as 400 response. Developer also have the option of appending a fieldIS_ERROR
                 // to the jsonObject and showing it to the user in the webapp. If so, the IS_ERROR have to bechecked in
                 // any later steps.
-                throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent not in authorizable state");
+                throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.INVALID_REQUEST,
+                        "Consent not in authorizable state", consentData.getState());
             }
 
             AuthorizationResource authorizationResource = consentCoreService.searchAuthorizations(consentId).get(0);
@@ -69,7 +71,8 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
                 //Currently throwing error as 400 response. Developer also have the option of appending a fieldIS_ERROR
                 // to the jsonObject and showing it to the user in the webapp. If so, the IS_ERROR have to bechecked in
                 // any later steps.
-                throw new ConsentException(ResponseStatus.BAD_REQUEST, "Authorization not in authorizable state");
+                throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.INVALID_REQUEST,
+                        "Authorization not in authorizable state", consentData.getState());
             }
 
             consentData.setType(consentResource.getConsentType());
@@ -84,14 +87,22 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
             JSONArray accountsJSON = ConsentAuthorizeUtil.appendDummyAccountID();
             jsonObject.put("accounts", accountsJSON);
 
-        } catch (ConsentException e) {
-            JSONObject errorObj = e.getPayload();
-            JSONArray errorList = (JSONArray) errorObj.get("Errors");
-            jsonObject.put("isError", ((JSONObject) errorList.get(0)).getAsString("Message"));
-            return;
         } catch (ConsentManagementException e) {
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
-                    "Exception occurred while getting consent data");
+            throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.SERVER_ERROR,
+                    "Exception occurred while getting consent data", consentData.getState());
+        }
+    }
+
+    /**
+     * Get the AuthErrorCode for the given ResponseStatus.
+     * @param responseStatus ResponseStatus
+     * @return AuthErrorCode
+     */
+    private AuthErrorCode getAuthErrorCode(ResponseStatus responseStatus) {
+        if (responseStatus == ResponseStatus.BAD_REQUEST) {
+            return AuthErrorCode.INVALID_REQUEST;
+        } else {
+            return AuthErrorCode.SERVER_ERROR;
         }
     }
 }
