@@ -158,7 +158,7 @@ public class ConsentManagementConfigParser {
      */
     private boolean elementHasText(OMElement element) {
 
-       return StringUtils.isNotBlank(element.getText());
+        return StringUtils.isNotBlank(element.getText());
     }
 
     /**
@@ -277,26 +277,6 @@ public class ConsentManagementConfigParser {
         return Optional.ofNullable((String) this.configuration.get(key));
     }
 
-    /**
-     * Returns the element with the provided key as an int.
-     *
-     * @param key local part name
-     * @return Corresponding value for key
-     */
-    private  Optional<Integer> getConfigurationFromKeyAsInt(final String key) {
-        return Optional.of(Integer.parseInt((String) this.configuration.get(key)));
-    }
-
-    /**
-     * Returns the element with the provided key as a list.
-     *
-     * @param key local part name
-     * @return Corresponding value for key
-     */
-    private Optional getConfigurationFromKeyAsList(final String key) {
-        return Optional.of((ArrayList<String>) this.configuration.get(key));
-    }
-
     public String getDataSourceName() {
         Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG);
         return source.map(String::trim).orElse("");
@@ -309,12 +289,55 @@ public class ConsentManagementConfigParser {
      */
     public int getConnectionVerificationTimeout() {
 
-        Optional<Integer> timeout = getConfigurationFromKeyAsInt(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT);
-        return timeout.orElse(1);
+        Optional<String> timeout = getConfigurationFromKeyAsString(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT);
+        return timeout.map(Integer::parseInt).orElse(1);
     }
 
     public Map<String, Map<Integer, String>> getConsentAuthorizeSteps() {
 
         return authorizeSteps;
+    }
+
+    public String getConsentValidationConfig() {
+
+        Optional<String> source =
+                getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION);
+        return source.map(String::trim).orElse("");
+    }
+
+    public int getConsentCacheAccessExpiry() {
+
+        Optional<String> expiryTime = getConfigurationFromKeyAsString(ConsentManagementConstants.CACHE_ACCESS_EXPIRY);
+        return expiryTime.map(Integer::parseInt).orElse(60);
+    }
+
+    public int getConsentCacheModifiedExpiry() {
+
+        Optional<String> expiryTime = getConfigurationFromKeyAsString(ConsentManagementConstants.CACHE_MODIFY_EXPIRY);
+        return expiryTime.map(Integer::parseInt).orElse(60);
+    }
+
+    public String getPreserveConsent() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.PRESERVE_CONSENT);
+        return source.map(String::trim).orElse("false");
+    }
+
+    public String getAuthServletExtension() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.AUTH_SERVLET_EXTENSION);
+        return source.map(String::trim).orElse("");
+    }
+
+    public String getConsentAPIUsername() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_USERNAME);
+        return source.map(String::trim).orElse("admin");
+    }
+
+    public String getConsentAPIPassword() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_PASSWORD);
+        return source.map(String::trim).orElse("admin");
     }
 }
