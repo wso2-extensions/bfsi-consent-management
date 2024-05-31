@@ -268,20 +268,38 @@ public class ConsentManagementConfigParser {
     }
 
     /**
-     * Returns the element with the provided key.
+     * Returns the element with the provided key as a String.
      *
      * @param key local part name
      * @return Corresponding value for key
      */
-    private  <T> Optional<T> getConfigurationFromKey(final String key, final Class<T> className) {
-        return Optional.ofNullable(className.cast(this.configuration.get(key)));
+    private  Optional<String> getConfigurationFromKeyAsString(final String key) {
+        return Optional.ofNullable((String) this.configuration.get(key));
+    }
+
+    /**
+     * Returns the element with the provided key as an int.
+     *
+     * @param key local part name
+     * @return Corresponding value for key
+     */
+    private  Optional<Integer> getConfigurationFromKeyAsInt(final String key) {
+        return Optional.of(Integer.parseInt((String) this.configuration.get(key)));
+    }
+
+    /**
+     * Returns the element with the provided key as a list.
+     *
+     * @param key local part name
+     * @return Corresponding value for key
+     */
+    private Optional getConfigurationFromKeyAsList(final String key) {
+        return Optional.of((ArrayList<String>) this.configuration.get(key));
     }
 
     public String getDataSourceName() {
-
-        return !getConfigurationFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG, String.class).isPresent()
-                ? "" : getConfigurationFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG, String.class).get()
-                .trim();
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG);
+        return source.map(String::trim).orElse("");
     }
 
     /**
@@ -291,8 +309,8 @@ public class ConsentManagementConfigParser {
      */
     public int getConnectionVerificationTimeout() {
 
-        return !getConfigurationFromKey(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT, Integer.class).isPresent()
-                ? 1 : getConfigurationFromKey(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT, Integer.class).get();
+        Optional<Integer> timeout = getConfigurationFromKeyAsInt(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT);
+        return timeout.orElse(1);
     }
 
     public Map<String, Map<Integer, String>> getConsentAuthorizeSteps() {
