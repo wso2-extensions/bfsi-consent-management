@@ -41,17 +41,14 @@ public class CommonUtils {
      */
     public static JSONObject decodeRequestJWT(String jwtToken, String jwtPart) throws java.text.ParseException {
 
-        JSONObject jsonObject =  new JSONObject();
-
         JWSObject plainObject = JWSObject.parse(jwtToken);
 
         if ("head".equals(jwtPart)) {
-            jsonObject = plainObject.getHeader().toJSONObject();
+            return plainObject.getHeader().toJSONObject();
         } else if ("body".equals(jwtPart)) {
-            jsonObject = plainObject.getPayload().toJSONObject();
+            return plainObject.getPayload().toJSONObject();
         }
-
-        return jsonObject;
+        return null;
     }
 
     /**

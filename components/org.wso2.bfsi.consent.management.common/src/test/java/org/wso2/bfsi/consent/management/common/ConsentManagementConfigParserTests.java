@@ -101,4 +101,28 @@ public class ConsentManagementConfigParserTests {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConnectionVerificationTimeout(), 2);
     }
+
+    @Test(priority = 5)
+    public void testGetConsentValidationConfig() {
+
+        Assert.assertNotNull(ConsentManagementConfigParser.getInstance().getConsentValidationConfig());
+    }
+
+    @Test(priority = 5)
+    public void testGetConsentCacheAccessExpiry() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentCacheAccessExpiry(), 60);
+    }
+
+    @Test(priority = 5)
+    public void testGetConsentCacheModifiedExpiry() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentCacheModifiedExpiry(), 60);
+    }
+
+    @Test(priority = 5)
+    public void testGetPreserveConsent() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getPreserveConsent(), "false");
+    }
 }

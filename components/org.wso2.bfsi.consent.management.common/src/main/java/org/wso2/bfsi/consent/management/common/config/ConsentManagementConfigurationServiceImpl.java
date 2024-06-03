@@ -26,6 +26,7 @@ import java.util.Map;
 public class ConsentManagementConfigurationServiceImpl implements ConsentManagementConfigurationService {
 
     private static final ConsentManagementConfigParser configParser = ConsentManagementConfigParser.getInstance();
+
     @Override
     public Map<String, Object> getConfigurations() {
         return configParser.getConfiguration();

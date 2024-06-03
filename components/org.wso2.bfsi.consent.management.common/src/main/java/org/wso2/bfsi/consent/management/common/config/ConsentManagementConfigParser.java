@@ -56,7 +56,6 @@ public class ConsentManagementConfigParser {
     private static final Object lock = new Object();
     private static volatile ConsentManagementConfigParser parser;
     private static final Map<String, Object> configuration = new HashMap<>();
-    private OMElement rootElement;
     private static final Map<String, Map<Integer, String>> authorizeSteps = new HashMap<>();
 
     /**
@@ -97,12 +96,11 @@ public class ConsentManagementConfigParser {
         File configXml = new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
         if (configXml.exists()) {
             try (FileInputStream fileInputStream = new FileInputStream(configXml)) {
-
                 builder = new StAXOMBuilder(fileInputStream);
-                rootElement = builder.getDocumentElement();
+                OMElement rootElement = builder.getDocumentElement();
                 Stack<String> nameStack = new Stack<>();
                 readChildElements(rootElement, nameStack);
-                buildConsentAuthSteps();
+                buildConsentAuthSteps(rootElement);
             } catch (IOException | XMLStreamException | OMException e) {
                 throw new ConsentManagementRuntimeException("Error occurred while building configuration from" +
                         " bfsi-consent-management.xml", e);
@@ -204,7 +202,7 @@ public class ConsentManagementConfigParser {
         return textBuilder.toString();
     }
 
-    private void buildConsentAuthSteps() {
+    private void buildConsentAuthSteps(OMElement rootElement) {
 
         OMElement consentElement = rootElement.getFirstChildWithName(
                 new QName(ConsentManagementConstants.OB_CONFIG_QNAME,

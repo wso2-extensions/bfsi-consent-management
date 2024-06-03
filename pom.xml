@@ -217,11 +217,6 @@
                 <artifactId>spotbugs-annotations</artifactId>
                 <version>${spotbugs.annotations.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.com.nimbusds</groupId>
-                <artifactId>nimbus-jose-jwt</artifactId>
-                <version>${org.wso2.orbit.nimbus.version}</version>
-            </dependency>
 
             <!-- Add Base Product dependencies here -->
             <dependency>
