@@ -43,6 +43,8 @@ public class ConsentManagementConstants {
     public static final String AUTH_SERVLET_EXTENSION = "AuthenticationWebApp.ServletExtension";
     public static final String CONSENT_API_USERNAME = "ConsentManagement.ConsentAPICredentials.Username";
     public static final String CONSENT_API_PASSWORD = "ConsentManagement.ConsentAPICredentials.Password";
+    public static final String MAX_INSTRUCTED_AMOUNT = "ConsentManagement.Payments" +
+            ".MaximumInstructedAmount";
     public static final String REQUEST_VALIDATOR = "Identity.Extensions.RequestObjectValidator";
     public static final String RESPONSE_HANDLER = "Identity.Extensions.ResponseTypeHandler";
 

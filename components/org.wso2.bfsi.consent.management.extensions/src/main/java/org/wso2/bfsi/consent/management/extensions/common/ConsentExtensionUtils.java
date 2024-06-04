@@ -46,15 +46,14 @@ public class ConsentExtensionUtils {
      * @return Consent Type
      */
     public static String getConsentType(String requestPath) throws ConsentManagementException {
-        switch (requestPath) {
-            case ConsentExtensionConstants.ACCOUNT_CONSENT_PATH:
-                return ConsentExtensionConstants.ACCOUNTS;
-            case ConsentExtensionConstants.COF_CONSENT_PATH:
-                return ConsentExtensionConstants.FUNDS_CONFIRMATIONS;
-            case ConsentExtensionConstants.PAYMENT_CONSENT_PATH:
-                return ConsentExtensionConstants.PAYMENTS;
-            default:
-                throw new ConsentManagementException("Invalid consent type");
+        if (requestPath.contains(ConsentExtensionConstants.ACCOUNT_CONSENT_PATH)) {
+            return ConsentExtensionConstants.ACCOUNTS;
+        } else if (requestPath.contains(ConsentExtensionConstants.COF_CONSENT_PATH)) {
+            return ConsentExtensionConstants.FUNDS_CONFIRMATIONS;
+        } else if (requestPath.contains(ConsentExtensionConstants.PAYMENT_CONSENT_PATH)) {
+            return ConsentExtensionConstants.PAYMENTS;
+        } else {
+            throw new ConsentManagementException("Invalid consent type");
         }
     }
 

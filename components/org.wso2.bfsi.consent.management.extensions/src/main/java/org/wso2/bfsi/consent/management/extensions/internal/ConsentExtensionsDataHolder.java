@@ -21,7 +21,6 @@ package org.wso2.bfsi.consent.management.extensions.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
-import org.wso2.bfsi.consent.management.extensions.admin.builder.ConsentAdminBuilder;
 import org.wso2.bfsi.consent.management.extensions.authorize.builder.ConsentStepsBuilder;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionExporter;
 import org.wso2.bfsi.consent.management.extensions.manage.builder.ConsentManageBuilder;
@@ -40,7 +39,6 @@ public class ConsentExtensionsDataHolder {
     private ConsentManagementConfigurationService configurationService;
     private ConsentCoreService consentCoreService;
     private ConsentStepsBuilder consentStepsBuilder;
-    private ConsentAdminBuilder consentAdminBuilder;
     private ConsentManageBuilder consentManageBuilder;
     private ConsentValidateBuilder consentValidateBuilder;
     private KeyStore trustStore = null;
@@ -78,11 +76,6 @@ public class ConsentExtensionsDataHolder {
         this.setConsentStepsBuilder(consentStepsBuilder);
         ConsentExtensionExporter.setConsentStepsBuilder(consentStepsBuilder);
 
-        ConsentAdminBuilder consentAdminBuilder = new ConsentAdminBuilder();
-        consentAdminBuilder.build();
-        this.setConsentAdminBuilder(consentAdminBuilder);
-        ConsentExtensionExporter.setConsentAdminBuilder(consentAdminBuilder);
-
         ConsentManageBuilder consentManageBuilder = new ConsentManageBuilder();
         consentManageBuilder.build();
         this.setConsentManageBuilder(consentManageBuilder);
@@ -108,14 +101,6 @@ public class ConsentExtensionsDataHolder {
 
     public void setConsentStepsBuilder(ConsentStepsBuilder consentStepsBuilder) {
         this.consentStepsBuilder = consentStepsBuilder;
-    }
-
-    public ConsentAdminBuilder getConsentAdminBuilder() {
-        return consentAdminBuilder;
-    }
-
-    public void setConsentAdminBuilder(ConsentAdminBuilder consentAdminBuilder) {
-        this.consentAdminBuilder = consentAdminBuilder;
     }
 
     public ConsentValidateBuilder getConsentValidateBuilder() {

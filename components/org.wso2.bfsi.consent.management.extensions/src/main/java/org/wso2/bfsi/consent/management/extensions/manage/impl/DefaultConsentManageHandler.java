@@ -65,6 +65,10 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
                 if (consent == null) {
                     throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent not found");
                 }
+                String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
+                if (!consentType.equals(consent.getConsentType())) {
+                    throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent Type mismatch");
+                }
                 // Check whether the client id is matching
                 if (!consent.getClientID().equals(consentManageData.getClientId())) {
                     //Throwing same error as null scenario since client will not be able to identify if consent
@@ -151,6 +155,15 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
                 try {
                     ConsentResource consentResource = ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
                             .getConsent(consentId, false);
+
+                    if (consentResource == null) {
+                        throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent not found");
+                    }
+
+                    String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
+                    if (!consentType.equals(consentResource.getConsentType())) {
+                        throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent Type mismatch");
+                    }
 
                     if (!consentResource.getClientID().equals(consentManageData.getClientId())) {
                         //Throwing this error in a generic manner since client will not be able to identify if consent

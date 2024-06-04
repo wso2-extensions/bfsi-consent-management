@@ -85,6 +85,82 @@ public class Utils {
     }
 
     /**
+     * Method to populate accounts data to be sent to consent page.
+     *
+     * @param request  HttpServletRequest
+     * @param dataSet  Request payload JSONObject
+     * @return  Map of Accounts data
+     */
+    public static Map<String, Object> populateAccountsData(HttpServletRequest request, JSONObject dataSet) {
+
+        Map<String, Object> returnMaps = new HashMap<>();
+
+        //Sets "data_requested" that contains the human-readable scope-requested information
+        JSONArray dataRequestedJsonArray = (JSONArray) dataSet.get(ConsentExtensionConstants.CONSENT_DATA);
+        Map<String, List<String>> dataRequested = new LinkedHashMap<>();
+
+        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.size(); requestedDataIndex++) {
+            JSONObject dataObj = (JSONObject) dataRequestedJsonArray.get(requestedDataIndex);
+            String title = dataObj.getAsString(ConsentExtensionConstants.TITLE);
+            JSONArray dataArray = (JSONArray) dataObj.get(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
+
+            ArrayList<String> listData = new ArrayList<>();
+            for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
+                listData.add(dataArray.get(dataIndex).toString());
+            }
+            dataRequested.put(title, listData);
+        }
+        returnMaps.put(ConsentExtensionConstants.DATA_REQUESTED, dataRequested);
+
+        // add accounts list
+        request.setAttribute(ConsentExtensionConstants.ACCOUNT_DATA, addAccList(dataSet));
+        request.setAttribute(ConsentExtensionConstants.CONSENT_TYPE, ConsentExtensionConstants.ACCOUNTS);
+
+        return returnMaps;
+
+    }
+
+    /**
+     * Method to populate Confirmation of Funds data to be sent to consent page.
+     *
+     * @param httpServletRequest  HttpServletRequest
+     * @param dataSet  Request payload JSONObject
+     * @return  Map of Confirmation of Funds data
+     */
+    public static Map<String, Object> populateCoFData(HttpServletRequest httpServletRequest, JSONObject dataSet) {
+
+        Map<String, Object> returnMaps = new HashMap<>();
+
+        //Sets "data_requested" that contains the human-readable scope-requested information
+        JSONArray dataRequestedJsonArray = (JSONArray) dataSet.get(ConsentExtensionConstants.CONSENT_DATA);
+        Map<String, List<String>> dataRequested = new LinkedHashMap<>();
+
+        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.size(); requestedDataIndex++) {
+            JSONObject dataObj = (JSONObject) dataRequestedJsonArray.get(requestedDataIndex);
+            String title = dataObj.getAsString(ConsentExtensionConstants.TITLE);
+            JSONArray dataArray = (JSONArray) dataObj.get(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
+
+            ArrayList<String> listData = new ArrayList<>();
+            for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
+                listData.add(dataArray.get(dataIndex).toString());
+            }
+            dataRequested.put(title, listData);
+
+        }
+        returnMaps.put(ConsentExtensionConstants.DATA_REQUESTED, dataRequested);
+
+        //Assigning value of the "Debtor Account" key in the map to the variable "selectedAccount".
+        if (dataRequested.containsKey("Debtor Account")) {
+            httpServletRequest.setAttribute(ConsentExtensionConstants.DEBTOR_ACCOUNT_ID,
+                    getDebtorAccFromConsentData(dataRequestedJsonArray));
+        }
+
+        httpServletRequest.setAttribute(ConsentExtensionConstants.CONSENT_TYPE,
+                ConsentExtensionConstants.FUNDS_CONFIRMATIONS);
+        return returnMaps;
+    }
+
+    /**
      * Method to populate payments data to be sent to consent page.
      *
      * @param request  HttpServletRequest

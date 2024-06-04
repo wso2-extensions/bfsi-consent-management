@@ -42,7 +42,18 @@ public class OBDefaultAuthServletImpl implements OBAuthServletInterface {
     public Map<String, Object> updateRequestAttribute(HttpServletRequest request, JSONObject dataSet,
                                                       ResourceBundle resourceBundle) {
 
-        return Utils.populatePaymentsData(request, dataSet);
+        String consentType = dataSet.getAsString("type");
+        switch (consentType) {
+
+            case ConsentExtensionConstants.ACCOUNTS:
+                return Utils.populateAccountsData(request, dataSet);
+            case ConsentExtensionConstants.PAYMENTS:
+                return Utils.populatePaymentsData(request, dataSet);
+            case ConsentExtensionConstants.FUNDS_CONFIRMATIONS:
+                return Utils.populateCoFData(request, dataSet);
+            default:
+                return new HashMap<>();
+        }
     }
 
     @Override
