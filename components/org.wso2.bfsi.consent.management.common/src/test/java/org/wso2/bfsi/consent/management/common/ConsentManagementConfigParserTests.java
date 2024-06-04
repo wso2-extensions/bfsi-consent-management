@@ -90,37 +90,37 @@ public class ConsentManagementConfigParserTests {
         Assert.assertNotNull(configService.getConsentAuthorizeSteps());
     }
 
-    @Test(priority = 5)
+    @Test(priority = 6)
     public void testGetDataSourceName() {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getDataSourceName(), "jdbc/WSO2OB_DB");
     }
 
-    @Test(priority = 5)
+    @Test(priority = 7)
     public void testGetConnectionVerificationTimeout() {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConnectionVerificationTimeout(), 2);
     }
 
-    @Test(priority = 5)
+    @Test(priority = 8)
     public void testGetConsentValidationConfig() {
 
         Assert.assertNotNull(ConsentManagementConfigParser.getInstance().getConsentValidationConfig());
     }
 
-    @Test(priority = 5)
+    @Test(priority = 9)
     public void testGetConsentCacheAccessExpiry() {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentCacheAccessExpiry(), 60);
     }
 
-    @Test(priority = 5)
+    @Test(priority = 10)
     public void testGetConsentCacheModifiedExpiry() {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentCacheModifiedExpiry(), 60);
     }
 
-    @Test(priority = 5)
+    @Test(priority = 11)
     public void testGetPreserveConsent() {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getPreserveConsent(), "false");
