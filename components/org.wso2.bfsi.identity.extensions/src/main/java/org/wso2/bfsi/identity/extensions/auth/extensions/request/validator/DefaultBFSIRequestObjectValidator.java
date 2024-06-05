@@ -22,16 +22,16 @@ import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.OBRequestObject;
+import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.BFSIRequestObject;
 import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.ValidationResponse;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 
 import java.util.Map;
 
 /**
- * The extension class for enforcing OB Request Object Validations. For Tool kits to extend.
+ * The extension class for enforcing BFSI Request Object Validations. For Tool kits to extend.
  */
-public class DefaultOBRequestObjectValidator extends OBRequestObjectValidator {
+public class DefaultBFSIRequestObjectValidator extends BFSIRequestObjectValidator {
 
     private static final String CLAIMS = "claims";
     private static final String[] CLAIM_FIELDS = new String[]{"id_token", "userinfo"};
@@ -40,31 +40,32 @@ public class DefaultOBRequestObjectValidator extends OBRequestObjectValidator {
     private static final String CLIENT_ID = "client_id";
     private static final String SCOPE = "scope";
 
-    private static final Log log = LogFactory.getLog(DefaultOBRequestObjectValidator.class);
+    private static final Log log = LogFactory.getLog(DefaultBFSIRequestObjectValidator.class);
 
-    public DefaultOBRequestObjectValidator() {
+    public DefaultBFSIRequestObjectValidator() {
     }
 
     /**
      * Extension point for tool kits. Perform validation and return the error message if any, else null.
      *
-     * @param obRequestObject request object
+     * @param bfsiRequestObject request object
      * @param dataMap         provides scope related data needed for validation from service provider meta data
      * @return the response object with error message.
      */
     @Override
-    public ValidationResponse validateOBConstraints(OBRequestObject obRequestObject, Map<String, Object> dataMap) {
+    public ValidationResponse validateBFSIConstraints(BFSIRequestObject bfsiRequestObject,
+                                                      Map<String, Object> dataMap) {
 
-        ValidationResponse superValidationResponse = super.validateOBConstraints(obRequestObject, dataMap);
+        ValidationResponse superValidationResponse = super.validateBFSIConstraints(bfsiRequestObject, dataMap);
 
         if (superValidationResponse.isValid()) {
             try {
-                if (isClientIdAndScopePresent(obRequestObject)) {
+                if (isClientIdAndScopePresent(bfsiRequestObject)) {
                     // consent id and client id is matching
                     return new ValidationResponse(true);
                 }
-                return new ValidationResponse(false,
-                        "Consent Id in the request does not match with the client Id");
+                return new ValidationResponse(false, "Client Id and scope are mandatory to" +
+                        " include in the request object.");
             } catch (RequestObjectException e) {
                 return new ValidationResponse(false, e.getMessage());
             }
@@ -76,12 +77,12 @@ public class DefaultOBRequestObjectValidator extends OBRequestObjectValidator {
     /**
      * Extract clientId and scope from ob request object and check whether it's present.
      *
-     * @param obRequestObject
+     * @param bfsiRequestObject
      * @return result received from validateConsentIdWithClientId method
      * @throws RequestObjectException if error occurred while validating
      */
-    private boolean isClientIdAndScopePresent(OBRequestObject obRequestObject) throws RequestObjectException {
-        JSONObject jsonObject = obRequestObject.getSignedJWT().getPayload().toJSONObject();
+    private boolean isClientIdAndScopePresent(BFSIRequestObject bfsiRequestObject) throws RequestObjectException {
+        JSONObject jsonObject = bfsiRequestObject.getSignedJWT().getPayload().toJSONObject();
         final String clientId = jsonObject.getAsString(CLIENT_ID);
         String scope = jsonObject.getAsString(SCOPE);
         if (StringUtils.isBlank(clientId) || StringUtils.isBlank(scope)) {

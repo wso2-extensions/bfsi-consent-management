@@ -33,9 +33,9 @@ import javax.servlet.http.HttpServletRequest;
  * Validate whether the correct response type is sent for regulatory applications. By default, code response type
  * is not allowed for regulatory apps.
  */
-public class OBCodeResponseTypeValidator extends AbstractValidator<HttpServletRequest> {
+public class BFSICodeResponseTypeValidator extends AbstractValidator<HttpServletRequest> {
 
-    private static Log log = LogFactory.getLog(OBCodeResponseTypeValidator.class);
+    private static Log log = LogFactory.getLog(BFSICodeResponseTypeValidator.class);
     private static final String CODE = "code";
 
     @Override

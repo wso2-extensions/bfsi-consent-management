@@ -33,9 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 /**
    Validator for hybrid flow code token requests.
  */
-public class OBHybridResponseTypeValidator extends TokenValidator {
+public class BFSIHybridResponseTypeValidator extends TokenValidator {
 
-    private static final Log log = LogFactory.getLog(OBHybridResponseTypeValidator.class);
+    private static final Log log = LogFactory.getLog(BFSIHybridResponseTypeValidator.class);
 
     private static boolean isContainOIDCScope(String scope) {
 

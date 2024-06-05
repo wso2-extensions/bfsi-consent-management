@@ -45,6 +45,7 @@ public class ConsentManagementConstants {
     public static final String CONSENT_API_PASSWORD = "ConsentManagement.ConsentAPICredentials.Password";
     public static final String REQUEST_VALIDATOR = "Identity.Extensions.RequestObjectValidator";
     public static final String RESPONSE_HANDLER = "Identity.Extensions.ResponseTypeHandler";
+    public static final String CLAIM_PROVIDER = "Identity.Extensions.ClaimProvider";
 
     //Common Constants
     public static final String CONSENT = "consent";

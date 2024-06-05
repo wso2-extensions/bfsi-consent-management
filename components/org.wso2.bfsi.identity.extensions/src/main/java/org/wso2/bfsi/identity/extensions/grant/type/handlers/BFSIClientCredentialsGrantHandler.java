@@ -24,12 +24,12 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.grant.AuthorizationCodeGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.grant.ClientCredentialsGrantHandler;
 
 /**
- * OB specific authorization code grant handler.
+ * BFSI specific client credentials code grant handler.
  */
-public class OBAuthorizationCodeGrantHandler extends AuthorizationCodeGrantHandler {
+public class BFSIClientCredentialsGrantHandler extends ClientCredentialsGrantHandler {
 
     @Override
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
@@ -39,7 +39,6 @@ public class OBAuthorizationCodeGrantHandler extends AuthorizationCodeGrantHandl
                 OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO = super.issue(tokReqMsgCtx);
                 executeInitialStep(oAuth2AccessTokenRespDTO, tokReqMsgCtx);
                 tokReqMsgCtx.setScope(IdentityCommonUtils.removeInternalScopes(tokReqMsgCtx.getScope()));
-                publishUserAccessTokenData(oAuth2AccessTokenRespDTO);
                 return oAuth2AccessTokenRespDTO;
             }
         } catch (RequestObjectException e) {
@@ -48,16 +47,6 @@ public class OBAuthorizationCodeGrantHandler extends AuthorizationCodeGrantHandl
         return super.issue(tokReqMsgCtx);
     }
 
-    /**
-     * Extend this method to publish access token related data.
-     *
-     * @param oAuth2AccessTokenRespDTO
-     */
-
-    public void publishUserAccessTokenData(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO)
-            throws IdentityOAuth2Exception {
-
-    }
 
     /**
      * Extend this method to perform any actions which requires internal scopes.
@@ -68,16 +57,5 @@ public class OBAuthorizationCodeGrantHandler extends AuthorizationCodeGrantHandl
     public void executeInitialStep(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO,
                                    OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
 
-    }
-
-    /**
-     * Extend this method to perform any actions related when issuing refresh token.
-     *
-     * @return
-     */
-    @Override
-    public boolean issueRefreshToken() throws IdentityOAuth2Exception {
-
-        return super.issueRefreshToken();
     }
 }

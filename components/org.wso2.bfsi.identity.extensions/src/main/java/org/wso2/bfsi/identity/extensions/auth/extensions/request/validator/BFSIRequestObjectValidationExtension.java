@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.consent.management.common.util.Generated;
-import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.OBRequestObject;
+import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.BFSIRequestObject;
 import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.ValidationResponse;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
@@ -42,11 +42,11 @@ import java.util.Map;
  * The extension of RequestObjectValidatorImpl to enforce Open Banking specific validations of the
  * request object.
  */
-public class OBRequestObjectValidationExtension extends RequestObjectValidatorImpl {
+public class BFSIRequestObjectValidationExtension extends RequestObjectValidatorImpl {
 
-    private static final Log log = LogFactory.getLog(OBRequestObjectValidationExtension.class);
+    private static final Log log = LogFactory.getLog(BFSIRequestObjectValidationExtension.class);
     // Get extension impl
-    static OBRequestObjectValidator obDefaultRequestObjectValidator =
+    static BFSIRequestObjectValidator obDefaultRequestObjectValidator =
             IdentityExtensionsDataHolder.getInstance().getObRequestObjectValidator();
 
     /**
@@ -64,16 +64,16 @@ public class OBRequestObjectValidationExtension extends RequestObjectValidatorIm
         try {
             if (isRegulatory(oAuth2Parameters)) {
 
-                OBRequestObject obRequestObject = new OBRequestObject(initialRequestObject);
+                BFSIRequestObject bfsiRequestObject = new BFSIRequestObject(initialRequestObject);
 
                 Map<String, Object> dataMap = new HashMap<>();
                 final String allowedScopes = getAllowedScopes(oAuth2Parameters);
                 if (StringUtils.isNotBlank(allowedScopes)) {
                     dataMap.put(IdentityCommonConstants.SCOPE, Arrays.asList(allowedScopes.split(" ")));
                 }
-                // perform OB customized validations
+                // perform BFSI customized validations
                 ValidationResponse validationResponse = obDefaultRequestObjectValidator
-                        .validateOBConstraints(obRequestObject, dataMap);
+                        .validateBFSIConstraints(bfsiRequestObject, dataMap);
 
                 if (!validationResponse.isValid()) {
                     // Exception will be caught and converted to auth error by IS at endpoint.

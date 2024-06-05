@@ -23,7 +23,7 @@ import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 /**
  *  Extension interface for setting values in response type handling. Toolkits have to implement this.
  */
-public interface OBResponseTypeHandler {
+public interface BFSIResponseTypeHandler {
 
     /**
      * return the new refresh validity period.

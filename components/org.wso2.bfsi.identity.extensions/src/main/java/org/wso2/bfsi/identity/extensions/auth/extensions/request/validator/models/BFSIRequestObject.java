@@ -47,13 +47,13 @@ import java.util.Map;
 @ValidScopeFormat(scope = "claimsSet.claims.scope")
 @ValidAudience(audience = "claimsSet.claims.aud", clientId = "claimsSet.claims.client_id")
 @ValidSigningAlgorithm(algorithm = "signedJWT.header.algorithm.name", clientId = "claimsSet.claims.client_id")
-public class OBRequestObject<T extends OBRequestObject> extends RequestObject {
+public class BFSIRequestObject<T extends BFSIRequestObject> extends RequestObject {
 
     // decorator object
     private RequestObject requestObject;
     private static final long serialVersionUID = -568639546792395972L;
 
-    public OBRequestObject(RequestObject requestObject) throws RequestObjectException {
+    public BFSIRequestObject(RequestObject requestObject) throws RequestObjectException {
         if (requestObject == null) {
             throw new RequestObjectException(RequestObjectException.ERROR_CODE_INVALID_REQUEST,
                     "Null request object passed");
@@ -69,7 +69,7 @@ public class OBRequestObject<T extends OBRequestObject> extends RequestObject {
      *
      * @param childObject Any class extending this class.
      */
-    public OBRequestObject(T childObject) {
+    public BFSIRequestObject(T childObject) {
         this.requestObject = childObject;
     }
 

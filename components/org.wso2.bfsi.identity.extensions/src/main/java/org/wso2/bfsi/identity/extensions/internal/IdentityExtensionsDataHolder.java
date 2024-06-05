@@ -20,11 +20,13 @@ package org.wso2.bfsi.identity.extensions.internal;
 
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
 import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
-import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.OBRequestObjectValidator;
-import org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.OBResponseTypeHandler;
+import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.BFSIRequestObjectValidator;
+import org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.BFSIResponseTypeHandler;
+import org.wso2.bfsi.identity.extensions.claims.BFSIClaimProvider;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.identity.oauth2.OAuth2Service;
+import org.wso2.carbon.identity.openidconnect.ClaimProvider;
 import org.wso2.carbon.identity.openidconnect.RequestObjectService;
 import org.wso2.carbon.user.core.service.RealmService;
 
@@ -39,11 +41,12 @@ public class IdentityExtensionsDataHolder {
     private static ApplicationManagementService applicationManagementService;
     private static ConsentManagementConfigurationService configurationService;
     Map<String, Object> configurationMap;
-    private OBRequestObjectValidator obRequestObjectValidator;
-    private OBResponseTypeHandler obResponseTypeHandler;
+    private BFSIRequestObjectValidator bfsiRequestObjectValidator;
+    private BFSIResponseTypeHandler bfsiResponseTypeHandler;
     private static RealmService realmService;
     private static OAuth2Service oAuth2Service;
     private RequestObjectService requestObjectService;
+    private ClaimProvider claimProvider;
 
     private IdentityExtensionsDataHolder() {
 
@@ -90,13 +93,13 @@ public class IdentityExtensionsDataHolder {
 
         IdentityExtensionsDataHolder.configurationService = configurationService;
         this.configurationMap = configurationService.getConfigurations();
-        obRequestObjectValidator = (OBRequestObjectValidator) IdentityCommonUtils.getClassInstanceFromFQN(
+        bfsiRequestObjectValidator = (BFSIRequestObjectValidator) IdentityCommonUtils.getClassInstanceFromFQN(
                 this.configurationMap.get(ConsentManagementConstants.REQUEST_VALIDATOR).toString());
-        obResponseTypeHandler = (OBResponseTypeHandler) IdentityCommonUtils.getClassInstanceFromFQN(
+        bfsiResponseTypeHandler = (BFSIResponseTypeHandler) IdentityCommonUtils.getClassInstanceFromFQN(
                 this.configurationMap.get(ConsentManagementConstants.RESPONSE_HANDLER).toString());
-//        this.setClaimProvider((ClaimProvider) OpenBankingUtils.getClassInstanceFromFQN(openBankingConfigurationService
-//                .getConfigurations().get(IdentityCommonConstants.CLAIM_PROVIDER).toString()));
-//        OBClaimProvider.setClaimProvider(getClaimProvider());
+        this.setClaimProvider((ClaimProvider) IdentityCommonUtils.getClassInstanceFromFQN(
+                this.configurationMap.get(ConsentManagementConstants.CLAIM_PROVIDER).toString()));
+        BFSIClaimProvider.setClaimProvider(getClaimProvider());
     }
 
     public void setConfigurationMap(Map<String, Object> confMap) {
@@ -109,12 +112,22 @@ public class IdentityExtensionsDataHolder {
         return configurationMap;
     }
 
-    public OBRequestObjectValidator getObRequestObjectValidator() {
-        return obRequestObjectValidator;
+    public BFSIRequestObjectValidator getObRequestObjectValidator() {
+        return bfsiRequestObjectValidator;
     }
 
-    public OBResponseTypeHandler getObResponseTypeHandler() {
-        return obResponseTypeHandler;
+    public BFSIResponseTypeHandler getObResponseTypeHandler() {
+        return bfsiResponseTypeHandler;
+    }
+
+    public ClaimProvider getClaimProvider() {
+
+        return claimProvider;
+    }
+
+    public void setClaimProvider(ClaimProvider claimProvider) {
+
+        this.claimProvider = claimProvider;
     }
 
     public RealmService getRealmService() {

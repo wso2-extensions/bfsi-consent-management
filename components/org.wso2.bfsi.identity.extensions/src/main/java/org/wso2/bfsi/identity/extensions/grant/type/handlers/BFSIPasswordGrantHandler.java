@@ -24,12 +24,12 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.grant.ClientCredentialsGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.grant.PasswordGrantHandler;
 
 /**
- * OB specific client credentials code grant handler.
+ * BFSI specific password grant handler.
  */
-public class OBClientCredentialsGrantHandler extends ClientCredentialsGrantHandler {
+public class BFSIPasswordGrantHandler extends PasswordGrantHandler {
 
     @Override
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
@@ -39,24 +39,12 @@ public class OBClientCredentialsGrantHandler extends ClientCredentialsGrantHandl
                 OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO = super.issue(tokReqMsgCtx);
                 executeInitialStep(oAuth2AccessTokenRespDTO, tokReqMsgCtx);
                 tokReqMsgCtx.setScope(IdentityCommonUtils.removeInternalScopes(tokReqMsgCtx.getScope()));
-                publishUserAccessTokenData(oAuth2AccessTokenRespDTO);
                 return oAuth2AccessTokenRespDTO;
             }
         } catch (RequestObjectException e) {
             throw new IdentityOAuth2Exception(e.getMessage());
         }
         return super.issue(tokReqMsgCtx);
-    }
-
-    /**
-     * Extend this method to publish access token related data.
-     *
-     * @param oAuth2AccessTokenRespDTO
-     */
-
-    public void publishUserAccessTokenData(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO)
-            throws IdentityOAuth2Exception {
-
     }
 
     /**

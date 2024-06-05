@@ -19,16 +19,16 @@
 package org.wso2.bfsi.identity.extensions.auth.extensions.request.validator;
 
 import org.apache.commons.lang3.StringUtils;
-import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.OBRequestObject;
+import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.BFSIRequestObject;
 import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.ValidationResponse;
-import org.wso2.bfsi.identity.extensions.validator.OpenBankingValidator;
+import org.wso2.bfsi.identity.extensions.validator.BFSIValidator;
 
 import java.util.Map;
 
 /**
- * The extension class for enforcing OB Request Object Validations. For Tool kits to extend.
+ * The extension class for enforcing BFSI Request Object Validations. For Tool kits to extend.
  */
-public class OBRequestObjectValidator {
+public class BFSIRequestObjectValidator {
 
     /**
      * Extension point for tool kits. Perform validation and return the error message if any, else null.
@@ -37,9 +37,9 @@ public class OBRequestObjectValidator {
      * @param dataMap         provides scope related data needed for validation from service provider meta data
      * @return the response object with error message.
      */
-    public ValidationResponse validateOBConstraints(OBRequestObject obRequestObject, Map<String, Object> dataMap) {
+    public ValidationResponse validateBFSIConstraints(BFSIRequestObject obRequestObject, Map<String, Object> dataMap) {
 
-        String violation = OpenBankingValidator.getInstance().getFirstViolation(obRequestObject);
+        String violation = BFSIValidator.getInstance().getFirstViolation(obRequestObject);
 
         if (StringUtils.isEmpty(violation)) {
             return new ValidationResponse(true);

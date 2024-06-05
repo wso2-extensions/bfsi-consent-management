@@ -217,7 +217,11 @@
                             org.apache.commons.logging;version="${commons.logging.version}",
                             org.apache.axiom.*;version="${axiom.osgi.version.range}",
                             net.minidev.json.*; version="${json-smart.version}",
-                            *
+                            com.nimbusds.jose;version="${org.wso2.orbit.nimbus.version}",
+                            org.wso2.bfsi.consent.management.common.*; version="${json-smart.version}",
+                            org.wso2.carbon.base.*;version="${carbon.kernel.version.range}",
+                            org.wso2.carbon.identity.oauth.*;version="${identity.inbound.auth.oauth.version.range}",
+                            org.wso2. carbon.identity.oauth2.*;version="${identity.inbound.auth.oauth.version.range}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.common.internal,

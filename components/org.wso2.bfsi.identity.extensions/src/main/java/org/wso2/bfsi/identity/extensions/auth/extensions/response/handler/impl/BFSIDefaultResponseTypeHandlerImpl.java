@@ -22,7 +22,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.OBResponseTypeHandler;
+import org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.BFSIResponseTypeHandler;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
@@ -36,10 +36,10 @@ import java.util.List;
 /**
  * Default extension implementation. Used to do the accelerator testing. Mimics a UK flow.
  */
-public class OBDefaultResponseTypeHandlerImpl implements OBResponseTypeHandler {
+public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandler {
 
     private static final String OPENBANKING_INTENT_ID = "openbanking_intent_id";
-    private static final Log log = LogFactory.getLog(OBDefaultResponseTypeHandlerImpl.class);
+    private static final Log log = LogFactory.getLog(BFSIDefaultResponseTypeHandlerImpl.class);
 
     /**
      * return the new refresh validity period.
@@ -76,7 +76,7 @@ public class OBDefaultResponseTypeHandlerImpl implements OBResponseTypeHandler {
                         .get(IdentityCommonConstants.CONSENT_ID_CLAIM_NAME).toString();
                 String consentScope = consentIdClaim + consentID;
                 if (!Arrays.asList(scopes).contains(consentScope)) {
-                    String[] updatedScopes = (String[]) ArrayUtils.addAll(scopes, new String[]{consentScope});
+                    String[] updatedScopes = ArrayUtils.addAll(scopes, consentScope);
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Updated scopes: %s", Arrays.toString(updatedScopes)
                                 .replaceAll("[\r\n]", "")));

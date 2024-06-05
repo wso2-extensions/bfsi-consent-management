@@ -46,14 +46,13 @@ public class IdentityCommonConstants {
     public static final String X509 = "X.509";
     public static final String TOKEN_FILTER = "Identity.Filters.TokenFilter";
     public static final String TOKEN_VALIDATORS = "Identity.TokenFilterValidators.Validator";
-    public static final String CLAIM_PROVIDER = "Identity.Extensions.ClaimProvider";
     public static final String INTROSPECTION_DATA_PROVIDER = "Identity.Extensions.IntrospectionDataProvider";
     public static final String SIGNING_CERT_KID = "Identity.SigningCertificateKid";
     public static final String OAUTH_ERROR = "error";
     public static final String OAUTH_ERROR_DESCRIPTION = "error_description";
     public static final String JAVAX_SERVLET_REQUEST_CERTIFICATE = "javax.servlet.request.X509Certificate";
-    public static final String OB_CONSENT_ID_PREFIX = "OB_CONSENT_ID_";
-    public static final String OB_PREFIX = "OB_";
+    public static final String BFSI_CONSENT_ID_PREFIX = "BFSI_CONSENT_ID_";
+    public static final String BFSI_PREFIX = "BFSI_";
     public static final String TIME_PREFIX = "TIME_";
     public static final String TLS_CERT = "tls_cert";
     public static final String CERT_PREFIX = "x5t#";
@@ -86,7 +85,7 @@ public class IdentityCommonConstants {
 
     public static final String S_HASH = "s_hash";
     public static final String CODE = "code";
-    public static final String DCR_INTERNAL_SCOPE = "OB_DCR";
+    public static final String DCR_INTERNAL_SCOPE = "BFSI_DCR";
     public static final String OPENID_SCOPE = "openid";
     public static final String CLIENT_CREDENTIALS = "client_credentials";
     public static final String CARBON_SUPER = "carbon.super";

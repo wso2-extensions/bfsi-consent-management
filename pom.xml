@@ -233,6 +233,11 @@
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons.bean.utils.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.oltu.oauth2</groupId>
+                <artifactId>oltu</artifactId>
+                <version>${oltu.version}</version>
+            </dependency>
 
             <!-- Add Base Product dependencies here -->
             <dependency>
@@ -337,6 +342,7 @@
         <commons.bean.utils.version>1.9.3</commons.bean.utils.version>
         <json-smart.version>2.4.10</json-smart.version>
         <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
+        <oltu.version>1.0.0.wso2v3</oltu.version>
         <!-- Base product dependency versions -->
         <carbon.identity.framework.version>7.0.75</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.25.234, 8.0.0)</carbon.identity.framework.version.range>
@@ -359,5 +365,6 @@
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <commons-collections.version.range>[4.4.0, 5.0.0)</commons-collections.version.range>
         <javax.validation.api.version.range>[3.0.0, 4.0.0)</javax.validation.api.version.range>
+        <carbon.kernel.version.range>[4.10.0, 5.0.0)</carbon.kernel.version.range>
     </properties>
 </project>

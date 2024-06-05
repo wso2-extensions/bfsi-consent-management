@@ -24,12 +24,12 @@ import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AccessTokenRespDTO;
 import org.wso2.carbon.identity.oauth2.token.OAuthTokenReqMessageContext;
-import org.wso2.carbon.identity.oauth2.token.handlers.grant.PasswordGrantHandler;
+import org.wso2.carbon.identity.oauth2.token.handlers.grant.AuthorizationCodeGrantHandler;
 
 /**
- * OB specific password grant handler.
+ * BFSI specific authorization code grant handler.
  */
-public class OBPasswordGrantHandler extends PasswordGrantHandler {
+public class BFSIAuthorizationCodeGrantHandler extends AuthorizationCodeGrantHandler {
 
     @Override
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
@@ -39,24 +39,12 @@ public class OBPasswordGrantHandler extends PasswordGrantHandler {
                 OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO = super.issue(tokReqMsgCtx);
                 executeInitialStep(oAuth2AccessTokenRespDTO, tokReqMsgCtx);
                 tokReqMsgCtx.setScope(IdentityCommonUtils.removeInternalScopes(tokReqMsgCtx.getScope()));
-                publishUserAccessTokenData(oAuth2AccessTokenRespDTO);
                 return oAuth2AccessTokenRespDTO;
             }
         } catch (RequestObjectException e) {
             throw new IdentityOAuth2Exception(e.getMessage());
         }
         return super.issue(tokReqMsgCtx);
-    }
-
-    /**
-     * Extend this method to publish access token related data.
-     *
-     * @param oAuth2AccessTokenRespDTO
-     */
-
-    public void publishUserAccessTokenData(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO)
-            throws IdentityOAuth2Exception {
-
     }
 
     /**
@@ -68,5 +56,16 @@ public class OBPasswordGrantHandler extends PasswordGrantHandler {
     public void executeInitialStep(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO,
                                    OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
 
+    }
+
+    /**
+     * Extend this method to perform any actions related when issuing refresh token.
+     *
+     * @return
+     */
+    @Override
+    public boolean issueRefreshToken() throws IdentityOAuth2Exception {
+
+        return super.issueRefreshToken();
     }
 }

@@ -26,7 +26,7 @@ import javax.validation.Validator;
 /**
  * Common Validator to validate objects based on annotation.
  */
-public class OpenBankingValidator {
+public class BFSIValidator {
 
     public static final Validator FAIL_FAST_VALIDATOR = Validation
             .byDefaultProvider().providerResolver(new OsgiServiceDiscoverer())
@@ -34,17 +34,17 @@ public class OpenBankingValidator {
             .buildValidatorFactory()
             .getValidator();
 
-    private static volatile OpenBankingValidator instance;
+    private static volatile BFSIValidator instance;
 
-    private OpenBankingValidator() {
+    private BFSIValidator() {
     }
 
-    public static OpenBankingValidator getInstance() {
+    public static BFSIValidator getInstance() {
 
         if (instance == null) {
-            synchronized (OpenBankingValidator.class) {
+            synchronized (BFSIValidator.class) {
                 if (instance == null) {
-                    instance = new OpenBankingValidator();
+                    instance = new BFSIValidator();
                 }
             }
         }

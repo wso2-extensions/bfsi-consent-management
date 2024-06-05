@@ -24,15 +24,15 @@ import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
-import org.wso2.carbon.identity.oauth2.authz.handlers.CodeResponseTypeHandler;
+import org.wso2.carbon.identity.oauth2.authz.handlers.HybridResponseTypeHandler;
 import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
 
 /**
- * Extension to append scope with OB_ prefix at the end of auth flow, before offering auth code.
+ * Extension to append scope with BFSI_ prefix at the end of auth flow, before offering auth code.
  */
-public class OBCodeResponseTypeHandlerExtension extends CodeResponseTypeHandler {
+public class BFSIHybridResponseTypeHandlerExtension extends HybridResponseTypeHandler {
 
-    static OBResponseTypeHandler obResponseTypeHandler =
+    static BFSIResponseTypeHandler bfsiResponseTypeHandler =
             IdentityExtensionsDataHolder.getInstance().getObResponseTypeHandler();
 
     /**
@@ -50,18 +50,17 @@ public class OBCodeResponseTypeHandlerExtension extends CodeResponseTypeHandler 
                 return issueCode(oauthAuthzMsgCtx);
             }
         } catch (RequestObjectException e) {
-            throw new IdentityOAuth2Exception("Error while reading regulatory property");
+            throw  new IdentityOAuth2Exception("Error while reading regulatory property");
         }
 
-        // make oauthAuthzMsgCtx immutable
         oauthAuthzMsgCtx.setRefreshTokenvalidityPeriod(
-                obResponseTypeHandler.updateRefreshTokenValidityPeriod(oauthAuthzMsgCtx));
-        if (obResponseTypeHandler.updateApprovedScopes(oauthAuthzMsgCtx) != null) {
-            oauthAuthzMsgCtx.setApprovedScope(obResponseTypeHandler.updateApprovedScopes(oauthAuthzMsgCtx));
+                bfsiResponseTypeHandler.updateRefreshTokenValidityPeriod(oauthAuthzMsgCtx));
+        String[] approvedScopes = bfsiResponseTypeHandler.updateApprovedScopes(oauthAuthzMsgCtx);
+        if (approvedScopes != null) {
+            oauthAuthzMsgCtx.setApprovedScope(approvedScopes);
         } else {
             throw new IdentityOAuth2Exception("Error while updating scopes");
         }
-
         return issueCode(oauthAuthzMsgCtx);
     }
 
@@ -72,7 +71,7 @@ public class OBCodeResponseTypeHandlerExtension extends CodeResponseTypeHandler 
      * @return
      * @throws IdentityOAuth2Exception
      */
-    @Generated(message = "Cannot test super calls")
+    @Generated(message = "cant unit test super calls")
     OAuth2AuthorizeRespDTO issueCode(
             OAuthAuthzReqMessageContext oAuthAuthzReqMessageContext) throws IdentityOAuth2Exception {
 

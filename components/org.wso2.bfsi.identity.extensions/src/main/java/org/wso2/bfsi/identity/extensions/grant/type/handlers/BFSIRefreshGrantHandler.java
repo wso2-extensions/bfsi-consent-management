@@ -36,11 +36,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 /**
- * OB specific refresh grant handler.
+ * BFSI specific refresh grant handler.
  */
-public class OBRefreshGrantHandler extends RefreshGrantHandler {
+public class BFSIRefreshGrantHandler extends RefreshGrantHandler {
 
-    private static final Log log = LogFactory.getLog(OBRefreshGrantHandler.class);
+    private static final Log log = LogFactory.getLog(BFSIRefreshGrantHandler.class);
 
     @Override
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
@@ -50,7 +50,6 @@ public class OBRefreshGrantHandler extends RefreshGrantHandler {
                 OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO = super.issue(tokReqMsgCtx);
                 executeInitialStep(oAuth2AccessTokenRespDTO, tokReqMsgCtx);
                 tokReqMsgCtx.setScope(IdentityCommonUtils.removeInternalScopes(tokReqMsgCtx.getScope()));
-                publishUserAccessTokenData(oAuth2AccessTokenRespDTO);
                 if (tokReqMsgCtx.getScope().length == 0) {
                     oAuth2AccessTokenRespDTO.setAuthorizedScopes("");
                 }
@@ -60,17 +59,6 @@ public class OBRefreshGrantHandler extends RefreshGrantHandler {
             throw new IdentityOAuth2Exception(e.getMessage());
         }
         return super.issue(tokReqMsgCtx);
-    }
-
-    /**
-     * Extend this method to publish access token related data.
-     *
-     * @param oAuth2AccessTokenRespDTO
-     */
-
-    public void publishUserAccessTokenData(OAuth2AccessTokenRespDTO oAuth2AccessTokenRespDTO)
-            throws IdentityOAuth2Exception {
-
     }
 
     /**

@@ -18,26 +18,41 @@
 
 package org.wso2.bfsi.identity.extensions.util;
 
+import com.google.common.base.Charsets;
+import com.nimbusds.jose.JWSAlgorithm;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.oauth.cache.SessionDataCache;
 import org.wso2.carbon.identity.oauth.cache.SessionDataCacheEntry;
 import org.wso2.carbon.identity.oauth.cache.SessionDataCacheKey;
+import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
+import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -139,11 +154,98 @@ public class IdentityCommonUtils {
         if (scopes != null && scopes.length > 0) {
             List<String> scopesList = new LinkedList<>(Arrays.asList(scopes));
             scopesList.removeIf(s -> s.startsWith(consentIdClaim));
-            scopesList.removeIf(s -> s.startsWith(IdentityCommonConstants.OB_PREFIX));
+            scopesList.removeIf(s -> s.startsWith(IdentityCommonConstants.BFSI_PREFIX));
             scopesList.removeIf(s -> s.startsWith(IdentityCommonConstants.TIME_PREFIX));
             scopesList.removeIf(s -> s.startsWith(IdentityCommonConstants.CERT_PREFIX));
             return scopesList.toArray(new String[scopesList.size()]);
         }
         return scopes;
+    }
+
+    /**
+     * Method to obtain Hash Value for a given String, default algorithm SHA256withRSA.
+     *
+     * @param value String value that required to be Hashed
+     * @return Hashed String
+     * @throws IdentityOAuth2Exception
+     */
+    public static String getHashValue(String value, String digestAlgorithm) throws IdentityOAuth2Exception {
+
+        if (digestAlgorithm == null) {
+            JWSAlgorithm digAlg = OAuth2Util.mapSignatureAlgorithmForJWSAlgorithm(
+                    OAuthServerConfiguration.getInstance().getIdTokenSignatureAlgorithm());
+            digestAlgorithm = OAuth2Util.mapDigestAlgorithm(digAlg);
+        }
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance(digestAlgorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IdentityOAuth2Exception("Error creating the hash value. Invalid Digest Algorithm: " +
+                    digestAlgorithm);
+        }
+        //generating hash value
+        md.update(value.getBytes(Charsets.UTF_8));
+        byte[] digest = md.digest();
+        int leftHalfBytes = digest.length / 2;
+        byte[] leftmost = new byte[leftHalfBytes];
+        System.arraycopy(digest, 0, leftmost, 0, leftHalfBytes);
+
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(leftmost)
+                .replace("\n", "").replace("\r", "");
+    }
+
+    /**
+     * Get the configured certificate header name.
+     *
+     * @return value of the cert header name configuration
+     */
+    public static String getMTLSAuthHeader() {
+
+        return Optional.ofNullable(IdentityUtil.getProperty(IdentityCommonConstants.MTLS_AUTH_HEADER))
+                .orElse("CONFIG_NOT_FOUND");
+    }
+
+    /**
+     * Parse the certificate content.
+     *
+     * @param content the content to be passed
+     * @return the parsed certificate
+     * @throws ConsentManagementException  if an error occurs while parsing the certificate
+     */
+    public static X509Certificate parseCertificate(String content) throws ConsentManagementException {
+
+        try {
+            if (StringUtils.isNotBlank(content)) {
+                // removing illegal base64 characters before decoding
+                content = removeIllegalBase64Characters(content);
+                byte[] bytes = Base64.getDecoder().decode(content);
+
+                return (java.security.cert.X509Certificate) CertificateFactory.getInstance(IdentityCommonConstants.X509)
+                        .generateCertificate(new ByteArrayInputStream(bytes));
+            }
+            log.error("Certificate passed through the request is empty");
+            return null;
+        } catch (CertificateException | IllegalArgumentException e) {
+            throw new ConsentManagementException("Certificate passed through the request not valid", e);
+        }
+    }
+
+    /**
+     * Remove illegal base64 characters from input string.
+     *
+     * @param value certificate as a string
+     * @return certificate without illegal base64 characters
+     */
+    private static String removeIllegalBase64Characters(String value) {
+        if (value.contains(IdentityCommonConstants.BEGIN_CERT)
+                && value.contains(IdentityCommonConstants.END_CERT)) {
+
+            // extracting certificate content
+            value = value.substring(value.indexOf(IdentityCommonConstants.BEGIN_CERT)
+                            + IdentityCommonConstants.BEGIN_CERT.length(),
+                    value.indexOf(IdentityCommonConstants.END_CERT));
+        }
+        // remove spaces, \r, \\r, \n, \\n, ], [ characters from certificate string
+        return value.replaceAll("\\\\r|\\\\n|\\r|\\n|\\[|]| ", StringUtils.EMPTY);
     }
 }
