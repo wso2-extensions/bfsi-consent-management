@@ -16,16 +16,26 @@
  * under the License.
  */
 
-package org.wso2.bfsi.consent.management.common.config;
-
-import java.util.Map;
+package org.wso2.bfsi.consent.management.common.caching;
 
 /**
- * Interface to expose Configurations as an OSGi Service.
+ * Abstract class for Consent Management Cache Key.
  */
-public interface ConsentManagementConfigurationService {
+public class ConsentManagementBaseCacheKey {
 
-    Map<String, Object> getConfigurations();
+    private String cacheKey;
 
-    Map<String, Map<Integer, String>> getConsentAuthorizeSteps();
+    public ConsentManagementBaseCacheKey(String cacheKey) {
+
+        this.cacheKey = cacheKey;
+    }
+
+    public static ConsentManagementBaseCacheKey of(String cacheKey) {
+        return new ConsentManagementBaseCacheKey(cacheKey);
+    }
+
+    public String getCacheKey() {
+        return cacheKey;
+    }
+
 }
