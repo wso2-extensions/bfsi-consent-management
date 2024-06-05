@@ -149,7 +149,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             requestPathArray = consentManageData.getRequestPath().split("/");
         }
 
-        if (StringUtils.isNotEmpty(requestPathArray[0])) {
+        if (requestPathArray.length > 1 && StringUtils.isNotEmpty(requestPathArray[0])) {
             String consentId = requestPathArray[1];
             if (ConsentExtensionUtils.isConsentIdValid(consentId)) {
                 try {
