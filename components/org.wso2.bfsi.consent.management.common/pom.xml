@@ -74,6 +74,10 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -128,8 +132,11 @@
                     <excludes>
                         <!-- Excluding them in coverage reports -->
                         <exclude>**/*ServiceComponent.class</exclude>
+                        <exclude>**/*DataHolder.class</exclude>
                         <exclude>**/*Constants.class</exclude>
                         <exclude>**/*Exception.class</exclude>
+                        <exclude>**/*Cache.class</exclude>
+                        <exclude>**/*CacheKey.class</exclude>
                         <!-- Excluded since involves datasource initialization -->
                         <exclude>**/DatabaseUtil.class</exclude>
                         <exclude>**/*PersistenceManager.class</exclude>
