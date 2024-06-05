@@ -20,6 +20,7 @@ package org.wso2.bfsi.identity.extensions.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -28,13 +29,15 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
+import org.wso2.bfsi.identity.extensions.claims.RoleClaimProviderImpl;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
 import org.wso2.carbon.identity.oauth2.OAuth2Service;
+import org.wso2.carbon.identity.openidconnect.ClaimProvider;
 import org.wso2.carbon.identity.openidconnect.RequestObjectService;
 import org.wso2.carbon.user.core.service.RealmService;
 
 /**
- * Identity open banking common data holder.
+ * Identity common data holder.
  */
 @Component(
         name = "org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsServiceComponent",
@@ -48,6 +51,10 @@ public class IdentityExtensionsServiceComponent {
     protected void activate(ComponentContext context) {
 
         log.debug("Identity Extensions component activated.");
+        BundleContext bundleContext = context.getBundleContext();
+        bundleContext.registerService(ClaimProvider.class.getName(), new RoleClaimProviderImpl(), null);
+
+        log.debug("Registered BFSI related Identity services.");
     }
 
     @Reference(

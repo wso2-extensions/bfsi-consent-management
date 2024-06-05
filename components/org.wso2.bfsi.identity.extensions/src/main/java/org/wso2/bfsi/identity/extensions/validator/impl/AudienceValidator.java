@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
-import org.wso2.bfsi.identity.extensions.util.ServiceProviderUtils;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.bfsi.identity.extensions.validator.annotation.ValidAudience;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
@@ -72,7 +72,7 @@ public class AudienceValidator implements ConstraintValidator<ValidAudience, Obj
         String issuer;
 
         try {
-            issuer = OAuth2Util.getIdTokenIssuer(ServiceProviderUtils.getSpTenantDomain(clientId));
+            issuer = OAuth2Util.getIdTokenIssuer(IdentityCommonUtils.getSpTenantDomain(clientId));
         } catch (IdentityOAuth2Exception | ConsentManagementException e) {
             log.error("Unable to retrieve the ID token issuer per tenant ", e);
             return false;

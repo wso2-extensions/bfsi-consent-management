@@ -21,11 +21,12 @@ package org.wso2.bfsi.identity.extensions.claims;
 import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jose.util.X509CertUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
+import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
@@ -122,7 +123,7 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
                                                 Map<String, Object> userClaimsInOIDCDialect) {
 
         String consentIdClaimName =
-                identityConfigurations.get(IdentityCommonConstants.CONSENT_ID_CLAIM_NAME).toString();
+                identityConfigurations.get(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME).toString();
         String consentID = Arrays.stream(tokenReqMessageContext.getScope())
                 .filter(scope -> scope.contains(IdentityCommonConstants.BFSI_PREFIX)).findFirst().orElse(null);
         if (StringUtils.isEmpty(consentID)) {
@@ -141,8 +142,8 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
 
     /**
      * Update the subject claim of the JWT claims set if any of the following configurations are true
-     *  1. Remove tenant domain from subject (open_banking.identity.token.remove_tenant_domain_from_subject)
-     *  2. Remove user store domain from subject (open_banking.identity.token.remove_user_store_domain_from_subject)
+     *  1. Remove tenant domain from subject (bfsi.identity.token.remove_tenant_domain_from_subject)
+     *  2. Remove user store domain from subject (bfsi.identity.token.remove_user_store_domain_from_subject)
      * @param tokenReqMessageContext token request message context
      * @param userClaimsInOIDCDialect user claims in OIDC dialect as a map
      */
@@ -150,12 +151,12 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
                                 Map<String, Object> userClaimsInOIDCDialect) {
 
         Object removeTenantDomainConfig =
-                identityConfigurations.get(IdentityCommonConstants.REMOVE_TENANT_DOMAIN_FROM_SUBJECT);
+                identityConfigurations.get(ConsentManagementConstants.REMOVE_TENANT_DOMAIN_FROM_SUBJECT);
         Boolean removeTenantDomain = removeTenantDomainConfig != null
                 && Boolean.parseBoolean(removeTenantDomainConfig.toString());
 
         Object removeUserStoreDomainConfig =
-                identityConfigurations.get(IdentityCommonConstants.REMOVE_USER_STORE_DOMAIN_FROM_SUBJECT);
+                identityConfigurations.get(ConsentManagementConstants.REMOVE_USER_STORE_DOMAIN_FROM_SUBJECT);
         Boolean removeUserStoreDomain = removeUserStoreDomainConfig != null
                 && Boolean.parseBoolean(removeUserStoreDomainConfig.toString());
 

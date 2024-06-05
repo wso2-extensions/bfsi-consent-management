@@ -262,7 +262,7 @@ public class ConsentManagementConfigParser {
      */
     public Map<String, Object> getConfiguration() {
 
-        return configuration;
+        return this.configuration;
     }
 
     /**
@@ -272,7 +272,7 @@ public class ConsentManagementConfigParser {
      * @return Corresponding value for key
      */
     private  Optional<String> getConfigurationFromKeyAsString(final String key) {
-        return Optional.ofNullable((String) configuration.get(key));
+        return Optional.ofNullable((String) this.configuration.get(key));
     }
 
     public String getDataSourceName() {

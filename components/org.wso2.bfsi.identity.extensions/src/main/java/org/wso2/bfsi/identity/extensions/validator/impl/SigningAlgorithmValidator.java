@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
-import org.wso2.bfsi.identity.extensions.util.IdentityCommonHelper;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.bfsi.identity.extensions.validator.annotation.ValidSigningAlgorithm;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 
@@ -71,9 +71,9 @@ public class SigningAlgorithmValidator implements ConstraintValidator<ValidSigni
      boolean algorithmValidate(String requestedAlgo, String clientId) {
 
         try {
-            if (!(StringUtils.isNotEmpty(new IdentityCommonHelper().getCertificateContent(clientId))
+            if (!(StringUtils.isNotEmpty(IdentityCommonUtils.getCertificateContent(clientId))
                     && CommonUtils.isRegulatoryApp(clientId))) {
-                String registeredAlgo = new IdentityCommonHelper().getAppPropertyFromSPMetaData(
+                String registeredAlgo = IdentityCommonUtils.getAppPropertyFromSPMetaData(
                         clientId, IdentityCommonConstants.REQUEST_OBJECT_SIGNING_ALG);
 
                 if (StringUtils.isBlank(registeredAlgo)) {

@@ -22,8 +22,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
+import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
-import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
@@ -85,7 +85,7 @@ public class BFSIRefreshGrantHandler extends RefreshGrantHandler {
             //Adding internal scopes.
             ArrayList<String> requestedScopeList = new ArrayList<>(Arrays.asList(requestedScopes));
             String consentIdClaim = IdentityExtensionsDataHolder.getInstance().getConfigurationMap()
-                    .get(IdentityCommonConstants.CONSENT_ID_CLAIM_NAME).toString();
+                    .get(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME).toString();
             for (String scope : grantedScopes) {
                 if (scope.startsWith(consentIdClaim)) {
                     if (log.isDebugEnabled()) {

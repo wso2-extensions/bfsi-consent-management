@@ -22,9 +22,9 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.BFSIResponseTypeHandler;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
-import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.authz.OAuthAuthzReqMessageContext;
 import org.wso2.carbon.identity.openidconnect.RequestObjectService;
@@ -73,7 +73,7 @@ public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandl
                 }
 
                 String consentIdClaim = IdentityExtensionsDataHolder.getInstance().getConfigurationMap()
-                        .get(IdentityCommonConstants.CONSENT_ID_CLAIM_NAME).toString();
+                        .get(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME).toString();
                 String consentScope = consentIdClaim + consentID;
                 if (!Arrays.asList(scopes).contains(consentScope)) {
                     String[] updatedScopes = ArrayUtils.addAll(scopes, consentScope);

@@ -18,24 +18,23 @@
 
 package org.wso2.bfsi.identity.extensions.util;
 
-import com.google.common.base.Charsets;
 import com.nimbusds.jose.JWSAlgorithm;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
+import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
+import org.wso2.carbon.identity.application.common.IdentityApplicationManagementException;
+import org.wso2.carbon.identity.application.common.model.ServiceProvider;
+import org.wso2.carbon.identity.application.common.model.ServiceProviderProperty;
+import org.wso2.carbon.identity.application.common.util.IdentityApplicationConstants;
+import org.wso2.carbon.identity.base.IdentityRuntimeException;
+import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
-import org.wso2.carbon.identity.oauth.cache.SessionDataCache;
-import org.wso2.carbon.identity.oauth.cache.SessionDataCacheEntry;
-import org.wso2.carbon.identity.oauth.cache.SessionDataCacheKey;
+import org.wso2.carbon.identity.oauth.common.exception.InvalidOAuthClientException;
 import org.wso2.carbon.identity.oauth.config.OAuthServerConfiguration;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
@@ -53,8 +52,7 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
 
 /**
  * Common utility class for Identity Extensions.
@@ -84,61 +82,6 @@ public class IdentityCommonUtils {
         }
     }
 
-    /**
-     * Method to decode request object and retrieve values.
-     *
-     * @param request HTTP Servlet request.
-     * @param key key to retrieve.
-     * @return value.
-     */
-    @SuppressFBWarnings("SERVLET_PARAMETER")
-    // Suppressed content - request.getParameter("response_type")
-    // Suppression reason - False Positive : These endpoints are secured with access control
-    // as defined in the IS deployment.toml file
-    // Suppressed warning count - 3
-    public static String decodeRequestObjectAndGetKey(HttpServletRequest request, String key)
-            throws OAuthProblemException {
-
-        try {
-            if (request.getParameterMap().containsKey(IdentityCommonConstants.REQUEST_URI) &&
-                    request.getParameter(IdentityCommonConstants.REQUEST_URI) != null) {
-
-                // Consider as PAR request
-                String[] requestUri = request.getParameter(IdentityCommonConstants.REQUEST_URI)
-                        .replaceAll("[\r\n]", "").split(":");
-                String requestUriRef = requestUri[requestUri.length - 1];
-                SessionDataCacheEntry valueFromCache = SessionDataCache.getInstance()
-                        .getValueFromCache(new SessionDataCacheKey(requestUriRef));
-                if (valueFromCache != null) {
-                    String essentialClaims = valueFromCache.getoAuth2Parameters().getEssentialClaims();
-                    if (essentialClaims != null) {
-                        String[] essentialClaimsWithExpireTime = essentialClaims.split(":");
-                        essentialClaims = essentialClaimsWithExpireTime[0];
-                        essentialClaims = essentialClaims.split("\\.")[1];
-                        byte[] requestObject;
-                        try {
-                            requestObject = Base64.getDecoder().decode(essentialClaims);
-                        } catch (IllegalArgumentException e) {
-
-                            // Decode if the requestObject is base64-url encoded.
-                            requestObject = Base64.getUrlDecoder().decode(essentialClaims);
-                        }
-                        JSONObject requestObjectVal = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE))
-                                .parse(new String(requestObject, StandardCharsets.UTF_8));
-                        return requestObjectVal.containsKey(key) ? requestObjectVal.getAsString(key) : null;
-                    }
-                } else {
-                    throw OAuthProblemException.error("invalid_request_uri")
-                            .description("Provided request URI is not valid");
-                }
-            }
-        } catch (ParseException e) {
-            throw OAuthProblemException.error("invalid_request")
-                    .description("Error occurred while parsing the request object");
-        }
-        return null;
-
-    }
 
     /**
      * Remove the internal scopes from the space delimited list of authorized scopes.
@@ -149,7 +92,7 @@ public class IdentityCommonUtils {
     public static String[] removeInternalScopes(String[] scopes) {
 
         String consentIdClaim = IdentityExtensionsDataHolder.getInstance().getConfigurationMap()
-                .get(IdentityCommonConstants.CONSENT_ID_CLAIM_NAME).toString();
+                .get(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME).toString();
 
         if (scopes != null && scopes.length > 0) {
             List<String> scopesList = new LinkedList<>(Arrays.asList(scopes));
@@ -184,7 +127,7 @@ public class IdentityCommonUtils {
                     digestAlgorithm);
         }
         //generating hash value
-        md.update(value.getBytes(Charsets.UTF_8));
+        md.update(value.getBytes(StandardCharsets.UTF_8));
         byte[] digest = md.digest();
         int leftHalfBytes = digest.length / 2;
         byte[] leftmost = new byte[leftHalfBytes];
@@ -247,5 +190,96 @@ public class IdentityCommonUtils {
         }
         // remove spaces, \r, \\r, \n, \\n, ], [ characters from certificate string
         return value.replaceAll("\\\\r|\\\\n|\\r|\\n|\\[|]| ", StringUtils.EMPTY);
+    }
+
+    /**
+     * Utility method get the application property from SP Meta Data.
+     * @param clientId ClientId of the application
+     * @return the service provider certificate
+     * @throws ConsentManagementException
+     */
+    @Generated(message = "Excluding from code coverage since it requires a service call")
+    public static String getCertificateContent(String clientId) throws ConsentManagementException {
+
+        Optional<ServiceProvider> serviceProvider;
+        try {
+            serviceProvider = Optional.ofNullable(IdentityExtensionsDataHolder.getInstance()
+                    .getApplicationManagementService().getServiceProviderByClientId(clientId,
+                            IdentityApplicationConstants.OAuth2.NAME, getSpTenantDomain(clientId)));
+            if (serviceProvider.isPresent()) {
+                return serviceProvider.get().getCertificateContent();
+            }
+        } catch (IdentityApplicationManagementException e) {
+            log.error(String.format("Error occurred while retrieving OAuth2 application data for clientId %s",
+                    clientId.replaceAll("[\r\n]", "")), e);
+            throw new ConsentManagementException("Error occurred while retrieving OAuth2 application data for clientId"
+                    , e);
+        }
+        return "";
+    }
+
+    /**
+     * Utility method get the application property from SP Meta Data.
+     *
+     * @param clientId ClientId of the application
+     * @param property Property of the application
+     * @return the property value from SP metadata
+     * @throws ConsentManagementException
+     */
+    @Generated(message = "Excluding from code coverage since it requires a service call")
+    public static String getAppPropertyFromSPMetaData(String clientId, String property)
+            throws ConsentManagementException {
+
+        String spProperty = null;
+
+        if (StringUtils.isNotEmpty(clientId)) {
+            Optional<ServiceProvider> serviceProvider;
+            try {
+                serviceProvider = Optional.ofNullable(IdentityExtensionsDataHolder.getInstance()
+                        .getApplicationManagementService().getServiceProviderByClientId(clientId,
+                                IdentityApplicationConstants.OAuth2.NAME, getSpTenantDomain(clientId)));
+                if (serviceProvider.isPresent()) {
+                    spProperty = Arrays.stream(serviceProvider.get().getSpProperties())
+                            .collect(Collectors.toMap(ServiceProviderProperty::getName,
+                                    ServiceProviderProperty::getValue))
+                            .get(property);
+                }
+            } catch (IdentityApplicationManagementException e) {
+                log.error(String.format("Error occurred while retrieving OAuth2 application data for clientId %s",
+                        clientId.replaceAll("[\r\n]", "")), e);
+                throw new ConsentManagementException("Error occurred while retrieving OAuth2 application data for" +
+                        " clientId", e);
+            }
+        } else {
+            log.error(IdentityCommonConstants.CLIENT_ID_ERROR);
+            throw new ConsentManagementException(IdentityCommonConstants.CLIENT_ID_ERROR);
+        }
+
+        return spProperty;
+    }
+
+    /**
+     * Get Tenant Domain String for the client id.
+     * @param clientId the client id of the application
+     * @return tenant domain of the client
+     * @throws ConsentManagementException  if an error occurs while retrieving the tenant domain
+     */
+    @Generated(message = "Ignoring because OAuth2Util cannot be mocked with no constructors")
+    public static String getSpTenantDomain(String clientId) throws ConsentManagementException {
+
+        try {
+            return OAuth2Util.getTenantDomainOfOauthApp(clientId);
+        } catch (InvalidOAuthClientException | IdentityOAuth2Exception e) {
+            throw new ConsentManagementException("Error retrieving service provider tenant domain for client_id: "
+                    + clientId, e);
+        }
+    }
+
+    public static int getTenantIdOfUser(String userId) throws ConsentManagementException {
+        try {
+            return IdentityTenantUtil.getTenantIdOfUser(userId);
+        } catch (IdentityRuntimeException e) {
+            throw new ConsentManagementException("Error retrieving tenant id for user: " + userId, e);
+        }
     }
 }

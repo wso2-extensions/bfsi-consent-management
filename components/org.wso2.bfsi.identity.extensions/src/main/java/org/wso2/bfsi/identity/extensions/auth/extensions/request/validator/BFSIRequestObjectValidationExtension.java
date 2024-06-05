@@ -28,7 +28,7 @@ import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.model
 import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.ValidationResponse;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
-import org.wso2.bfsi.identity.extensions.util.IdentityCommonHelper;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.model.OAuth2Parameters;
 import org.wso2.carbon.identity.openidconnect.RequestObjectValidatorImpl;
@@ -130,8 +130,8 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
     protected String getAllowedScopes(OAuth2Parameters oAuth2Parameters) throws RequestObjectException {
 
         try {
-             return new IdentityCommonHelper()
-                     .getAppPropertyFromSPMetaData(oAuth2Parameters.getClientId(), IdentityCommonConstants.SCOPE);
+             return IdentityCommonUtils.getAppPropertyFromSPMetaData(oAuth2Parameters.getClientId(),
+                     IdentityCommonConstants.SCOPE);
         } catch (ConsentManagementException e) {
             throw new RequestObjectException(e.getMessage(), e);
         }
