@@ -31,6 +31,7 @@ import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentData;
 import org.wso2.bfsi.consent.management.extensions.authorize.util.ConsentAuthorizeUtil;
 import org.wso2.bfsi.consent.management.extensions.common.AuthErrorCode;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
+import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
 import org.wso2.bfsi.consent.management.extensions.internal.ConsentExtensionsDataHolder;
 import org.wso2.bfsi.consent.management.service.ConsentCoreService;
@@ -56,7 +57,7 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
             consentData.setConsentId(consentId);
             ConsentResource consentResource = consentCoreService.getConsent(consentId, false);
 
-            if (!consentResource.getCurrentStatus().equals("AwaitingAuthorization")) {
+            if (!consentResource.getCurrentStatus().equals(ConsentExtensionConstants.AWAIT_AUTHORISE_STATUS)) {
                 log.error("Consent not in authorizable state");
                 //Currently throwing error as 400 response. Developer also have the option of appending a fieldIS_ERROR
                 // to the jsonObject and showing it to the user in the webapp. If so, the IS_ERROR have to bechecked in
@@ -66,7 +67,7 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
             }
 
             AuthorizationResource authorizationResource = consentCoreService.searchAuthorizations(consentId).get(0);
-            if (!authorizationResource.getAuthorizationStatus().equals("created")) {
+            if (!authorizationResource.getAuthorizationStatus().equals(ConsentExtensionConstants.CREATED_STATUS)) {
                 log.error("Authorization not in authorizable state");
                 //Currently throwing error as 400 response. Developer also have the option of appending a fieldIS_ERROR
                 // to the jsonObject and showing it to the user in the webapp. If so, the IS_ERROR have to bechecked in

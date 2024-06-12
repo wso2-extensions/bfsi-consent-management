@@ -46,8 +46,12 @@ public class ConsentExtensionConstants {
     public static final String SELECTED_ACCOUNT = "selectedAccount";
     public static final String DISPLAY_NAME = "display_name";
     public static final String CONSENT_TYPE = "consent_type";
-    public static final String AUTHORIZED_STATUS = "authorised";
-    public static final String REVOKED_STATUS = "revoked";
+    public static final String AWAIT_AUTHORISE_STATUS = "AwaitingAuthorisation";
+    public static final String AUTHORIZED_STATUS = "Authorised";
+    public static final String REVOKED_STATUS = "Revoked";
+    public static final String REJECTED_STATUS = "Rejected";
+    public static final String CREATED_STATUS = "created";
+    public static final String DEFAULT_AUTH_TYPE = "authorization";
     public static final String PERMISSIONS = "Permissions";
     public static final String EXPIRATION_DATE = "ExpirationDateTime";
     public static final String EXPIRATION_DATE_TITLE = "Expiration Date Time";

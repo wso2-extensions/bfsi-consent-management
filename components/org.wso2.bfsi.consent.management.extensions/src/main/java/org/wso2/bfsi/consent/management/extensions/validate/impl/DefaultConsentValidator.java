@@ -82,13 +82,14 @@ public class DefaultConsentValidator implements ConsentValidator {
             }
         }
 
-        if (!userIdMatching) {
-            log.error("Invalid User Id");
-            consentValidationResult.setErrorMessage("Invalid User Id");
-            consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
-            consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
-            return;
-        }
+        //TODO:
+//        if (!userIdMatching) {
+//            log.error("Invalid User Id");
+//            consentValidationResult.setErrorMessage("Invalid User Id");
+//            consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
+//            consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
+//            return;
+//        }
 
         String clientIdFromToken = consentValidateData.getClientId();
         String clientIdFromConsent = consentValidateData.getComprehensiveConsent().getClientID();

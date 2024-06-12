@@ -19,7 +19,6 @@
 package org.wso2.bfsi.consent.management.extensions.authservlet.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.wso2.bfsi.consent.management.extensions.authservlet.OBAuthServletInterface;
 import org.wso2.bfsi.consent.management.extensions.authservlet.utils.Utils;
@@ -74,7 +73,7 @@ public class OBDefaultAuthServletImpl implements OBAuthServletInterface {
         Map<String, Object> returnMaps = new HashMap<>();
 
         String[] accounts = request.getParameter("accounts[]").replaceAll("[\r\n]", "").split(":");
-        returnMaps.put("accountIds", (new JSONArray()).addAll(List.of(accounts)));
+        returnMaps.put("accountIds", List.of(accounts));
 
         returnMaps.put(ConsentExtensionConstants.PAYMENT_ACCOUNT,
                 request.getParameter(ConsentExtensionConstants.PAYMENT_ACCOUNT).replaceAll("[\r\n]", ""));
@@ -92,6 +91,6 @@ public class OBDefaultAuthServletImpl implements OBAuthServletInterface {
     @Override
     public String getJSPPath() {
 
-        return "/default_displayconsent.jsp";
+        return "/ob_default.jsp";
     }
 }

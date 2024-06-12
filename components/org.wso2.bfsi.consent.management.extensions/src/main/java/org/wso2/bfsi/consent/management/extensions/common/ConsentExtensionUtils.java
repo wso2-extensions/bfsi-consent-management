@@ -18,6 +18,10 @@
 
 package org.wso2.bfsi.consent.management.extensions.common;
 
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jwt.SignedJWT;
 import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,8 +30,19 @@ import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRunti
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
+import org.wso2.bfsi.consent.management.extensions.internal.ConsentExtensionsDataHolder;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.interfaces.RSAPublicKey;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -134,5 +149,66 @@ public class ConsentExtensionUtils {
             //Throwing a runtime exception since we cannot proceed with invalid objects
             throw new ConsentManagementRuntimeException("Defined class" + classpath + "cannot be instantiated.", e);
         }
+    }
+
+    /**
+     * Validate a JWT signature by providing the alias in the client truststore.
+     * Skipped in unit tests since @KeystoreManager cannot be mocked
+     *
+     * @param jwtString string value of the JWT to be validated
+     * @param alias     alias in the trust store
+     * @return boolean value depicting whether the signature is valid
+     * @throws ConsentManagementException error with message mentioning the cause
+     */
+    public static boolean validateJWTSignatureWithPublicKey(String jwtString, String alias)
+            throws ConsentManagementException {
+
+        Certificate certificate;
+        try {
+            KeyStore trustStore = getTrustStore();
+            certificate = trustStore.getCertificate(alias);
+        } catch (Exception e) {
+            throw new ConsentManagementException("Error while retrieving certificate from truststore");
+        }
+
+        if (certificate == null) {
+            throw new ConsentManagementException("Certificate not found for provided alias");
+        }
+        PublicKey publicKey = certificate.getPublicKey();
+
+        try {
+            JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
+            return SignedJWT.parse(jwtString).verify(verifier);
+        } catch (JOSEException | java.text.ParseException e) {
+            throw new ConsentManagementException("Error occurred while validating JWT signature");
+        }
+
+    }
+
+    /**
+     * Util method to get the configured trust store by carbon config or cached instance.
+     *
+     * @return Keystore instance of the truststore
+     * @throws Exception Error when loading truststore or carbon truststore config unavailable
+     */
+    public static KeyStore getTrustStore() throws Exception {
+        if (ConsentExtensionsDataHolder.getInstance().getTrustStore() == null) {
+            String trustStoreLocation = System.getProperty("javax.net.ssl.trustStore");
+            String trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
+            String trustStoreType = System.getProperty("javax.net.ssl.trustStoreType");
+
+            if (trustStoreLocation == null || trustStorePassword == null || trustStoreType == null) {
+                throw new Exception("Trust store config not available");
+            }
+
+            try (InputStream keyStoreStream = new FileInputStream(trustStoreLocation)) {
+                KeyStore keyStore = KeyStore.getInstance(trustStoreType); // or "PKCS12"
+                keyStore.load(keyStoreStream, trustStorePassword.toCharArray());
+                ConsentExtensionsDataHolder.getInstance().setTrustStore(keyStore);
+            } catch (IOException | CertificateException | KeyStoreException | NoSuchAlgorithmException e) {
+                throw new Exception("Error while loading truststore.", e);
+            }
+        }
+        return ConsentExtensionsDataHolder.getInstance().getTrustStore();
     }
 }

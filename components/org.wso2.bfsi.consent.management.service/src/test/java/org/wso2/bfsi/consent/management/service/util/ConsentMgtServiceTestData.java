@@ -27,7 +27,7 @@ public class ConsentMgtServiceTestData {
     public static final String SAMPLE_CLIENT_ID = "sampleClientID";
     public static final int SAMPLE_CONSENT_FREQUENCY = 1;
     public static final Long SAMPLE_CONSENT_VALIDITY_PERIOD = 1638337852L;
-    public static final String SAMPLE_CURRENT_STATUS = "Authorized";
+    public static final String SAMPLE_CURRENT_STATUS = "Authorised";
     public static final boolean SAMPLE_RECURRING_INDICATOR = true;
     public static final String SAMPLE_AUTHORIZATION_TYPE = "authorizationType";
     public static final String SAMPLE_USER_ID = "admin@wso2.com";
@@ -84,7 +84,7 @@ public class ConsentMgtServiceTestData {
             (List.of("accounts", "payments", "cof"));
 
     public static final ArrayList<String> SAMPLE_CONSENT_STATUSES_LIST = new ArrayList<>
-            (List.of("created", "authorized", "awaitingAuthorization"));
+            (List.of("created", "authorised", "awaitingAuthorization"));
 
     public static final Map<String, ArrayList<String>> SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP3 = Map.of(
             "mismatching account ID", new ArrayList<> (List.of("permission5", "permission6")));

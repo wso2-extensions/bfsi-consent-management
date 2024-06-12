@@ -18,7 +18,6 @@
 
 package org.wso2.bfsi.consent.management.extensions.authorize.impl;
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -37,6 +36,7 @@ import org.wso2.bfsi.consent.management.extensions.internal.ConsentExtensionsDat
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -90,11 +90,11 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
         String authStatus;
 
         if (isApproved) {
-            consentStatus = "Authorized";
-            authStatus = "Authorized";
+            consentStatus = ConsentExtensionConstants.AUTHORIZED_STATUS;
+            authStatus = ConsentExtensionConstants.AUTHORIZED_STATUS;
         } else {
-            consentStatus = "Rejected";
-            authStatus = "Rejected";
+            consentStatus = ConsentExtensionConstants.REJECTED_STATUS;
+            authStatus = ConsentExtensionConstants.REJECTED_STATUS;
         }
 
         ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
@@ -142,14 +142,14 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
             accountIDsMapWithPermissions.put(paymentAccount, permissionsDefault);
         } else {
             //Check whether account Ids are in array format
-            if (!(persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS) instanceof JSONArray)) {
+            if (!(persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS) instanceof List)) {
                 log.error(ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
                 throw new ConsentException(ResponseStatus.BAD_REQUEST,
                         ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
             }
 
             //Check whether account Ids are strings
-            JSONArray accountIds = (JSONArray) persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS);
+            List accountIds = (List) persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS);
             for (Object account : accountIds) {
                 if (!(account instanceof String)) {
                     log.error(ConsentAuthorizeConstants.ACCOUNT_ID_FORMAT_ERROR);

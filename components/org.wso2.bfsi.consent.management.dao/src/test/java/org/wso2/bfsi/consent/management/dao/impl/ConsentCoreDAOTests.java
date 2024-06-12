@@ -2168,7 +2168,7 @@ public class ConsentCoreDAOTests {
             consentCoreDAO.storeConsentAttributes(connection, consentAttributesResource);
 
             expirationEligibleConsents = consentCoreDAO.getExpiringConsents(connection,
-                    "Authorized,awaitingAuthorisation");
+                    "Authorised,awaitingAuthorisation");
 
         }
         Assert.assertTrue(expirationEligibleConsents.isEmpty());
@@ -2194,7 +2194,7 @@ public class ConsentCoreDAOTests {
             consentCoreDAO.storeConsentAttributes(connection, consentAttributesResource);
 
             expirationEligibleConsents = consentCoreDAO.getExpiringConsents(connection,
-                    "Authorized,awaitingAuthorisation");
+                    "Authorised,awaitingAuthorisation");
 
         }
         Assert.assertFalse(expirationEligibleConsents.isEmpty());
@@ -2205,7 +2205,7 @@ public class ConsentCoreDAOTests {
 
         Mockito.doReturn(mockedPreparedStatement).when(mockedConnection).prepareStatement(Mockito.anyString());
         Mockito.doThrow(SQLException.class).when(mockedPreparedStatement).executeQuery();
-        consentCoreDAO.getExpiringConsents(mockedConnection, "Authorized,awaitingAuthorisation");
+        consentCoreDAO.getExpiringConsents(mockedConnection, "Authorised,awaitingAuthorisation");
     }
 
     private void storeDataForConsentSearchTest(ArrayList<String> consentIDs,

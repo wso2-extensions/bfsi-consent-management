@@ -144,7 +144,7 @@ public class ConsentAuthorizeUtil {
                 throw new ConsentException(ResponseStatus.BAD_REQUEST, "Not a Json Object");
             }
 
-            if (!"AwaitingAuthorization".equals(consentResource.getCurrentStatus())) {
+            if (!ConsentExtensionConstants.AWAIT_AUTHORISE_STATUS.equals(consentResource.getCurrentStatus())) {
                 log.error("Invalid status for the consent. Consent not in authorizable state.");
                 // Currently throwing an error as a 400 response.
                 // Developers have the option of appending a field IS_ERROR to the jsonObject

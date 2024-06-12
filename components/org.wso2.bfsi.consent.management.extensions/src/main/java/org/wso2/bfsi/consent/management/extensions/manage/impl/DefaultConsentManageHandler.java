@@ -116,17 +116,17 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             ConsentPayloadValidationResult validationResponse =
                     getConsentManageValidator().validateInitiation(requestObject, consentType);
             if (!validationResponse.isValid()) {
-                log.error("Payload Validation Failed");
+                log.error(validationResponse.getErrorMessage().replaceAll("[\r\n]+", " "));
                 throw new ConsentException(validationResponse.getHttpCode(), validationResponse.getErrorCode(),
                         validationResponse.getErrorMessage());
             }
 
             ConsentResource requestedConsent = new ConsentResource(consentManageData.getClientId(),
-                    requestObject.toString(), consentType, "AwaitingAuthorization");
+                    requestObject.toString(), consentType, ConsentExtensionConstants.AWAIT_AUTHORISE_STATUS);
 
             DetailedConsentResource createdConsent = ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
-                    .createAuthorizableConsent(requestedConsent, null, "created", "authorization",
-                            true);
+                    .createAuthorizableConsent(requestedConsent, null, ConsentExtensionConstants.CREATED_STATUS,
+                            ConsentExtensionConstants.DEFAULT_AUTH_TYPE, true);
 
             consentManageData.setResponsePayload(ConsentExtensionUtils.getInitiationResponse(requestObject,
                     createdConsent));
