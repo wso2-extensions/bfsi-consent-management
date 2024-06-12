@@ -56,8 +56,8 @@ public class BFSIHybridResponseTypeValidator extends TokenValidator {
     // Suppressed warning count - 3
     public void validateRequiredParameters(HttpServletRequest request) throws OAuthProblemException {
 
-        String openIdScope = request.getParameter(OAuth.OAUTH_SCOPE).replaceAll("[\r\n]", "");
         super.validateRequiredParameters(request);
+        String openIdScope = request.getParameter(OAuth.OAUTH_SCOPE);
 
         if (StringUtils.isBlank(openIdScope) || !isContainOIDCScope(openIdScope)) {
             String clientID = request.getParameter(OAuth.OAUTH_CLIENT_ID).replaceAll("[\r\n]", "");
