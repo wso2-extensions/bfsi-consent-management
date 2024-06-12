@@ -60,7 +60,7 @@ public class SigningAlgorithmValidator implements ConstraintValidator<ValidSigni
             final String algorithm = new PropertyUtilsBean().getProperty(object, algorithmXpath).toString();
             final String clientId = BeanUtils.getProperty(object, clientIdXPath);
 
-            return algorithmValidate(algorithm, clientId);
+            return validateAlgorithm(algorithm, clientId);
 
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | NestedNullException e) {
             log.error("Error while resolving validation fields", e);
@@ -68,7 +68,7 @@ public class SigningAlgorithmValidator implements ConstraintValidator<ValidSigni
         }
     }
 
-     boolean algorithmValidate(String requestedAlgo, String clientId) {
+     boolean validateAlgorithm(String requestedAlgo, String clientId) {
 
         try {
             if (!(StringUtils.isNotEmpty(IdentityCommonUtils.getCertificateContent(clientId))
@@ -77,7 +77,7 @@ public class SigningAlgorithmValidator implements ConstraintValidator<ValidSigni
                         clientId, IdentityCommonConstants.REQUEST_OBJECT_SIGNING_ALG);
 
                 if (StringUtils.isBlank(registeredAlgo)) {
-                    // TODO: check with DCR API
+                    // TODO: check with DCR API https://github.com/wso2-extensions/bfsi-consent-management/issues/7
                     return true;
                 }
 

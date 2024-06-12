@@ -68,7 +68,7 @@ public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandl
                 String sessionDataKey = oAuthAuthzReqMessageContext.getAuthorizationReqDTO().getSessionDataKey();
                 String consentID = getConsentIDFromSessionData(sessionDataKey);
                 if (consentID.isEmpty()) {
-                    log.error("Consent-ID retrieved from request object claims is empty");
+                    log.warn("Consent-ID retrieved from request object claims is empty");
                     return scopes;
                 }
 
@@ -107,13 +107,13 @@ public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandl
             if (requestObjectService != null) {
                 consentID = retrieveConsentIDFromReqObjService(requestObjectService, sessionDataKey);
                 if (consentID.isEmpty()) {
-                    log.error("Failed to retrieve ConsentID from query parameters");
+                    log.warn("Failed to retrieve ConsentID from query parameters");
                 }
             } else {
-                log.error("Failed to retrieve Request Object Service");
+                log.warn("Failed to retrieve Request Object Service");
             }
         } else {
-            log.error("Invalid Session Data Key");
+            log.warn("Invalid Session Data Key");
         }
         return consentID;
     }
@@ -138,7 +138,7 @@ public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandl
             }
 
         } catch (RequestObjectException ex) {
-            log.error("Exception occurred", ex);
+            log.warn("Exception occurred", ex);
         }
         return consentID;
     }

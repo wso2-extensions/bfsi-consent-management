@@ -18,6 +18,8 @@
 
 package org.wso2.bfsi.identity.extensions.auth.extensions.response.handler;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
@@ -32,6 +34,7 @@ import org.wso2.carbon.identity.oauth2.dto.OAuth2AuthorizeRespDTO;
  */
 public class BFSICodeResponseTypeHandlerExtension extends CodeResponseTypeHandler {
 
+    private static final Log log = LogFactory.getLog(BFSICodeResponseTypeHandlerExtension.class);
     static BFSIResponseTypeHandler bfsiResponseTypeHandler =
             IdentityExtensionsDataHolder.getInstance().getObResponseTypeHandler();
 
@@ -50,6 +53,7 @@ public class BFSICodeResponseTypeHandlerExtension extends CodeResponseTypeHandle
                 return issueCode(oauthAuthzMsgCtx);
             }
         } catch (RequestObjectException e) {
+            log.error("Error while reading regulatory property", e);
             throw new IdentityOAuth2Exception("Error while reading regulatory property");
         }
 
@@ -59,6 +63,7 @@ public class BFSICodeResponseTypeHandlerExtension extends CodeResponseTypeHandle
         if (approvedScopes != null) {
             oauthAuthzMsgCtx.setApprovedScope(approvedScopes);
         } else {
+            log.error("Error while updating scopes");
             throw new IdentityOAuth2Exception("Error while updating scopes");
         }
         return issueCode(oauthAuthzMsgCtx);

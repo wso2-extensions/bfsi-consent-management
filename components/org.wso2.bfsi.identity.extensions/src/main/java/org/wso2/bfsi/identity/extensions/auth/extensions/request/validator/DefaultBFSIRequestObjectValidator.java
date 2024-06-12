@@ -18,14 +18,20 @@
 
 package org.wso2.bfsi.identity.extensions.auth.extensions.request.validator;
 
+import com.nimbusds.jwt.JWTClaimsSet;
 import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.BFSIRequestObject;
 import org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.models.ValidationResponse;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -60,12 +66,16 @@ public class DefaultBFSIRequestObjectValidator extends BFSIRequestObjectValidato
 
         if (superValidationResponse.isValid()) {
             try {
-                if (isClientIdAndScopePresent(bfsiRequestObject)) {
-                    // consent id and client id is matching
-                    return new ValidationResponse(true);
+                if (!isClientIdAndScopePresent(bfsiRequestObject)) {
+                    return new ValidationResponse(false, "Client Id and scope are mandatory to" +
+                            " include in the request object.");
                 }
-                return new ValidationResponse(false, "Client Id and scope are mandatory to" +
-                        " include in the request object.");
+                String violation = validateScope(bfsiRequestObject, dataMap);
+                if (StringUtils.isEmpty(violation)) {
+                    return new ValidationResponse(true);
+                } else {
+                    return new ValidationResponse(false, violation);
+                }
             } catch (RequestObjectException e) {
                 return new ValidationResponse(false, e.getMessage());
             }
@@ -90,5 +100,50 @@ public class DefaultBFSIRequestObjectValidator extends BFSIRequestObjectValidato
             throw new RequestObjectException("Client id or scope cannot be empty");
         }
         return true;
+    }
+
+    private String validateScope(BFSIRequestObject bfsiRequestObject, Map<String, Object> dataMap) {
+
+        try {
+            //remove scope claim
+            JWTClaimsSet claimsSet = bfsiRequestObject.getClaimsSet();
+            JSONObject claimsSetJsonObject = claimsSet.toJSONObject();
+            if (claimsSetJsonObject.containsKey("scope")) {
+                String scopeClaimString = claimsSetJsonObject.remove("scope").toString();
+                List allowedScopes = (List) dataMap.get("scope");
+                List<String> requestedScopes = new ArrayList<>(Arrays.asList(scopeClaimString.split(" ")));
+                StringBuilder stringBuilder = new StringBuilder();
+
+                // iterate through requested scopes and remove if not allowed
+                for (String scope : requestedScopes) {
+                    if (IdentityCommonConstants.OPENID_SCOPE.equals(scope)) {
+                        stringBuilder.append(scope).append(" ");
+                        if (log.isDebugEnabled()) {
+                            log.debug("Adding Openid scope to the request object");
+                        }
+                    }
+                    if (allowedScopes.contains(scope)) {
+                        stringBuilder.append(scope).append(" ");
+                        if (log.isDebugEnabled()) {
+                            log.debug(String.format("Removed scope %s from the request object",
+                                    scope.replaceAll("[\r\n]", "")));
+                        }
+                    }
+                }
+                String modifiedScopeString = stringBuilder.toString().trim();
+                // throw an error if no valid scopes found or only openid scope is found
+                if (StringUtils.isBlank(modifiedScopeString) || modifiedScopeString.split(" ").length <= 1) {
+                    throw new RequestObjectException("No valid scopes found in the request");
+                }
+                claimsSetJsonObject.put("scope", modifiedScopeString);
+                //Set claims set to request object
+                JWTClaimsSet validatedClaimsSet = JWTClaimsSet.parse(claimsSetJsonObject);
+                bfsiRequestObject.setClaimSet(validatedClaimsSet);
+                log.debug("Successfully set the modified claims-set to the request object");
+            }
+        } catch (ParseException | RequestObjectException e) {
+            return e.getMessage();
+        }
+        return StringUtils.EMPTY;
     }
 }

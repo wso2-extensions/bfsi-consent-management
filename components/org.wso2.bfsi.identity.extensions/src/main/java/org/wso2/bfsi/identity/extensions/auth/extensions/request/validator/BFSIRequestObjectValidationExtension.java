@@ -76,6 +76,8 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
                         .validateBFSIConstraints(bfsiRequestObject, dataMap);
 
                 if (!validationResponse.isValid()) {
+                    log.error(String.format("Request object validation failed: %s",
+                            validationResponse.getViolationMessage().replaceAll("[\r\n]+", " ")));
                     // Exception will be caught and converted to auth error by IS at endpoint.
                     throw new RequestObjectException(RequestObjectException.ERROR_CODE_INVALID_REQUEST,
                             validationResponse.getViolationMessage());
@@ -130,9 +132,15 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
     protected String getAllowedScopes(OAuth2Parameters oAuth2Parameters) throws RequestObjectException {
 
         try {
-             return IdentityCommonUtils.getAppPropertyFromSPMetaData(oAuth2Parameters.getClientId(),
+             String scopesFromSP = IdentityCommonUtils.getAppPropertyFromSPMetaData(oAuth2Parameters.getClientId(),
                      IdentityCommonConstants.SCOPE);
+             if (StringUtils.isNotBlank(scopesFromSP)) {
+                 return scopesFromSP;
+             } else {
+                    return "accounts payments fundsconfirmations";
+             }
         } catch (ConsentManagementException e) {
+            log.error("Error while retrieving scopes property from sp metadata", e);
             throw new RequestObjectException(e.getMessage(), e);
         }
     }

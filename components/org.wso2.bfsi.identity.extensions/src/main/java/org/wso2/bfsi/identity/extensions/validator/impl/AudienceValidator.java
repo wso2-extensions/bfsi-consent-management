@@ -59,7 +59,7 @@ public class AudienceValidator implements ConstraintValidator<ValidAudience, Obj
             final Object audiences = new PropertyUtilsBean().getProperty(object, audienceXpath);
             final String clientId = BeanUtils.getProperty(object, clientIdXPath);
 
-            return audienceValidate(audiences, clientId);
+            return validateAudience(audiences, clientId);
 
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | NestedNullException e) {
             log.error("Error while resolving validation fields", e);
@@ -67,7 +67,7 @@ public class AudienceValidator implements ConstraintValidator<ValidAudience, Obj
         }
     }
 
-    public boolean audienceValidate(Object aud, String clientId) {
+    public boolean validateAudience(Object aud, String clientId) {
 
         String issuer;
 

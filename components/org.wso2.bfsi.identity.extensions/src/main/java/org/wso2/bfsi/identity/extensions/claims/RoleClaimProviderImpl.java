@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.identity.extensions.internal.IdentityExtensionsDataHolder;
+import org.wso2.bfsi.identity.extensions.util.IdentityCommonConstants;
 import org.wso2.carbon.identity.base.IdentityRuntimeException;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
@@ -49,7 +50,6 @@ import java.util.Map;
 public class RoleClaimProviderImpl implements ClaimProvider {
     private static final Log LOG = LogFactory.getLog(RoleClaimProviderImpl.class);
     private static final String USER_ROLE = "user_role";
-    private static final String OPENID_SCOPE = "openid";
     private static final String CUSTOMER_CARE_OFFICER = "customerCareOfficer";
     private static final String CUSTOMER_CARE_OFFICER_ROLE = "Internal/CustomerCareOfficerRole";
     private static final String CUSTOMER_CARE_OFFICER_SCOPE = "consents:read_all";
@@ -77,7 +77,7 @@ public class RoleClaimProviderImpl implements ClaimProvider {
         Map<String, Object> claims = new HashMap<>();
 
         List<String> scopes = Arrays.asList(oAuthTokenReqMessageContext.getScope());
-        if (scopes.contains(CUSTOMER_CARE_OFFICER_SCOPE) && scopes.contains(OPENID_SCOPE)) {
+        if (scopes.contains(CUSTOMER_CARE_OFFICER_SCOPE) && scopes.contains(IdentityCommonConstants.OPENID_SCOPE)) {
             final String userId = oAuthTokenReqMessageContext.getAuthorizedUser().getUserName();
 
             try {

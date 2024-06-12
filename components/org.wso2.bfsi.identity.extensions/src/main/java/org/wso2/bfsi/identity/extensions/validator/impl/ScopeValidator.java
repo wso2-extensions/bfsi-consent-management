@@ -50,7 +50,7 @@ public class ScopeValidator implements ConstraintValidator<ValidScopeFormat, Obj
         try {
             final Object scope = new PropertyUtilsBean().getProperty(object, scopeXPath);
 
-            return scopeValidate(scope);
+            return validateScope(scope);
 
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | NestedNullException e) {
             log.error("Error while resolving validation fields", e);
@@ -58,7 +58,7 @@ public class ScopeValidator implements ConstraintValidator<ValidScopeFormat, Obj
         }
     }
 
-    boolean scopeValidate(Object scope) {
+    boolean validateScope(Object scope) {
 
         if (scope instanceof String) {
             ArrayList<String> scopes = new ArrayList<>(Arrays.asList(

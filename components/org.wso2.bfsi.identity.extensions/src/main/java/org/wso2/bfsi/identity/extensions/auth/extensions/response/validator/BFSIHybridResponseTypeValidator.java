@@ -61,9 +61,11 @@ public class BFSIHybridResponseTypeValidator extends TokenValidator {
 
         if (StringUtils.isBlank(openIdScope) || !isContainOIDCScope(openIdScope)) {
             String clientID = request.getParameter(OAuth.OAUTH_CLIENT_ID).replaceAll("[\r\n]", "");
+            String errorMsg = "Request with \'client_id\' = \'" + clientID +
+                    "\' has \'response_type\' for \'hybrid flow\'; but \'openid\' scope not found.";
+            log.error(errorMsg);
             throw OAuthProblemException.error(OAuthError.CodeResponse.INVALID_REQUEST)
-                    .description("Request with \'client_id\' = \'" + clientID +
-                            "\' has \'response_type\' for \'hybrid flow\'; but \'openid\' scope not found.");
+                    .description(errorMsg);
         }
 
     }
@@ -73,8 +75,9 @@ public class BFSIHybridResponseTypeValidator extends TokenValidator {
 
         String method = request.getMethod();
         if (!OAuth.HttpMethod.GET.equals(method) && !OAuth.HttpMethod.POST.equals(method)) {
+            log.error("HTTP Method not correct.");
             throw OAuthProblemException.error(OAuthError.CodeResponse.INVALID_REQUEST)
-                    .description("Method not correct.");
+                    .description("HTTP Method not correct.");
         }
     }
 

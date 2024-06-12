@@ -59,8 +59,8 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
         /*  accessToken property check is done to omit the following claims getting bound to id_token
              The access token property is added to the ID token message context before this method is invoked. */
         try {
-            if (CommonUtils.isRegulatoryApp(tokenReqMessageContext.getOauth2AccessTokenReqDTO()
-                    .getClientId()) && (tokenReqMessageContext.getProperty("accessToken") == null)) {
+            if (CommonUtils.isRegulatoryApp(tokenReqMessageContext.getOauth2AccessTokenReqDTO().getClientId())
+                    && (tokenReqMessageContext.getProperty(IdentityCommonConstants.ACCESS_TOKEN) == null)) {
 
                 Map<String, Object> userClaimsInOIDCDialect = new HashMap<>();
                 JWTClaimsSet jwtClaimsSet = getJwtClaimsFromSuperClass(jwtClaimsSetBuilder, tokenReqMessageContext);
@@ -85,6 +85,7 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
                 return jwtClaimsSetBuilder.build();
             }
         } catch (RequestObjectException e) {
+            log.error("Error while handling custom claims", e);
             throw new IdentityOAuth2Exception(e.getMessage(), e);
         }
         return super.handleCustomClaims(jwtClaimsSetBuilder, tokenReqMessageContext);
@@ -112,8 +113,10 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
             try {
                 certificate = IdentityCommonUtils.parseCertificate(certHeader.get().getValue()[0]);
                 certThumbprint = X509CertUtils.computeSHA256Thumbprint(certificate);
-                userClaimsInOIDCDialect.put("cnf", Collections.singletonMap("x5t#S256", certThumbprint));
+                userClaimsInOIDCDialect.put(IdentityCommonConstants.CNF_CLAIM,
+                        Collections.singletonMap("x5t#S256", certThumbprint));
             } catch (ConsentManagementException e) {
+                log.error("Error while extracting the certificate", e);
                 log.error("Error while extracting the certificate", e);
             }
         }
@@ -163,7 +166,7 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
         if (removeTenantDomain || removeUserStoreDomain) {
             String subClaim = tokenReqMessageContext.getAuthorizedUser()
                     .getUsernameAsSubjectIdentifier(!removeUserStoreDomain, !removeTenantDomain);
-            userClaimsInOIDCDialect.put("sub", subClaim);
+            userClaimsInOIDCDialect.put(IdentityCommonConstants.SUBJECT_CLAIM, subClaim);
         }
     }
 }
