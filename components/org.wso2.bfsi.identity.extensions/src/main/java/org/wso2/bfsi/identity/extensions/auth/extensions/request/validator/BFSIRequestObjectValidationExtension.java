@@ -87,8 +87,7 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
 
         } catch (RequestObjectException e) {
             log.error("Error while retrieving regulatory property from sp metadata", e);
-            throw new RequestObjectException(RequestObjectException.ERROR_CODE_INVALID_REQUEST, "Error while " +
-                    "retrieving regulatory property from sp metadata");
+            throw new RequestObjectException(RequestObjectException.ERROR_CODE_INVALID_REQUEST, e.getErrorMessage());
         }
     }
 
