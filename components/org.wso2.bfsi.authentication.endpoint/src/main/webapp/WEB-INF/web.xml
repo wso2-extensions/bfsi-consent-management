@@ -7,23 +7,23 @@
     <!-- 1 -->
 
     <servlet>
-        <servlet-name>OBConsentServlet</servlet-name>
-        <servlet-class>org.wso2.bfsi.authentication.endpoint.OBConsentServlet</servlet-class>
+        <servlet-name>BFSIConsentServlet</servlet-name>
+        <servlet-class>org.wso2.bfsi.authentication.endpoint.BFSIConsentServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>OBConsentServlet</servlet-name>
+        <servlet-name>BFSIConsentServlet</servlet-name>
         <url-pattern>/oauth2_authz.do</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>OBConsentServlet</servlet-name>
+        <servlet-name>BFSIConsentServlet</servlet-name>
         <url-pattern>/oauth2_consent.do</url-pattern>
     </servlet-mapping>
 
     <context-param>
         <param-name>retrievalBaseURL</param-name>
-        <param-value>https://localhost:9443/api/openbanking/consent/authorize/retrieve</param-value>
+        <param-value>https://localhost:9443/api/bfsi/consent/authorize/retrieve</param-value>
     </context-param>
 
     <context-param>
@@ -34,18 +34,18 @@
     <!-- 2 -->
 
     <servlet>
-        <servlet-name>OBConsentConfirmServlet</servlet-name>
-        <servlet-class>org.wso2.bfsi.authentication.endpoint.OBConsentConfirmServlet</servlet-class>
+        <servlet-name>BFSIConsentConfirmServlet</servlet-name>
+        <servlet-class>org.wso2.bfsi.authentication.endpoint.BFSIConsentConfirmServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>OBConsentConfirmServlet</servlet-name>
+        <servlet-name>BFSIConsentConfirmServlet</servlet-name>
         <url-pattern>/oauth2_authz_confirm.do</url-pattern>
     </servlet-mapping>
 
     <context-param>
         <param-name>persistenceBaseURL</param-name>
-        <param-value>https://localhost:9443/api/openbanking/consent/authorize/persist</param-value>
+        <param-value>https://localhost:9443/api/bfsi/consent/authorize/persist</param-value>
     </context-param>
 
     <!-- 3 -->

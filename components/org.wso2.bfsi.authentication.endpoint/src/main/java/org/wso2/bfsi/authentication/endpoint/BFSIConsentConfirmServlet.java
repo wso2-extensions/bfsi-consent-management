@@ -36,7 +36,7 @@ import org.wso2.bfsi.authentication.endpoint.util.AuthenticationUtils;
 import org.wso2.bfsi.authentication.endpoint.util.Constants;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.util.Generated;
-import org.wso2.bfsi.consent.management.extensions.authservlet.OBAuthServletInterface;
+import org.wso2.bfsi.consent.management.extensions.authservlet.BFSIAuthServletInterface;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -59,7 +59,7 @@ import javax.servlet.http.HttpSession;
  */
 public class BFSIConsentConfirmServlet extends HttpServlet {
 
-    static OBAuthServletInterface obAuthServletTK;
+    static BFSIAuthServletInterface bfsiAuthServletTK;
     private static final long serialVersionUID = 6106269597832678046L;
     private static Logger log = LoggerFactory.getLogger(BFSIConsentConfirmServlet.class);
 
@@ -82,35 +82,35 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
         for (Cookie cookie : cookies) {
             browserCookies.put(cookie.getName(), cookie.getValue());
         }
-        consentData.put("cookies", browserCookies);
+        consentData.put(Constants.COOKIES, browserCookies);
 
         // Add authorisationId if available
-        String authorisationId = request.getParameter("authorisationId");
+        String authorisationId = request.getParameter(Constants.AUTH_ID);
         if (StringUtils.isNotEmpty(authorisationId)) {
-            metadata.put("authorisationId", authorisationId);
+            metadata.put(Constants.AUTH_ID, authorisationId);
         }
 
-        consentData.put("type", request.getParameter("type"));
-        consentData.put("approval", request.getParameter("consent"));
-        consentData.put("userId", session.getAttribute("username"));
+        consentData.put(Constants.TYPE, request.getParameter(Constants.TYPE));
+        consentData.put(Constants.APPROVAL, request.getParameter(Constants.CONSENT));
+        consentData.put(Constants.USER_ID, session.getAttribute(Constants.USER_NAME));
 
         // add TK data
-        if (obAuthServletTK != null) {
-            Map<String, String> updatedMetadata = obAuthServletTK.updateConsentMetaData(request);
+        if (bfsiAuthServletTK != null) {
+            Map<String, String> updatedMetadata = bfsiAuthServletTK.updateConsentMetaData(request);
             if (updatedMetadata != null) {
                 metadata.putAll(updatedMetadata);
             }
 
-            Map<String, Object> updatedConsentData = obAuthServletTK.updateConsentData(request);
+            Map<String, Object> updatedConsentData = bfsiAuthServletTK.updateConsentData(request);
             if (updatedConsentData != null) {
-                updatedConsentData.forEach(consentData::put);
+                consentData.putAll(updatedConsentData);
             }
         }
 
-        consentData.put("metadata", metadata);
+        consentData.put(Constants.METADATA, metadata);
 
         String redirectURL = persistConsentData(
-                consentData, request.getParameter("sessionDataKeyConsent"), getServletContext());
+                consentData, request.getParameter(Constants.SESSION_DATA_KEY_CONSENT), getServletContext());
 
         // Invoke authorize flow
         if (redirectURL != null) {
@@ -126,20 +126,21 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
     @Generated(message = "Contains the tested code of HTTPClient")
     String persistConsentData(JSONObject consentData, String sessionDataKey, ServletContext servletContext) {
 
-        String persistenceBaseURL = servletContext.getInitParameter("persistenceBaseURL");
-        String persistenceUrl = persistenceBaseURL + "/" + sessionDataKey;
+        String persistenceBaseURL = servletContext.getInitParameter(Constants.PERSISTENCE_BASE_URL);
+        String persistenceUrl = persistenceBaseURL + Constants.SLASH + sessionDataKey;
 
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPatch dataRequest = new HttpPatch(persistenceUrl);
-            dataRequest.addHeader("accept", "application/json");
-            dataRequest.addHeader("Authorization", "Basic " + BFSIConsentServlet.getConsentApiCredentials());
+            dataRequest.addHeader(Constants.ACCEPT, Constants.JSON);
+            dataRequest.addHeader(Constants.AUTHORIZATION, Constants.BASIC +
+                    BFSIConsentServlet.getConsentApiCredentials());
             StringEntity body = new StringEntity(consentData.toString(), ContentType.APPLICATION_JSON);
             dataRequest.setEntity(body);
             HttpResponse dataResponse = client.execute(dataRequest);
 
             if (dataResponse.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_MOVED_TEMP &&
-                    dataResponse.getLastHeader("Location") != null) {
-                return dataResponse.getLastHeader("Location").getValue();
+                    dataResponse.getLastHeader(Constants.LOCATION) != null) {
+                return dataResponse.getLastHeader(Constants.LOCATION).getValue();
             } else {
                 String retrievalResponse = IOUtils.toString(dataResponse.getEntity().getContent(),
                         String.valueOf(StandardCharsets.UTF_8));
@@ -162,7 +163,7 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
      */
      void setAuthExtension() {
          try {
-             obAuthServletTK = (OBAuthServletInterface) Class.forName(ConsentManagementConfigParser.getInstance()
+             bfsiAuthServletTK = (BFSIAuthServletInterface) Class.forName(ConsentManagementConfigParser.getInstance()
                      .getAuthServletExtension()).getDeclaredConstructor().newInstance();
          } catch (InstantiationException | IllegalAccessException |
                  InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {

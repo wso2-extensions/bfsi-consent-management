@@ -35,7 +35,7 @@ import org.wso2.bfsi.authentication.endpoint.util.AuthenticationUtils;
 import org.wso2.bfsi.authentication.endpoint.util.Constants;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.util.Generated;
-import org.wso2.bfsi.consent.management.extensions.authservlet.OBAuthServletInterface;
+import org.wso2.bfsi.consent.management.extensions.authservlet.BFSIAuthServletInterface;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,7 +66,7 @@ import static org.wso2.bfsi.consent.management.extensions.authservlet.utils.Util
  */
 public class BFSIConsentServlet extends HttpServlet {
 
-    static OBAuthServletInterface obAuthServletTK;
+    static BFSIAuthServletInterface bfsiAuthServletTK;
     private static final long serialVersionUID = 6106269076132678046L;
     private static Logger log = LoggerFactory.getLogger(BFSIConsentServlet.class);
     private static final String BUNDLE = "org.wso2.bfsi.authentication.endpoint.i18n";
@@ -85,14 +85,14 @@ public class BFSIConsentServlet extends HttpServlet {
         setAuthExtension();
 
         // get consent data
-        String sessionDataKey = request.getParameter("sessionDataKeyConsent");
+        String sessionDataKey = request.getParameter(Constants.SESSION_DATA_KEY_CONSENT);
         HttpResponse consentDataResponse = getConsentDataWithKey(sessionDataKey, getServletContext());
         JSONObject dataSet = new JSONObject();
         log.debug("HTTP response for consent retrieval" + consentDataResponse.toString());
         try {
             if (consentDataResponse.getStatusLine().getStatusCode() == HttpURLConnection.HTTP_MOVED_TEMP &&
-                    consentDataResponse.getLastHeader("Location") != null) {
-                response.sendRedirect(consentDataResponse.getLastHeader("Location").getValue());
+                    consentDataResponse.getLastHeader(Constants.LOCATION) != null) {
+                response.sendRedirect(consentDataResponse.getLastHeader(Constants.LOCATION).getValue());
                 return;
             } else {
                 String retrievalResponse = IOUtils.toString(consentDataResponse.getEntity().getContent(),
@@ -125,68 +125,82 @@ public class BFSIConsentServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         session.setAttribute(Constants.SESSION_DATA_KEY_CONSENT, Encode.forJava(sessionDataKey));
-        session.setAttribute("displayScopes",
-                Boolean.parseBoolean(getServletContext().getInitParameter("displayScopes")));
+        session.setAttribute(Constants.DISPLAY_SCOPES,
+                Boolean.parseBoolean(getServletContext().getInitParameter(Constants.DISPLAY_SCOPES)));
 
         // set strings to request
         ResourceBundle resourceBundle = getResourceBundle(request.getLocale());
 
-        originalRequest.setAttribute("privacyDescription", i18n(resourceBundle,
-                "privacy.policy.privacy.short.description.approving"));
-        originalRequest.setAttribute("privacyGeneral", i18n(resourceBundle, "privacy.policy.general"));
+        originalRequest.setAttribute(Constants.PRIVACY_DESCRIPTION, i18n(resourceBundle,
+                Constants.PRIVACY_DESCRIPTION_KEY));
+        originalRequest.setAttribute(Constants.PRIVACY_GENERAL, i18n(resourceBundle, Constants.PRIVACY_GENERAL_KEY));
 
         // bottom.jsp
-        originalRequest.setAttribute("ok", i18n(resourceBundle, "ok"));
-        originalRequest.setAttribute("requestedScopes", i18n(resourceBundle, "requested.scopes"));
+        originalRequest.setAttribute(Constants.OK, i18n(resourceBundle, Constants.OK));
+        originalRequest.setAttribute(Constants.REQUESTED_SCOPES, i18n(resourceBundle, Constants.REQUESTED_SCOPES_KEY));
 
-        originalRequest.setAttribute("app", dataSet.getAsString("application"));
+        originalRequest.setAttribute(Constants.APP, dataSet.getAsString(Constants.APPLICATION));
 
         // get auth servlet toolkit implementation
-        if (obAuthServletTK == null) {
+        if (bfsiAuthServletTK == null) {
             request.getSession().invalidate();
             response.sendRedirect("retry.do?status=Error&statusMsg=Error while processing request");
-            log.error("Unable to find OB auth servlet extension implementation. Returning error.");
+            log.error("Unable to find BFSI auth servlet extension implementation. Returning error.");
             return;
         }
         // Get servlet extension
-        OBAuthServletInterface obAuthServlet = obAuthServletTK;
+        BFSIAuthServletInterface bfsiAuthServlet = bfsiAuthServletTK;
 
         Map<String, Object> updatedValues;
 
-        updatedValues = obAuthServlet.updateRequestAttribute(request, dataSet, resourceBundle);
+        updatedValues = bfsiAuthServlet.updateRequestAttribute(request, dataSet, resourceBundle);
         updatedValues.forEach(originalRequest::setAttribute);
 
         // update session
-        updatedValues = obAuthServlet.updateSessionAttribute(request, dataSet, resourceBundle);
+        updatedValues = bfsiAuthServlet.updateSessionAttribute(request, dataSet, resourceBundle);
         updatedValues.forEach(originalRequest.getSession()::setAttribute);
 
         // dispatch
-        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher(obAuthServlet.getJSPPath());
+        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher(bfsiAuthServlet.getJSPPath());
         dispatcher.forward(originalRequest, response);
 
     }
 
+    /**
+     * Retrieve consent data with the session data key.
+     * @param sessionDataKeyConsent  session data key
+     * @param servletContext         servlet context
+     * @return   HTTP response
+     * @throws IOException if an error occurs while retrieving consent data
+     */
     HttpResponse getConsentDataWithKey(String sessionDataKeyConsent, ServletContext servletContext) throws IOException {
 
-        String retrievalBaseURL = servletContext.getInitParameter("retrievalBaseURL");
-        String retrieveUrl = (retrievalBaseURL.endsWith("/")) ? retrievalBaseURL + sessionDataKeyConsent :
-                retrievalBaseURL + "/" + sessionDataKeyConsent;
+        String retrievalBaseURL = servletContext.getInitParameter(Constants.RETRIEVAL_BASE_URL);
+        String retrieveUrl = (retrievalBaseURL.endsWith(Constants.SLASH)) ? retrievalBaseURL + sessionDataKeyConsent :
+                retrievalBaseURL + Constants.SLASH + sessionDataKeyConsent;
 
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpGet dataRequest = new HttpGet(retrieveUrl);
-        dataRequest.addHeader("Authorization", "Basic " + getConsentApiCredentials());
+        dataRequest.addHeader(Constants.AUTHORIZATION, Constants.BASIC + getConsentApiCredentials());
 
         return client.execute(dataRequest);
 
     }
 
+    /**
+     * Create consent data from the response of the consent retrieval.
+     * @param consentResponse  consent response from retrieval
+     * @param statusCode       status code of the response
+     * @return  consent data JSON object
+     * @throws IOException if an error occurs while creating the consent data
+     */
     JSONObject createConsentDataset(JSONObject consentResponse, int statusCode) throws IOException {
 
         JSONObject errorObject = new JSONObject();
         if (statusCode != HttpURLConnection.HTTP_OK) {
             if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                if (consentResponse.containsKey("description")) {
-                    errorObject.put(Constants.IS_ERROR, consentResponse.get("description"));
+                if (consentResponse.containsKey(Constants.DESCRIPTION)) {
+                    errorObject.put(Constants.IS_ERROR, consentResponse.get(Constants.DESCRIPTION));
                 }
             } else {
                 errorObject.put(Constants.IS_ERROR, "Retrieving consent data failed");
@@ -203,7 +217,7 @@ public class BFSIConsentServlet extends HttpServlet {
     void setAuthExtension() {
 
         try {
-            obAuthServletTK = (OBAuthServletInterface) Class.forName(ConsentManagementConfigParser.getInstance().
+            bfsiAuthServletTK = (BFSIAuthServletInterface) Class.forName(ConsentManagementConfigParser.getInstance().
                     getAuthServletExtension()).getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException |
                 InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
@@ -216,8 +230,6 @@ public class BFSIConsentServlet extends HttpServlet {
 
         return ResourceBundle.getBundle(BUNDLE, locale);
     }
-
-
 
     /**
      * Retrieve admin credentials in Base64 format from webapp properties or OB configs.
