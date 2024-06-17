@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * The interface to define how the servlet extension should be implemented.
  */
-public interface OBAuthServletInterface {
+public interface BFSIAuthServletInterface {
 
     Map<String, Object> updateRequestAttribute(HttpServletRequest request,
                                                JSONObject dataSet, ResourceBundle resourceBundle);
