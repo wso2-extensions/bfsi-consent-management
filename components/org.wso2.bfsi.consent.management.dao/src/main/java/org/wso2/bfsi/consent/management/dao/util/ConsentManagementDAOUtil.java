@@ -140,13 +140,15 @@ public class ConsentManagementDAOUtil {
 
             // Set data related to authorization resources
             if (authIds.isEmpty()) {
-                AuthorizationResource authorizationResource = setAuthorizationData(resultSet);
+                AuthorizationResource authorizationResource = setAuthorizationData(resultSet,
+                        ConsentMgtDAOConstants.AUTH_UPDATED_TIME);
 
                 authorizationResources.add(authorizationResource);
                 authIds.add(authorizationResource.getAuthorizationID());
             } else {
                 if (!authIds.contains(resultSet.getString(ConsentMgtDAOConstants.AUTH_ID))) {
-                    AuthorizationResource authorizationResource = setAuthorizationData(resultSet);
+                    AuthorizationResource authorizationResource = setAuthorizationData(resultSet,
+                            ConsentMgtDAOConstants.AUTH_UPDATED_TIME);
 
                     authorizationResources.add(authorizationResource);
                     authIds.add(authorizationResource.getAuthorizationID());
@@ -209,17 +211,19 @@ public class ConsentManagementDAOUtil {
      * Set data from the result set to AuthorizationResource object.
      *
      * @param resultSet               result set
+     * @param updateTimeParamName     update time parameter name
      * @return  authorizationResource authorization resource
      * @throws SQLException thrown if an error occurs when getting data from the result set
      */
-    public static AuthorizationResource setAuthorizationData(ResultSet resultSet) throws SQLException {
+    public static AuthorizationResource setAuthorizationData(ResultSet resultSet, String updateTimeParamName)
+            throws SQLException {
 
         AuthorizationResource authorizationResource = new AuthorizationResource(
                 resultSet.getString(ConsentMgtDAOConstants.CONSENT_ID),
                 resultSet.getString(ConsentMgtDAOConstants.USER_ID),
                 resultSet.getString(ConsentMgtDAOConstants.AUTH_STATUS),
                 resultSet.getString(ConsentMgtDAOConstants.AUTH_TYPE),
-                resultSet.getLong(ConsentMgtDAOConstants.UPDATED_TIME)
+                resultSet.getLong(updateTimeParamName)
         );
 
         authorizationResource.setAuthorizationID(resultSet.getString(ConsentMgtDAOConstants.AUTH_ID));

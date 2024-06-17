@@ -45,6 +45,13 @@ public class ConsentManagementConstants {
     public static final String CONSENT_API_PASSWORD = "ConsentManagement.ConsentAPICredentials.Password";
     public static final String REQUEST_VALIDATOR = "Identity.Extensions.RequestObjectValidator";
     public static final String RESPONSE_HANDLER = "Identity.Extensions.ResponseTypeHandler";
+    public static final String CLAIM_PROVIDER = "Identity.Extensions.ClaimProvider";
+    public static final String ENABLE_TRANSPORT_CERT_AS_HEADER = "Identity.ClientTransportCertAsHeaderEnabled";
+    public static final String REMOVE_USER_STORE_DOMAIN_FROM_SUBJECT =
+            "Identity.TokenSubject.RemoveUserStoreDomainFromSubject";
+    public static final String REMOVE_TENANT_DOMAIN_FROM_SUBJECT =
+            "Identity.TokenSubject.RemoveTenantDomainFromSubject";
+    public static final String CONSENT_ID_CLAIM_NAME = "Identity.ConsentIDClaimName";
 
     //Common Constants
     public static final String CONSENT = "consent";
