@@ -17,7 +17,6 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-jaxrs</artifactId>
-<!--            <scope>provided</scope>-->
             <exclusions>
                 <exclusion>
                     <groupId>javax.ws.rs</groupId>
@@ -33,11 +32,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>javax.servlet</groupId>-->
-<!--            <artifactId>jstl</artifactId>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
@@ -121,7 +115,7 @@
                             <directory>src/main/resources/</directory>
                         </resource>
                     </webResources>
-                    <warName>ob#authenticationendpoint</warName>
+                    <warName>bfsi#authenticationendpoint</warName>
                 </configuration>
             </plugin>
             <plugin>
@@ -165,7 +159,6 @@
                         <configuration>
                             <excludes>
                                 <!--Excluding them in coverage reports-->
-                                <exclude>**/*OBDefaultAuthServletImpl.class</exclude>
                             </excludes>
                             <rules>
                                 <rule implementation="org.jacoco.maven.RuleConfiguration">
@@ -174,7 +167,7 @@
                                         <limit implementation="org.jacoco.report.check.Limit">
                                             <counter>INSTRUCTION</counter>
                                             <value>COVEREDRATIO</value>
-                                            <!--                                            <minimum>0.67</minimum>-->
+                                            <!--<minimum>0.67</minimum>-->
                                         </limit>
                                     </limits>
                                 </rule>

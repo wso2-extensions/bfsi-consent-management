@@ -16,13 +16,16 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>1.4</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.wso2.bfsi.consent.management</groupId>
@@ -35,6 +38,8 @@
         <module>components/org.wso2.bfsi.consent.management.dao</module>
         <module>components/org.wso2.bfsi.consent.management.service</module>
         <module>components/org.wso2.bfsi.consent.management.extensions</module>
+        <module>components/org.wso2.bfsi.consent.management.endpoint</module>
+        <module>components/org.wso2.bfsi.authentication.endpoint</module>
     </modules>
 
     <name>BFSI Consent Management Connector for Identity Server</name>
@@ -171,6 +176,11 @@
                     <version>${jacoco.version}</version>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven-war-plugin.version}</version>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
                     <version>${maven.bundle.plugin.version}</version>
@@ -219,16 +229,120 @@
                 <version>${spotbugs.annotations.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-jaxrs</artifactId>
+                <version>${swagger-jaxrs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-core</artifactId>
+                <version>${org.apache.cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.databinding.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.orbit.com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${org.wso2.orbit.nimbus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jstl</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.verison}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>javax.servlet</artifactId>
+                <version>${equinox.javax.servlet.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>${encoder.wso2.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${orbit.version.commons.httpclient}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${orbit.httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-impl</artifactId>
+                <version>${taglibs-standard-impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-catalina</artifactId>
+                <version>${apache.tomcat-catalina.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring-web-test.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-web.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.validation</groupId>
+                <artifactId>jakarta.validation-api</artifactId>
+                <version>${javax.validation.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons.bean.utils.version}</version>
+            </dependency>
             <!-- Add Base Product dependencies here -->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
@@ -240,7 +354,16 @@
                 <artifactId>org.wso2.carbon.identity.oauth</artifactId>
                 <version>${identity.inbound.auth.oauth.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
+                <artifactId>org.wso2.carbon.identity.local.auth.api.core</artifactId>
+                <version>${carbon.identity.local.auth.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.oltu.oauth2</groupId>
+                <artifactId>oltu</artifactId>
+                <version>${oltu.version}</version>
+            </dependency>
             <!-- Add BFSI Consent Management dependencies here -->
             <dependency>
                 <groupId>org.wso2.bfsi.consent.management</groupId>
@@ -262,7 +385,6 @@
                 <artifactId>org.wso2.bfsi.consent.management.extensions</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <!-- Unit test dependencies -->
             <dependency>
                 <groupId>org.testng</groupId>
@@ -325,6 +447,7 @@
         <spotbugs.annotations.version>4.7.3</spotbugs.annotations.version>
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
         <com.h3xstream.findsecbugs.version>1.12.0</com.h3xstream.findsecbugs.version>
+        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
         <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
         <!-- Common Dependency versions -->
         <commons.logging.version>1.2</commons.logging.version>
@@ -332,15 +455,34 @@
         <commons-lang.version>3.4</commons-lang.version>
         <json-smart.version>2.4.10</json-smart.version>
         <commons-collections.version>4.4</commons-collections.version>
-        <json-smart.version>2.4.10</json-smart.version>
-        <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
+        <swagger-jaxrs.version>1.6.1</swagger-jaxrs.version>
+        <javax.ws.rs-api.version>2.0.1</javax.ws.rs-api.version>
+        <org.apache.cxf.version>3.3.7</org.apache.cxf.version>
+        <jackson.databinding.version>2.16.1</jackson.databinding.version>
+        <spring-web.version>5.1.2.RELEASE</spring-web.version>
+        <spring-web-test.version>2.5</spring-web-test.version>
+        <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jstl.version>1.2</jstl.version>
+        <org.slf4j.verison>1.7.21</org.slf4j.verison>
+        <equinox.javax.servlet.version>3.0.0.v201112011016</equinox.javax.servlet.version>
         <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
-        <oltu.version>1.0.0.wso2v3</oltu.version>
+        <orbit.version.commons.httpclient>4.5.13.wso2v1</orbit.version.commons.httpclient>
+        <orbit.httpcore.version>4.3.3.wso2v1</orbit.httpcore.version>
+        <commons.io.version>2.7</commons.io.version>
+        <taglibs-standard-impl.version>1.2.5</taglibs-standard-impl.version>
+        <apache.tomcat-catalina.version>9.0.11</apache.tomcat-catalina.version>
+        <javax.validation.api.version>3.0.0</javax.validation.api.version>
+        <hibernate-validator>7.0.1.Final</hibernate-validator>
+        <commons.bean.utils.version>1.9.3</commons.bean.utils.version>
         <!-- Base product dependency versions -->
-        <carbon.identity.framework.version>7.0.75</carbon.identity.framework.version>
-        <carbon.identity.framework.version.range>[7.0.75, 8.0.0)</carbon.identity.framework.version.range>
         <identity.inbound.auth.oauth.version>7.0.26</identity.inbound.auth.oauth.version>
+        <carbon.identity.local.auth.api.version>2.5.10</carbon.identity.local.auth.api.version>
         <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
+        <carbon.identity.framework.version>7.0.75</carbon.identity.framework.version>
+        <carbon.identity.framework.version.range>[5.25.234, 8.0.0)</carbon.identity.framework.version.range>
+        <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
+        <oltu.version>1.0.0.wso2v3</oltu.version>
         <!-- Unit Test Dependency versions -->
         <jacoco.version>0.8.6</jacoco.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
@@ -362,4 +504,5 @@
         <carbon.kernal.version.range>[4.10.9, 5.0.0)</carbon.kernal.version.range>
         <google.gson.version.range>[2.9,3)</google.gson.version.range>
     </properties>
+
 </project>

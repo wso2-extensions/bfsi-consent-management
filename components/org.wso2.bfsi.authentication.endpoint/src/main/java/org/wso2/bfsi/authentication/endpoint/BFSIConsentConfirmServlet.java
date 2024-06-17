@@ -57,11 +57,11 @@ import javax.servlet.http.HttpSession;
 /**
  * The servlet responsible for the confirm page in auth web flow.
  */
-public class OBConsentConfirmServlet extends HttpServlet {
+public class BFSIConsentConfirmServlet extends HttpServlet {
 
     static OBAuthServletInterface obAuthServletTK;
     private static final long serialVersionUID = 6106269597832678046L;
-    private static Logger log = LoggerFactory.getLogger(OBConsentConfirmServlet.class);
+    private static Logger log = LoggerFactory.getLogger(BFSIConsentConfirmServlet.class);
 
     @SuppressFBWarnings("COOKIE_USAGE")
     // Suppressed content - browserCookies.put(cookie.getName(), cookie.getValue())
@@ -132,7 +132,7 @@ public class OBConsentConfirmServlet extends HttpServlet {
         try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpPatch dataRequest = new HttpPatch(persistenceUrl);
             dataRequest.addHeader("accept", "application/json");
-            dataRequest.addHeader("Authorization", "Basic " + OBConsentServlet.getConsentApiCredentials());
+            dataRequest.addHeader("Authorization", "Basic " + BFSIConsentServlet.getConsentApiCredentials());
             StringEntity body = new StringEntity(consentData.toString(), ContentType.APPLICATION_JSON);
             dataRequest.setEntity(body);
             HttpResponse dataResponse = client.execute(dataRequest);

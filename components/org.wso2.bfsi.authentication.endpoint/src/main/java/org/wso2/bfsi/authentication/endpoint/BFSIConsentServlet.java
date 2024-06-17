@@ -64,11 +64,11 @@ import static org.wso2.bfsi.consent.management.extensions.authservlet.utils.Util
 /**
  * The servlet responsible for displaying the consent details in the auth UI flow.
  */
-public class OBConsentServlet extends HttpServlet {
+public class BFSIConsentServlet extends HttpServlet {
 
     static OBAuthServletInterface obAuthServletTK;
     private static final long serialVersionUID = 6106269076132678046L;
-    private static Logger log = LoggerFactory.getLogger(OBConsentServlet.class);
+    private static Logger log = LoggerFactory.getLogger(BFSIConsentServlet.class);
     private static final String BUNDLE = "org.wso2.bfsi.authentication.endpoint.i18n";
 
     @SuppressFBWarnings({"REQUESTDISPATCHER_FILE_DISCLOSURE", "TRUST_BOUNDARY_VIOLATION"})
@@ -225,7 +225,7 @@ public class OBConsentServlet extends HttpServlet {
     static String getConsentApiCredentials () {
         String username, password;
         try {
-            InputStream configurations = OBConsentConfirmServlet.class.getClassLoader()
+            InputStream configurations = BFSIConsentConfirmServlet.class.getClassLoader()
                     .getResourceAsStream(Constants.CONFIG_FILE_NAME);
             Properties configurationProperties = new Properties();
             configurationProperties.load(configurations);
