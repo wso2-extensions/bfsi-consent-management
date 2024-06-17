@@ -40,7 +40,7 @@ public class IdentityExtensionsDataHolder {
     private static volatile IdentityExtensionsDataHolder instance;
     private static ApplicationManagementService applicationManagementService;
     private static ConsentManagementConfigurationService configurationService;
-    Map<String, Object> configurationMap;
+    private Map<String, Object> configurationMap;
     private BFSIRequestObjectValidator bfsiRequestObjectValidator;
     private BFSIResponseTypeHandler bfsiResponseTypeHandler;
     private static RealmService realmService;

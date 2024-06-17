@@ -193,7 +193,7 @@ public class IdentityCommonUtils {
     }
 
     /**
-     * Utility method get the application property from SP Meta Data.
+     * Utility method get the application certificate stored as a application property from SP Meta Data.
      * @param clientId ClientId of the application
      * @return the service provider certificate
      * @throws ConsentManagementException
