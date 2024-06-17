@@ -21,6 +21,7 @@ package org.wso2.bfsi.consent.management.extensions.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
+import org.wso2.bfsi.consent.management.extensions.admin.builder.ConsentAdminBuilder;
 import org.wso2.bfsi.consent.management.extensions.authorize.builder.ConsentStepsBuilder;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionExporter;
 import org.wso2.bfsi.consent.management.extensions.manage.builder.ConsentManageBuilder;
@@ -41,6 +42,7 @@ public class ConsentExtensionsDataHolder {
     private ConsentStepsBuilder consentStepsBuilder;
     private ConsentManageBuilder consentManageBuilder;
     private ConsentValidateBuilder consentValidateBuilder;
+    private ConsentAdminBuilder consentAdminBuilder;
     private KeyStore trustStore = null;
 
     // Prevent instantiation
@@ -85,6 +87,11 @@ public class ConsentExtensionsDataHolder {
         consentValidateBuilder.build();
         this.setConsentValidateBuilder(consentValidateBuilder);
         ConsentExtensionExporter.setConsentValidateBuilder(consentValidateBuilder);
+
+        ConsentAdminBuilder consentAdminBuilder = new ConsentAdminBuilder();
+        consentAdminBuilder.build();
+        this.setConsentAdminBuilder(consentAdminBuilder);
+        ConsentExtensionExporter.setConsentAdminBuilder(consentAdminBuilder);
     }
 
     public ConsentManageBuilder getConsentManageBuilder() {
@@ -109,6 +116,14 @@ public class ConsentExtensionsDataHolder {
 
     public void setConsentValidateBuilder(ConsentValidateBuilder consentValidateBuilder) {
         this.consentValidateBuilder = consentValidateBuilder;
+    }
+
+    public ConsentAdminBuilder getConsentAdminBuilder() {
+        return consentAdminBuilder;
+    }
+
+    public void setConsentAdminBuilder(ConsentAdminBuilder consentAdminBuilder) {
+        this.consentAdminBuilder = consentAdminBuilder;
     }
 
     public ConsentCoreService getConsentCoreService() {

@@ -18,6 +18,7 @@
 
 package org.wso2.bfsi.consent.management.extensions.common;
 
+import org.wso2.bfsi.consent.management.extensions.admin.builder.ConsentAdminBuilder;
 import org.wso2.bfsi.consent.management.extensions.authorize.builder.ConsentStepsBuilder;
 import org.wso2.bfsi.consent.management.extensions.manage.builder.ConsentManageBuilder;
 import org.wso2.bfsi.consent.management.extensions.validate.builder.ConsentValidateBuilder;
@@ -31,6 +32,7 @@ public class ConsentExtensionExporter {
     private static ConsentManageBuilder consentManageBuilder;
     private static ConsentStepsBuilder consentStepsBuilder;
     private static ConsentValidateBuilder consentValidateBuilder;
+    private static ConsentAdminBuilder consentAdminBuilder;
 
     public static ConsentExtensionExporter getInstance() {
         if (consentExtExporter == null) {
@@ -66,5 +68,13 @@ public class ConsentExtensionExporter {
 
     public static void setConsentStepsBuilder(ConsentStepsBuilder consentStepsBuilder) {
         ConsentExtensionExporter.consentStepsBuilder = consentStepsBuilder;
+    }
+
+    public static ConsentAdminBuilder getConsentAdminBuilder() {
+        return consentAdminBuilder;
+    }
+
+    public static void setConsentAdminBuilder(ConsentAdminBuilder consentAdminBuilder) {
+        ConsentExtensionExporter.consentAdminBuilder = consentAdminBuilder;
     }
 }

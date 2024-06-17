@@ -239,10 +239,10 @@ public class Utils {
         JSONArray accountsArray = (JSONArray) dataSet.get("accounts");
         for (int accountIndex = 0; accountIndex < accountsArray.size(); accountIndex++) {
             JSONObject object = (JSONObject) accountsArray.get(accountIndex);
-            String accountId = object.getAsString(ConsentExtensionConstants.ACCOUNT_ID);
+            String accountId = object.getAsString(ConsentExtensionConstants.AUTH_ACCOUNT_ID);
             String displayName = object.getAsString(ConsentExtensionConstants.DISPLAY_NAME);
             Map<String, String> data = new HashMap<>();
-            data.put(ConsentExtensionConstants.ACCOUNT_ID, accountId);
+            data.put(ConsentExtensionConstants.AUTH_ACCOUNT_ID, accountId);
             data.put(ConsentExtensionConstants.DISPLAY_NAME, displayName);
             accountData.add(data);
         }
