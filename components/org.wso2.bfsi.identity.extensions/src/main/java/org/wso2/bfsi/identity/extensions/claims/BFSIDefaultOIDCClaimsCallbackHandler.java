@@ -117,7 +117,6 @@ public class BFSIDefaultOIDCClaimsCallbackHandler extends DefaultOIDCClaimsCallb
                         Collections.singletonMap("x5t#S256", certThumbprint));
             } catch (ConsentManagementException e) {
                 log.error("Error while extracting the certificate", e);
-                log.error("Error while extracting the certificate", e);
             }
         }
     }

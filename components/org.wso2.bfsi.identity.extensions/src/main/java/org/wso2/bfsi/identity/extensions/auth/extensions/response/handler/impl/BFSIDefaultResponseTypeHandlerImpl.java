@@ -131,10 +131,10 @@ public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandl
         try {
             List<RequestedClaim> requestedClaims = service.getRequestedClaimsForSessionDataKey(sessionDataKey,
                     false);
-            consentID = iterateClaims(requestedClaims);
+            consentID = retrieveConsentIDFromClaimList(requestedClaims);
             if (consentID.isEmpty()) {
                 requestedClaims = service.getRequestedClaimsForSessionDataKey(sessionDataKey, true);
-                consentID = iterateClaims(requestedClaims);
+                consentID = retrieveConsentIDFromClaimList(requestedClaims);
             }
 
         } catch (RequestObjectException ex) {
@@ -149,7 +149,7 @@ public class BFSIDefaultResponseTypeHandlerImpl implements BFSIResponseTypeHandl
      * @param requestedClaims list of claims
      * @return consent id
      */
-    String iterateClaims(List<RequestedClaim> requestedClaims) {
+    String retrieveConsentIDFromClaimList(List<RequestedClaim> requestedClaims) {
 
         String consentID = StringUtils.EMPTY;
         for (RequestedClaim claim : requestedClaims) {

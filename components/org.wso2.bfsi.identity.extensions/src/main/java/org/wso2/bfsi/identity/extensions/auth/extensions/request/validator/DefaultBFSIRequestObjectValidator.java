@@ -118,20 +118,18 @@ public class DefaultBFSIRequestObjectValidator extends BFSIRequestObjectValidato
                 for (String scope : requestedScopes) {
                     if (IdentityCommonConstants.OPENID_SCOPE.equals(scope)) {
                         stringBuilder.append(scope).append(" ");
-                        if (log.isDebugEnabled()) {
-                            log.debug("Adding Openid scope to the request object");
-                        }
+                        log.debug("Adding Openid scope to the request object");
                     }
                     if (allowedScopes.contains(scope)) {
                         stringBuilder.append(scope).append(" ");
                         if (log.isDebugEnabled()) {
-                            log.debug(String.format("Removed scope %s from the request object",
+                            log.debug(String.format("Adding allowed scope %s to the request object",
                                     scope.replaceAll("[\r\n]", "")));
                         }
                     }
                 }
                 String modifiedScopeString = stringBuilder.toString().trim();
-                // throw an error if no valid scopes found or only openid scope is found
+                // throw an error if no valid scopes found or only one scope is found
                 if (StringUtils.isBlank(modifiedScopeString) || modifiedScopeString.split(" ").length <= 1) {
                     throw new RequestObjectException("No valid scopes found in the request");
                 }

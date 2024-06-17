@@ -78,7 +78,7 @@ public class BFSIDefaultClaimProvider extends BFSIClaimProvider {
             }
         }
         final String responseType = authAuthzReqMessageContext.getAuthorizationReqDTO().getResponseType();
-        avoidSettingATHash(responseType, authorizeRespDTO, claims);
+        setATHashAsNull(responseType, authorizeRespDTO, claims);
 
         return claims;
 
@@ -100,8 +100,8 @@ public class BFSIDefaultClaimProvider extends BFSIClaimProvider {
      * @param authorizeRespDTO authorizeRespDTO
      * @param claims           returning claims map
      */
-    private void avoidSettingATHash(String responseType, OAuth2AuthorizeRespDTO authorizeRespDTO,
-                                    Map<String, Object> claims) {
+    private void setATHashAsNull(String responseType, OAuth2AuthorizeRespDTO authorizeRespDTO,
+                                 Map<String, Object> claims) {
 
         if (StringUtils.isNotBlank(responseType)) {
             List<String> responseTypes = Arrays.asList(responseType.trim().split("\\s+"));

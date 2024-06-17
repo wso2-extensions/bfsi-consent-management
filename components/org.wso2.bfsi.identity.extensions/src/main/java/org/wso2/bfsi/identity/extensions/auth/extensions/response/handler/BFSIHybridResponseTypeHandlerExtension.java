@@ -72,7 +72,7 @@ public class BFSIHybridResponseTypeHandlerExtension extends HybridResponseTypeHa
      * @throws IdentityOAuth2Exception
      */
     @Generated(message = "cant unit test super calls")
-    OAuth2AuthorizeRespDTO issueCode(
+    private OAuth2AuthorizeRespDTO issueCode(
             OAuthAuthzReqMessageContext oAuthAuthzReqMessageContext) throws IdentityOAuth2Exception {
 
         return super.issue(oAuthAuthzReqMessageContext);

@@ -77,7 +77,7 @@ public class BFSICodeResponseTypeHandlerExtension extends CodeResponseTypeHandle
      * @throws IdentityOAuth2Exception If an error occurred while issuing the code.
      */
     @Generated(message = "Cannot test super calls")
-    OAuth2AuthorizeRespDTO issueCode(
+    private OAuth2AuthorizeRespDTO issueCode(
             OAuthAuthzReqMessageContext oAuthAuthzReqMessageContext) throws IdentityOAuth2Exception {
 
         return super.issue(oAuthAuthzReqMessageContext);
