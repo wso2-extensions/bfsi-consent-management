@@ -152,7 +152,7 @@
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>
                     <failOnError>true</failOnError>
-                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs</spotbugsXmlOutputDirectory>
+                    <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
                     <excludeFilterFile>${project.basedir}/src/main/resources/findbugs-exclude.xml</excludeFilterFile>
                     <includeFilterFile>${project.basedir}/src/main/resources/findbugs-include.xml</includeFilterFile>
                     <plugins>
