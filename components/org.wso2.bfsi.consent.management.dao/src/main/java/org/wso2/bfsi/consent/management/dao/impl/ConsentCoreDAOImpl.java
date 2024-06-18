@@ -389,7 +389,8 @@ public class ConsentCoreDAOImpl implements ConsentCoreDAO {
                         log.debug(String.format("Retrieved the consent authorization resource for authorization ID" +
                                 " : %s", authorizationID.replaceAll("[\r\n]", "")));
                     }
-                    return ConsentManagementDAOUtil.setAuthorizationData(resultSet);
+                    return ConsentManagementDAOUtil.setAuthorizationData(resultSet,
+                            ConsentMgtDAOConstants.UPDATED_TIME);
                 } else {
                     log.error(String.format("No records are found for authorization ID : %s",
                             authorizationID.replaceAll("[\r\n]", "")));
