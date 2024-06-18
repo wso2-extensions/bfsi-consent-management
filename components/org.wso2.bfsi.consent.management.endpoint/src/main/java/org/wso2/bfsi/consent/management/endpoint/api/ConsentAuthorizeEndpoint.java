@@ -29,7 +29,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
-import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.consent.management.endpoint.utils.ConsentCache;
 import org.wso2.bfsi.consent.management.endpoint.utils.ConsentConstants;
 import org.wso2.bfsi.consent.management.endpoint.utils.ConsentUtils;
@@ -41,6 +40,7 @@ import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentData;
 import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentPersistData;
 import org.wso2.bfsi.consent.management.extensions.common.AuthErrorCode;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
+import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionExporter;
 import org.wso2.bfsi.consent.management.service.impl.ConsentCoreServiceImpl;
 import org.wso2.carbon.identity.oauth.cache.SessionDataCacheEntry;
@@ -148,7 +148,7 @@ public class ConsentAuthorizeEndpoint {
         Map<String, Serializable> sensitiveDataMap =
                 ConsentUtils.getSensitiveDataWithConsentKey(sessionDataKey);
 
-        if ("false".equals(sensitiveDataMap.get(ConsentManagementConstants.IS_ERROR))) {
+        if ("false".equals(sensitiveDataMap.get(ConsentExtensionConstants.IS_ERROR))) {
             loggedInUser = (String) sensitiveDataMap.get("loggedInUser");
             app = (String) sensitiveDataMap.get("application");
             spQueryParams = (String) sensitiveDataMap.get("spQueryParams");
@@ -160,7 +160,7 @@ public class ConsentAuthorizeEndpoint {
                 }
             }
         } else {
-            String isError = (String) sensitiveDataMap.get(ConsentManagementConstants.IS_ERROR);
+            String isError = (String) sensitiveDataMap.get(ConsentExtensionConstants.IS_ERROR);
             //Have to throw standard error because cannot access redirect URI with this error
             log.error(String.format("Error while getting endpoint parameters. %s",
                     isError.replaceAll("\n\r", "")));
@@ -266,12 +266,12 @@ public class ConsentAuthorizeEndpoint {
             }
 
             boolean approval;
-            if (payload.containsKey(ConsentManagementConstants.APPROVAL)) {
+            if (payload.containsKey(ConsentExtensionConstants.APPROVAL)) {
                 try {
-                    if (payload.get(ConsentManagementConstants.APPROVAL) instanceof Boolean) {
-                        approval = (Boolean) payload.get(ConsentManagementConstants.APPROVAL);
+                    if (payload.get(ConsentExtensionConstants.APPROVAL) instanceof Boolean) {
+                        approval = (Boolean) payload.get(ConsentExtensionConstants.APPROVAL);
                     } else {
-                        approval = Boolean.parseBoolean((String) payload.get(ConsentManagementConstants.APPROVAL));
+                        approval = Boolean.parseBoolean((String) payload.get(ConsentExtensionConstants.APPROVAL));
                     }
                 } catch (ClassCastException e) {
                     log.error("Error while processing consent persistence approval", e);
@@ -286,8 +286,8 @@ public class ConsentAuthorizeEndpoint {
 
             ConsentPersistData consentPersistData = new ConsentPersistData(payload, headers, approval, consentData);
 
-            if (payload.containsKey(ConsentManagementConstants.COOKIES)) {
-                Object cookies = payload.get(ConsentManagementConstants.COOKIES);
+            if (payload.containsKey(ConsentExtensionConstants.COOKIES)) {
+                Object cookies = payload.get(ConsentExtensionConstants.COOKIES);
                 if (cookies instanceof Map) {
                     consentPersistData.setBrowserCookies((Map<String, String>) cookies);
                 } else {
@@ -335,7 +335,7 @@ public class ConsentAuthorizeEndpoint {
             }
         }
 
-        return Response.status(ConsentManagementConstants.STATUS_FOUND).location(location).build();
+        return Response.status(ConsentExtensionConstants.STATUS_FOUND).location(location).build();
     }
 
     /**

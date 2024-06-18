@@ -49,7 +49,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
-import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentMappingResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
@@ -57,6 +56,7 @@ import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
 import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentData;
 import org.wso2.bfsi.consent.management.extensions.common.AuthErrorCode;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
+import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.util.KeyStoreManager;
@@ -225,16 +225,16 @@ public class ConsentUtils {
 
             if (sensitiveDataSet.isEmpty()) {
                 log.error("No available data for key provided");
-                sensitiveDataSet.put(ConsentManagementConstants.IS_ERROR, "No available data for key provided");
+                sensitiveDataSet.put(ConsentExtensionConstants.IS_ERROR, "No available data for key provided");
                 return sensitiveDataSet;
             }
 
-            sensitiveDataSet.put(ConsentManagementConstants.IS_ERROR, "false");
+            sensitiveDataSet.put(ConsentExtensionConstants.IS_ERROR, "false");
             return sensitiveDataSet;
 
         } else {
             log.error("Could not retrieve ParameterResolverService OSGi service");
-            sensitiveDataSet.put(ConsentManagementConstants.IS_ERROR, "Could not retrieve parameter service");
+            sensitiveDataSet.put(ConsentExtensionConstants.IS_ERROR, "Could not retrieve parameter service");
             return sensitiveDataSet;
         }
     }
@@ -246,11 +246,11 @@ public class ConsentUtils {
      */
     public static void setCommonDataToResponse(ConsentData consentData, JSONObject jsonObject) {
 
-        if (!jsonObject.containsKey(ConsentManagementConstants.TYPE)) {
-            jsonObject.put(ConsentManagementConstants.TYPE, consentData.getType());
+        if (!jsonObject.containsKey(ConsentExtensionConstants.TYPE)) {
+            jsonObject.put(ConsentExtensionConstants.TYPE, consentData.getType());
         }
-        if (!jsonObject.containsKey(ConsentManagementConstants.APPLICATION)) {
-            jsonObject.put(ConsentManagementConstants.APPLICATION, consentData.getApplication());
+        if (!jsonObject.containsKey(ConsentExtensionConstants.APPLICATION)) {
+            jsonObject.put(ConsentExtensionConstants.APPLICATION, consentData.getApplication());
         }
     }
 
@@ -263,30 +263,30 @@ public class ConsentUtils {
     public static ConsentData getConsentDataFromAttributes(JsonObject consentDetails, String sessionDataKey)
             throws URISyntaxException {
 
-        JsonObject sensitiveDataMap = consentDetails.get(ConsentManagementConstants.SENSITIVE_DATA_MAP)
+        JsonObject sensitiveDataMap = consentDetails.get(ConsentExtensionConstants.SENSITIVE_DATA_MAP)
                 .getAsJsonObject();
         ConsentData consentData = new ConsentData(sessionDataKey,
-                sensitiveDataMap.get(ConsentManagementConstants.LOGGED_IN_USER).getAsString(),
-                sensitiveDataMap.get(ConsentManagementConstants.SP_QUERY_PARAMS).getAsString(),
-                consentDetails.get(ConsentManagementConstants.SCOPES).getAsString(),
-                sensitiveDataMap.get(ConsentManagementConstants.APPLICATION).getAsString(),
-                gson.fromJson(consentDetails.get(ConsentManagementConstants.REQUEST_HEADERS), Map.class));
+                sensitiveDataMap.get(ConsentExtensionConstants.LOGGED_IN_USER).getAsString(),
+                sensitiveDataMap.get(ConsentExtensionConstants.SP_QUERY_PARAMS).getAsString(),
+                consentDetails.get(ConsentExtensionConstants.SCOPES).getAsString(),
+                sensitiveDataMap.get(ConsentExtensionConstants.APPLICATION).getAsString(),
+                gson.fromJson(consentDetails.get(ConsentExtensionConstants.REQUEST_HEADERS), Map.class));
         consentData.setSensitiveDataMap(gson.fromJson(sensitiveDataMap, Map.class));
-        URI redirectURI = new URI(consentDetails.get(ConsentManagementConstants.REQUEST_URI).getAsString());
+        URI redirectURI = new URI(consentDetails.get(ConsentExtensionConstants.REQUEST_URI).getAsString());
         consentData.setRedirectURI(redirectURI);
-        consentData.setUserId(consentDetails.get(ConsentManagementConstants.USER_ID).getAsString());
-        consentData.setConsentId(consentDetails.get(ConsentManagementConstants.CONSENT_ID).getAsString());
-        consentData.setClientId(consentDetails.get(ConsentManagementConstants.CLIENT_ID).getAsString());
-        consentData.setRegulatory(Boolean.parseBoolean(consentDetails.get(ConsentManagementConstants.REGULATORY)
+        consentData.setUserId(consentDetails.get(ConsentExtensionConstants.USER_ID).getAsString());
+        consentData.setConsentId(consentDetails.get(ConsentExtensionConstants.CONSENT_ID).getAsString());
+        consentData.setClientId(consentDetails.get(ConsentExtensionConstants.CLIENT_ID).getAsString());
+        consentData.setRegulatory(Boolean.parseBoolean(consentDetails.get(ConsentExtensionConstants.REGULATORY)
                 .getAsString()));
-        ConsentResource consentResource = gson.fromJson(consentDetails.get(ConsentManagementConstants.CONSENT_RESOURCE),
+        ConsentResource consentResource = gson.fromJson(consentDetails.get(ConsentExtensionConstants.CONSENT_RESOURCE),
                 ConsentResource.class);
         consentData.setConsentResource(consentResource);
         AuthorizationResource authorizationResource = gson.fromJson(consentDetails
-                        .get(ConsentManagementConstants.AUTH_RESOURCE), AuthorizationResource.class);
+                        .get(ConsentExtensionConstants.AUTH_RESOURCE), AuthorizationResource.class);
         consentData.setAuthResource(authorizationResource);
-        consentData.setMetaDataMap(gson.fromJson(consentDetails.get(ConsentManagementConstants.META_DATA), Map.class));
-        consentData.setType(consentDetails.get(ConsentManagementConstants.TYPE).getAsString());
+        consentData.setMetaDataMap(gson.fromJson(consentDetails.get(ConsentExtensionConstants.META_DATA), Map.class));
+        consentData.setType(consentDetails.get(ConsentExtensionConstants.TYPE).getAsString());
         return consentData;
     }
 
@@ -314,11 +314,11 @@ public class ConsentUtils {
             }
             HttpPost authorizeRequest = new HttpPost(authorizeURL);
             List<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair(ConsentManagementConstants.HAS_APPROVED_ALWAYS, "false"));
-            params.add(new BasicNameValuePair(ConsentManagementConstants.SESSION_DATA_KEY_CONSENT,
+            params.add(new BasicNameValuePair(ConsentExtensionConstants.HAS_APPROVED_ALWAYS, "false"));
+            params.add(new BasicNameValuePair(ConsentExtensionConstants.SESSION_DATA_KEY_CONSENT,
                     consentData.getSessionDataKey()));
-            params.add(new BasicNameValuePair(ConsentManagementConstants.CONSENT, consent));
-            params.add(new BasicNameValuePair(ConsentManagementConstants.USER, consentData.getUserId()));
+            params.add(new BasicNameValuePair(ConsentExtensionConstants.CONSENT, consent));
+            params.add(new BasicNameValuePair(ConsentExtensionConstants.USER, consentData.getUserId()));
             HttpContext localContext = new BasicHttpContext();
             localContext.setAttribute(HttpClientContext.COOKIE_STORE, cookieStore);
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(params);
@@ -330,7 +330,7 @@ public class ConsentUtils {
                         "Error while getting authorize redirect", consentData.getState());
             } else {
                 //Extract the location header from the authorization redirect
-                return new URI(authorizeResponse.getLastHeader(ConsentManagementConstants.LOCATION).getValue());
+                return new URI(authorizeResponse.getLastHeader(ConsentExtensionConstants.LOCATION).getValue());
             }
         } catch (IOException e) {
             log.error("Error while sending authorize request to complete the authorize flow", e);
@@ -345,59 +345,59 @@ public class ConsentUtils {
     public static JSONObject detailedConsentToJSON(DetailedConsentResource detailedConsentResource) {
         JSONObject consentResource = new JSONObject();
 
-        consentResource.put(ConsentManagementConstants.CC_CONSENT_ID, detailedConsentResource.getConsentID());
-        consentResource.put(ConsentManagementConstants.CLIENT_ID, detailedConsentResource.getClientID());
+        consentResource.put(ConsentExtensionConstants.CC_CONSENT_ID, detailedConsentResource.getConsentID());
+        consentResource.put(ConsentExtensionConstants.CLIENT_ID, detailedConsentResource.getClientID());
         try {
-            consentResource.put(ConsentManagementConstants.RECEIPT,
+            consentResource.put(ConsentExtensionConstants.RECEIPT,
                     parser.parse(detailedConsentResource.getReceipt()));
         } catch (ParseException e) {
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Exception occurred while parsing" +
                     " receipt");
         }
-        consentResource.put(ConsentManagementConstants.CONSENT_TYPE, detailedConsentResource.getConsentType());
-        consentResource.put(ConsentManagementConstants.CONSENT_STATUS,
+        consentResource.put(ConsentExtensionConstants.CONSENT_TYPE, detailedConsentResource.getConsentType());
+        consentResource.put(ConsentExtensionConstants.CURRENT_STATUS,
                 detailedConsentResource.getCurrentStatus());
-        consentResource.put(ConsentManagementConstants.CONSENT_FREQUENCY,
+        consentResource.put(ConsentExtensionConstants.CONSENT_FREQUENCY,
                 detailedConsentResource.getConsentFrequency());
-        consentResource.put(ConsentManagementConstants.VALIDITY_PERIOD,
+        consentResource.put(ConsentExtensionConstants.VALIDITY_PERIOD,
                 detailedConsentResource.getValidityPeriod());
-        consentResource.put(ConsentManagementConstants.CREATED_TIMESTAMP,
+        consentResource.put(ConsentExtensionConstants.CREATED_TIMESTAMP,
                 detailedConsentResource.getCreatedTime());
-        consentResource.put(ConsentManagementConstants.UPDATED_TIMESTAMP,
+        consentResource.put(ConsentExtensionConstants.UPDATED_TIMESTAMP,
                 detailedConsentResource.getUpdatedTime());
-        consentResource.put(ConsentManagementConstants.RECURRING_IND,
+        consentResource.put(ConsentExtensionConstants.RECURRING_INDICATOR,
                 detailedConsentResource.isRecurringIndicator());
         JSONObject attributes = new JSONObject();
         Map<String, String> attMap = detailedConsentResource.getConsentAttributes();
         for (Map.Entry<String, String> entry : attMap.entrySet()) {
             attributes.put(entry.getKey(), entry.getValue());
         }
-        consentResource.put(ConsentManagementConstants.CONSENT_ATTRIBUTES, attributes);
+        consentResource.put(ConsentExtensionConstants.CONSENT_ATTRIBUTES, attributes);
         JSONArray authorizationResources = new JSONArray();
         ArrayList<AuthorizationResource> authArray = detailedConsentResource.getAuthorizationResources();
         for (AuthorizationResource resource : authArray) {
             JSONObject resourceJSON = new JSONObject();
-            resourceJSON.put(ConsentManagementConstants.AUTH_ID, resource.getAuthorizationID());
-            resourceJSON.put(ConsentManagementConstants.CC_CONSENT_ID, resource.getConsentID());
-            resourceJSON.put(ConsentManagementConstants.USER_ID, resource.getUserID());
-            resourceJSON.put(ConsentManagementConstants.AUTH_STATUS, resource.getAuthorizationStatus());
-            resourceJSON.put(ConsentManagementConstants.AUTH_TYPE, resource.getAuthorizationType());
-            resourceJSON.put(ConsentManagementConstants.UPDATED_TIME, resource.getUpdatedTime());
+            resourceJSON.put(ConsentExtensionConstants.AUTH_ID, resource.getAuthorizationID());
+            resourceJSON.put(ConsentExtensionConstants.CC_CONSENT_ID, resource.getConsentID());
+            resourceJSON.put(ConsentExtensionConstants.USER_ID, resource.getUserID());
+            resourceJSON.put(ConsentExtensionConstants.AUTH_STATUS, resource.getAuthorizationStatus());
+            resourceJSON.put(ConsentExtensionConstants.AUTH_TYPE, resource.getAuthorizationType());
+            resourceJSON.put(ConsentExtensionConstants.UPDATE_TIME, resource.getUpdatedTime());
             authorizationResources.add(resourceJSON);
         }
-        consentResource.put(ConsentManagementConstants.AUTH_RESOURCES, authorizationResources);
+        consentResource.put(ConsentExtensionConstants.AUTH_RESOURCES, authorizationResources);
         JSONArray consentMappingResources = new JSONArray();
         ArrayList<ConsentMappingResource> mappingArray = detailedConsentResource.getConsentMappingResources();
         for (ConsentMappingResource resource : mappingArray) {
             JSONObject resourceJSON = new JSONObject();
-            resourceJSON.put(ConsentManagementConstants.MAPPING_ID, resource.getMappingID());
-            resourceJSON.put(ConsentManagementConstants.AUTH_ID, resource.getAuthorizationID());
-            resourceJSON.put(ConsentManagementConstants.ACCOUNT_ID, resource.getAccountID());
-            resourceJSON.put(ConsentManagementConstants.PERMISSION, resource.getPermission());
-            resourceJSON.put(ConsentManagementConstants.MAPPING_STATUS, resource.getMappingStatus());
+            resourceJSON.put(ConsentExtensionConstants.MAPPING_ID, resource.getMappingID());
+            resourceJSON.put(ConsentExtensionConstants.AUTH_ID, resource.getAuthorizationID());
+            resourceJSON.put(ConsentExtensionConstants.ACCOUNT_ID, resource.getAccountID());
+            resourceJSON.put(ConsentExtensionConstants.PERMISSION, resource.getPermission());
+            resourceJSON.put(ConsentExtensionConstants.MAPPING_STATUS, resource.getMappingStatus());
             consentMappingResources.add(resourceJSON);
         }
-        consentResource.put(ConsentManagementConstants.MAPPING_RESOURCES, consentMappingResources);
+        consentResource.put(ConsentExtensionConstants.MAPPING_RESOURCES, consentMappingResources);
         return consentResource;
     }
 
@@ -470,9 +470,9 @@ public class ConsentUtils {
             return new HashMap<>();
         }
 
-        URI url = new URI(resourceParams.get(ConsentManagementConstants.RESOURCE));
+        URI url = new URI(resourceParams.get(ConsentExtensionConstants.RESOURCE));
 
-        resourceParams.put(ConsentManagementConstants.RESOURCE_PATH, url.getRawPath());
+        resourceParams.put(ConsentExtensionConstants.RESOURCE_PATH, url.getRawPath());
 
         if (url.getRawQuery() != null) {
             String[] params = url.getRawQuery().split("&");

@@ -45,6 +45,7 @@ public class ConsentExtensionConstants {
     public static final String UPDATED_TIMESTAMP = "updatedTimestamp";
     public static final String RECURRING_INDICATOR = "recurringIndicator";
     public static final String CONSENT_ATTRIBUTES = "consentAttributes";
+    public static final String RESOURCE = "resource";
     public static final String AUTH_ID = "authorizationId";
     public static final String CC_CONSENT_ID = "consentId";
     public static final String USER_ID = "userId";
@@ -80,6 +81,30 @@ public class ConsentExtensionConstants {
     public static final String AMOUNT = "Amount";
 
     //Consent Authorize Constants
+    public static final String IS_ERROR = "isError";
+    public static final String TYPE = "type";
+    public static final String APPLICATION = "application";
+    public static final String SENSITIVE_DATA_MAP = "sensitiveDataMap";
+    public static final String LOGGED_IN_USER = "loggedInUser";
+    public static final String SP_QUERY_PARAMS = "spQueryParams";
+    public static final String SCOPES = "scopeString";
+    public static final String REQUEST_HEADERS = "requestHeaders";
+    public static final String REQUEST_URI = "redirectURI";
+    public static final String META_DATA = "metaDataMap";
+    public static final String RESOURCE_PATH = "ResourcePath";
+    public static final String CONSENT_RESOURCE = "consentResource";
+    public static final String AUTH_RESOURCE = "authResource";
+    public static final String REGULATORY = "regulatory";
+    public static final String HAS_APPROVED_ALWAYS = "hasApprovedAlways";
+    public static final String USER = "user";
+    public static final String SESSION_DATA_KEY = "sessionDataKey";
+    public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
+    public static final String CONSENT = "consent";
+    public static final String LOCATION = "Location";
+
+    public static final int STATUS_FOUND = 302;
+    public static final String APPROVAL = "approval";
+    public static final String COOKIES = "cookies";
     public static final String TITLE = "title";
     public static final String PERMISSIONS = "Permissions";
     public static final String EXPIRATION_DATE_TITLE = "Expiration Date Time";

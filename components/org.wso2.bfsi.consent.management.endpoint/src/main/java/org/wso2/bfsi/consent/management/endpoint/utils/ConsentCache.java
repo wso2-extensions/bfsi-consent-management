@@ -27,9 +27,9 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.caching.ConsentManagementBaseCache;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
-import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentData;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
+import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
 import org.wso2.bfsi.consent.management.service.impl.ConsentCoreServiceImpl;
 import org.wso2.carbon.identity.oauth.cache.SessionDataCache;
@@ -179,7 +179,7 @@ public class ConsentCache extends ConsentManagementBaseCache<ConsentCacheKey, Ob
 
                     consentAttributes.forEach((key, value) -> {
                         if (JSONValue.isValidJson(value) &&
-                                value.contains(ConsentManagementConstants.SESSION_DATA_KEY)) {
+                                value.contains(ConsentExtensionConstants.SESSION_DATA_KEY)) {
                             keysToDelete.add(key);
                         }
                     });
