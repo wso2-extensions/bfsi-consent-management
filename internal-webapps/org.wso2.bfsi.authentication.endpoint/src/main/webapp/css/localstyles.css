@@ -21,7 +21,7 @@ body, p, div, a, span, h1, h2, h3, h4 {
 }
 
 body {
-    background: #999 url(../images/body-back.png) no-repeat center 10px;
+    background: #999 url(body-back.png) no-repeat center 10px;
 }
 
 .header-strip {
@@ -30,7 +30,7 @@ body {
 }
 
 .header-back {
-    background: transparent url(../images/repeat.jpg) repeat-x left top;
+    background: transparent url(repeat.jpg) repeat-x left top;
     height: 85px;
 }
 
@@ -47,7 +47,7 @@ body {
 }
 
 .logo {
-    background: transparent url(../images/logo.png) no-repeat left top;
+    background: transparent url(logo.png) no-repeat left top;
     width: 424px;
     height: 85px;
     display: block;
@@ -125,7 +125,7 @@ h1 {
 }
 
 .main-login-container {
-    background: transparent url(../images/container-back.png) repeat left top;
+    background: transparent url(container-back.png) repeat left top;
     padding: 20px 10px;
     margin-bottom: 20px;
     -webkit-box-shadow: 7px 7px 5px 0px rgba(50, 50, 50, 0.75);
@@ -239,7 +239,7 @@ h2 {
 
 .different-login-container a.main-link {
     display: block;
-    background: transparent url(../images/icon-default.png) no-repeat left top;
+    background: transparent url(icon-default.png) no-repeat left top;
     width: 75px;
     height: 76px;
     float: left;
@@ -248,7 +248,7 @@ h2 {
 }
 
 #claimed_id {
-    background: #fff url(../images/openid-input.gif) no-repeat left 4px;
+    background: #fff url(openid-input.gif) no-repeat left 4px;
     padding-left: 20px;
 }
 

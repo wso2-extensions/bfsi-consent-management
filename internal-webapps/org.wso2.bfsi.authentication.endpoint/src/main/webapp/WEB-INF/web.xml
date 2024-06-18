@@ -76,7 +76,7 @@
 
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/generic-exception-response.jsp</location>
+        <location>/../webapp/generic-exception-response.jsp</location>
     </error-page>
 
     <!--  6 -->

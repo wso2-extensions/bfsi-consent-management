@@ -176,7 +176,7 @@ body.sticky-footer footer {
 .data-container {
     margin: 3rem 0;
     background-image: linear-gradient(to bottom, #1a1f28 0%, #2e3b41 100%);
-    background-image: url(../images/login-back.svg), linear-gradient(to bottom, #1a1f28 0%, #2e3b41 100%);
+    background-image: url(login-back.svg), linear-gradient(to bottom, #1a1f28 0%, #2e3b41 100%);
     background-repeat: no-repeat;
     background-position: left bottom;
     background-size: contain;
