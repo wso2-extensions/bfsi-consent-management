@@ -275,16 +275,6 @@ public class ConsentManagementConfigParser {
         return Optional.ofNullable((String) this.configuration.get(key));
     }
 
-    /**
-     * Returns the element with the provided key as a list.
-     *
-     * @param key local part name
-     * @return Corresponding value for key
-     */
-    private Optional getConfigurationFromKeyAsList(final String key) {
-        return Optional.of((ArrayList<String>) this.configuration.get(key));
-    }
-
     public String getDataSourceName() {
         Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG);
         return source.map(String::trim).orElse("");

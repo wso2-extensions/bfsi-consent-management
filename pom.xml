@@ -370,6 +370,7 @@
         <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
         <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <oltu.version>1.0.0.wso2v3</oltu.version>
+        <jackson.databind.version>2.16.1</jackson.databind.version>
         <!-- Base product dependency versions -->
         <carbon.identity.framework.version>7.0.75</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[7.0.75, 8.0.0)</carbon.identity.framework.version.range>
@@ -377,6 +378,7 @@
         <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
         <!-- Unit Test Dependency versions -->
         <jacoco.version>0.8.6</jacoco.version>
+        <org.testng.version>7.3.0</org.testng.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
         <mockito.version>2.28.2</mockito.version>

@@ -21,7 +21,7 @@ package org.wso2.bfsi.consent.management.extensions.manage.impl;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
