@@ -78,6 +78,11 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>provided</scope>
@@ -152,7 +157,7 @@
                     <threshold>Low</threshold>
                     <xmlOutput>true</xmlOutput>
                     <failOnError>true</failOnError>
-                    <spotbugsXmlOutputDirectory>target/spotbugs</spotbugsXmlOutputDirectory>
+                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs</spotbugsXmlOutputDirectory>
                     <excludeFilterFile>${project.basedir}/src/main/resources/findbugs-exclude.xml</excludeFilterFile>
                     <includeFilterFile>${project.basedir}/src/main/resources/findbugs-include.xml</includeFilterFile>
                     <plugins>
