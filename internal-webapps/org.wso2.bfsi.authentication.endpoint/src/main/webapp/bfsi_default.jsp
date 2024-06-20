@@ -30,13 +30,13 @@
 
                     <%-- Change heading based on the consent type --%>
                     <c:choose>
-                        <c:when test="${consent_type eq 'accounts'}">
+                        <c:when test="${consentType eq 'accounts'}">
                             <strong>${app}</strong> requests account details on your account.
                         </c:when>
-                        <c:when test="${consent_type eq 'fundsconfirmations'}">
+                        <c:when test="${consentType eq 'fundsconfirmations'}">
                             <strong>${app}</strong> requests access to confirm the availability of funds in your account.
                         </c:when>
-                        <c:when test="${consent_type eq 'payments'}">
+                        <c:when test="${consentType eq 'payments'}">
                             <strong>${app}</strong> requests consent to do a payment transaction ${intentSubText}
                         </c:when>
                     </c:choose>
@@ -59,7 +59,7 @@
             <%-- Setting data based on the consent type --%>
             <c:choose>
                 <%-- Setting accounts related data --%>
-                <c:when test="${consent_type eq 'accounts'}">
+                <c:when test="${consentType eq 'accounts'}">
                     <div class="form-group ui form select">
                         <c:if test="${not empty account_data}">
                             <h5 class="ui body col-md-12">
@@ -81,7 +81,7 @@
                 </c:when>
 
                 <%-- Setting confirmation of funds related data --%>
-                <c:when test="${consent_type eq 'fundsconfirmations'}">
+                <c:when test="${consentType eq 'fundsconfirmations'}">
                     <c:if test="${isReauthorization eq true}">
                         <div class="form-group ui form">
                             <strong>
@@ -92,7 +92,7 @@
                 </c:when>
 
                 <%-- Setting payments related data --%>
-                <c:when test="${consent_type eq 'payments'}">
+                <c:when test="${consentType eq 'payments'}">
                     <c:if test="${not empty selectedAccount}">
                         <div class="form-group ui form">
                             <div class="col-md-12 ui box">
@@ -118,76 +118,6 @@
                             </div>
                         </div>
                     </c:if>
-                </c:when>
-
-                <%-- Setting payments related data --%>
-                <c:when test="${consent_type eq 'vrp'}">
-                    <c:choose>
-                        <c:when test="${isReauthorization eq true}">
-                            <div class="form-group ui form">
-                                <div class="col-md-12 ui box">
-                                    <h5 class="ui header">
-                                        <strong>
-                                            You are about to re-authorize an intent which had been authorized
-                                            before.
-                                        </strong>
-                                    </h5>
-                                    <c:if test="${not empty reauthAccountsList}">
-                                        <h5 class="ui header">
-                                            <strong>
-                                                Note: Account selection during re-authentication is disabled by
-                                                your ASPSP.
-                                            </strong>
-                                        </h5>
-                                        <div class="col-md-12">
-                                            <select style="display:none;" multiple name="accounts[]" class="form-control"
-                                                    id="accselect2">
-                                                <c:forEach items="${reauthAccountsList}" var="record">
-                                                    <option hidden selected value="${record}"></option>
-                                                </c:forEach>
-                                            </select>
-                                            <c:if test="${not empty reauthAccountsDisplayList}">
-                                                <ul class="scopes-list padding">
-                                                    <c:forEach items="${reauthAccountsDisplayList}"
-                                                               var="record">
-                                                        <li>${record}</li>
-                                                    </c:forEach>
-                                                </ul>
-                                            </c:if>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </div>
-                        </c:when>
-                        <c:when test="${isReauthorization eq false}">
-                            <c:if test="${not empty selectedAccount}">
-                                <div class="form-group ui form">
-                                    <div class="col-md-12 ui box">
-                                        <strong> Selected Account: ${selectedAccount} </strong>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="selectedAccount" id="selectedAccount" value="${selectedAccount}"/>
-                            </c:if>
-
-                            <c:if test="${empty selectedAccount && not empty account_data}">
-                                <div class="form-group ui form select">
-                                    <h5 class="ui body col-md-12">
-                                        Select the accounts you wish to authorise:
-                                    </h5>
-                                    <div class="col-md-12">
-                                        <select name="selectedAccount" id="selectedAccount">
-                                            <option hidden disabled selected value> -- Select an Account  -- </option>
-                                            <c:forEach items="${account_data}" var="record">
-                                                <option  value="${record['account_id']}">
-                                                        ${record['display_name']}</option>
-                                            </c:forEach>
-                                        </select>
-                                    </div>
-                                </div>
-                            </c:if>
-                        </c:when>
-
-                    </c:choose>
                 </c:when>
 
                 <%-- When consent type is not specified default view --%>
@@ -237,7 +167,7 @@
                 <input type="hidden" name="sessionDataKeyConsent" value="${sessionDataKeyConsent}"/>
                 <input type="hidden" name="consent" id="consent" value="deny"/>
                 <input type="hidden" name="app" id="app" value="${app}"/>
-                <input type="hidden" name="type" id="type" value="${consent_type}"/>
+                <input type="hidden" name="type" id="type" value="${consentType}"/>
                 <input type="hidden" name="accounts[]" id="account" value="">
                 <input type="hidden" name="accNames" id="accountName" value=""/>
                 <input type="hidden" name="paymentAccount" id="paymentAccount"

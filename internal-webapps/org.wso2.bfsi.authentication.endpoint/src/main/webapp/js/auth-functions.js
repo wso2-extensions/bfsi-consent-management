@@ -154,9 +154,6 @@ function updatePaymentAcc() {
 // Confirm sharing data
 function approvedConsent() {
     document.getElementById('consent').value = true;
-    if (document.getElementById('endTimestamp')) {
-        document.getElementById('endTimestamp').value = Date.now();
-    }
     validateFrm();
 }
 
