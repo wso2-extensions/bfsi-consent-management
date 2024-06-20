@@ -127,10 +127,6 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.bfsi.consent.management</groupId>
-            <artifactId>org.wso2.bfsi.consent.management.extensions</artifactId>
-        </dependency>
     </dependencies>
 
     <build>

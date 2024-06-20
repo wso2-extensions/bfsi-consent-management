@@ -46,7 +46,6 @@ import java.util.Map;
  */
 public class DefaultConsentAdminHandler implements ConsentAdminHandler {
     private static final Log log = LogFactory.getLog(DefaultConsentAdminHandler.class);
-    ConsentCoreService consentService = ConsentExtensionsDataHolder.getInstance().getConsentCoreService();
 
     @Override
     public void handleSearch(ConsentAdminData consentAdminData) throws ConsentException {
@@ -104,7 +103,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         int count, total = 0;
 
         try {
-            ArrayList<DetailedConsentResource> results = consentService.searchDetailedConsents(consentIDs, clientIDs,
+            ArrayList<DetailedConsentResource> results = ConsentExtensionsDataHolder.getInstance()
+                    .getConsentCoreService().searchDetailedConsents(consentIDs, clientIDs,
                     consentTypes, consentStatuses, userIDs, fromTime, toTime, limit, offset);
             JSONArray searchResults = new JSONArray();
             for (DetailedConsentResource result : results) {
@@ -120,7 +120,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         //retrieve the total of the data set queried
         if (limit != null || offset != null) {
             try {
-                ArrayList<DetailedConsentResource> results = consentService.searchDetailedConsents(consentIDs,
+                ArrayList<DetailedConsentResource> results = ConsentExtensionsDataHolder.getInstance()
+                        .getConsentCoreService().searchDetailedConsents(consentIDs,
                         clientIDs, consentTypes, consentStatuses, userIDs, fromTime, toTime, null, null);
                 total = results.size();
             } catch (ConsentManagementException e) {
@@ -150,14 +151,16 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             if (consentId == null) {
                 throw new ConsentException(ResponseStatus.BAD_REQUEST, "Mandatory parameter consent ID not available");
             } else {
-                ConsentResource consentResource = consentService.getConsent(consentId, false);
+                ConsentResource consentResource = ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
+                        .getConsent(consentId, false);
 
                 if (!ConsentExtensionConstants.AUTHORIZED_STATUS.equals(consentResource.getCurrentStatus())) {
                     throw new ConsentException(ResponseStatus.BAD_REQUEST,
                             "Consent is not in a revocable status");
                 } else {
-                    consentService.revokeConsentWithReason(ConsentAdminUtils.validateAndGetQueryParam(queryParams,
-                                            ConsentExtensionConstants.CC_CONSENT_ID),
+                    ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
+                            .revokeConsentWithReason(ConsentAdminUtils.validateAndGetQueryParam(queryParams,
+                                    ConsentExtensionConstants.CC_CONSENT_ID),
                                     ConsentExtensionConstants.REVOKED_STATUS,
                                     ConsentAdminUtils.validateAndGetQueryParam(queryParams, "userID"),
                                     ConsentExtensionConstants.CONSENT_REVOKE_FROM_DASHBOARD_REASON);
@@ -188,7 +191,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         int count = 0;
 
         try {
-            Map<String, ConsentHistoryResource> results = consentService.getConsentAmendmentHistoryData(consentId);
+            Map<String, ConsentHistoryResource> results = ConsentExtensionsDataHolder.getInstance()
+                    .getConsentCoreService().getConsentAmendmentHistoryData(consentId);
 
             JSONArray consentHistory = new JSONArray();
             for (Map.Entry<String, ConsentHistoryResource> result : results.entrySet()) {
@@ -206,7 +210,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             }
             response.appendField(ConsentExtensionConstants.CC_CONSENT_ID, consentId);
             response.appendField(ConsentExtensionConstants.CURRENT_CONSENT,
-                    ConsentAdminUtils.detailedConsentToJSON(consentService.getDetailedConsent(consentId)));
+                    ConsentAdminUtils.detailedConsentToJSON(ConsentExtensionsDataHolder.getInstance()
+                            .getConsentCoreService().getDetailedConsent(consentId)));
             response.appendField(ConsentExtensionConstants.AMENDMENT_HISTORY, consentHistory);
             count = consentHistory.size();
         } catch (ConsentManagementException e) {
@@ -279,7 +284,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         //retrieve the total of the data set queried
         if (limit != null || offset != null) {
             try {
-                ArrayList<ConsentStatusAuditRecord> results = consentService.getConsentStatusAuditRecords(consentIDs,
+                ArrayList<ConsentStatusAuditRecord> results = ConsentExtensionsDataHolder.getInstance()
+                        .getConsentCoreService().getConsentStatusAuditRecords(consentIDs,
                                 null, null);
                 total = results.size();
             } catch (ConsentManagementException e) {
@@ -312,7 +318,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         }
 
         try {
-            ConsentFile file = consentService.getConsentFile(consentId);
+            ConsentFile file = ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
+                    .getConsentFile(consentId);
             response.appendField(ConsentExtensionConstants.CONSENT_FILE, file.getConsentFile());
         } catch (ConsentManagementException e) {
             log.error("Error while retrieving consent file");
