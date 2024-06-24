@@ -101,8 +101,7 @@ public class ConsentAdminEndpoint {
     @Path("/search/consent-status-audit")
     @Consumes({"application/x-www-form-urlencoded"})
     @Produces({"application/json; charset=utf-8"})
-    public Response searchConsentStatusAudit(@Context HttpServletRequest request, @Context HttpServletResponse
-    response,
+    public Response searchConsentStatusAudit(@Context HttpServletRequest request, @Context HttpServletResponse response,
                            @Context UriInfo uriInfo) {
 
         ConsentAdminData consentAdminData = new ConsentAdminData(ConsentUtils.getHeaders(request),

@@ -70,7 +70,7 @@ public class ConsentAdminUtils {
      * @return  long value constructed from the query param value
      */
     public static long getLongFromQueryParam(String queryParam) {
-        return queryParam != null ? Long.parseLong(queryParam) : null;
+        return queryParam != null ? Long.parseLong(queryParam) : 0;
     }
 
     /**
@@ -79,7 +79,7 @@ public class ConsentAdminUtils {
      * @return  int value constructed from the query param value
      */
     public static int getIntFromQueryParam(String queryParam) {
-        return queryParam != null ? Integer.parseInt(queryParam) : null;
+        return queryParam != null ? Integer.parseInt(queryParam) : 0;
     }
 
     /**

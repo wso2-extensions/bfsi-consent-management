@@ -76,26 +76,30 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
                 .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.USER_IDS));
 
         try {
-            fromTime = ConsentAdminUtils.getLongFromQueryParam(ConsentAdminUtils
+            long fromTimeValue = ConsentAdminUtils.getLongFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.FROM_TIME));
+            fromTime = fromTimeValue == 0 ? null : fromTimeValue;
         } catch (NumberFormatException e) {
             log.error("Number format incorrect in search for parameter fromTime. Ignoring parameter");
         }
         try {
-            toTime = ConsentAdminUtils.getLongFromQueryParam(ConsentAdminUtils
+            long toTimeValue = ConsentAdminUtils.getLongFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.TO_TIME));
+            toTime = toTimeValue == 0 ? null : toTimeValue;
         } catch (NumberFormatException e) {
             log.error("Number format incorrect in search for parameter toTime. Ignoring parameter");
         }
         try {
-            limit = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
+            int limitValue = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.LIMIT));
+            limit = limitValue == 0 ? null : limitValue;
         } catch (NumberFormatException e) {
             log.error("Number format incorrect in search for parameter limit. Ignoring parameter");
         }
         try {
-            offset = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
+            int offsetValue = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.OFFSET));
+            offset = offsetValue == 0 ? null : offsetValue;
         } catch (NumberFormatException e) {
             log.error("Number format incorrect in search for parameter limit. Ignoring parameter");
         }
