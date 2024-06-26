@@ -144,7 +144,7 @@ public class ConsentExtensionUtils {
             Object classObj = Class.forName(classpath).getDeclaredConstructor().newInstance();
             return className.cast(classObj);
         } catch (ClassNotFoundException e) {
-            log.error("Class not found: " + classpath.replaceAll("[\r\n]", ""));
+            log.error(String.format("Class not found: %s", classpath.replaceAll("[\r\n]", "")));
             throw new ConsentManagementRuntimeException("Cannot find the defined class", e);
         } catch (InstantiationException | InvocationTargetException |
                  NoSuchMethodException | IllegalAccessException e) {
