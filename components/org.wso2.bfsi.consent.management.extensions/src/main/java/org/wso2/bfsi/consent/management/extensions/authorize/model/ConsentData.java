@@ -69,6 +69,7 @@ public class ConsentData implements Serializable {
     }
 
     public void setSessionDataKey(String sessionDataKey) {
+
         this.sessionDataKey = sessionDataKey;
     }
 

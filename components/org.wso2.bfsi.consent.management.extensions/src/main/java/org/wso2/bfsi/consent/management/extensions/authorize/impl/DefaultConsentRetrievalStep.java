@@ -18,11 +18,10 @@
 
 package org.wso2.bfsi.consent.management.extensions.authorize.impl;
 
-
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;

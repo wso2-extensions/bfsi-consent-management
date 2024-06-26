@@ -18,12 +18,11 @@
 
 package org.wso2.bfsi.consent.management.extensions.manage.impl;
 
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
@@ -58,6 +57,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
         }
 
         if (consentManageData.getRequestPath() == null) {
+            log.error("Resource Path Not Found");
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Resource Path Not Found");
         }
         String consentId = consentManageData.getRequestPath().split("/")[1];
@@ -65,28 +65,32 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             try {
                 ConsentResource consent = consentCoreService.getConsent(consentId, false);
                 if (consent == null) {
+                    log.error("Consent not found");
                     throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent not found");
                 }
                 String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
                 if (!consentType.equals(consent.getConsentType())) {
+                    log.error("Consent Type mismatch");
                     throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent Type mismatch");
                 }
                 // Check whether the client id is matching
                 if (!consent.getClientID().equals(consentManageData.getClientId())) {
                     //Throwing same error as null scenario since client will not be able to identify if consent
                     // exists if consent does not belong to them
+                    log.error("Client ID mismatch");
                     throw new ConsentException(ResponseStatus.BAD_REQUEST, "Client ID mismatch");
                 }
-                JSONObject receiptJSON = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE)
-                        .parse(consent.getReceipt());;
+                JSONObject receiptJSON = new JSONObject(consent.getReceipt());;
                 consentManageData.setResponsePayload(ConsentExtensionUtils.getInitiationRetrievalResponse(receiptJSON,
                         consent));
                 consentManageData.setResponseStatus(ResponseStatus.OK);
-            } catch (ConsentManagementException | ParseException e) {
+            } catch (ConsentManagementException | JSONException e) {
+                log.error("Error Occurred while handling the request", e);
                 throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
                         "Error Occurred while handling the request");
             }
         } else {
+            log.error("Invalid consent Id found");
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Invalid consent Id found");
         }
     }
@@ -100,6 +104,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Client ID missing in the request.");
         }
         if (consentManageData.getRequestPath() == null) {
+            log.error("Resource Path Not Found");
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Resource Path Not Found");
         }
 
@@ -112,7 +117,6 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             }
 
             String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
-
             JSONObject requestObject = (JSONObject) request;
 
             //Validate Initiation request
@@ -136,7 +140,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             consentManageData.setResponseStatus(ResponseStatus.CREATED);
 
         } catch (ConsentManagementException e) {
-            log.error(e.getMessage().replaceAll("[\r\n]+", " "));
+            log.error("Error Occurred while handling the request", e);
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
                     "Error Occurred while handling the request");
         }
@@ -148,6 +152,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
 
         String[] requestPathArray;
         if (consentManageData.getRequestPath() == null) {
+            log.error("Resource Path Not Found");
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Resource Path Not Found");
         } else {
             requestPathArray = consentManageData.getRequestPath().split("/");
@@ -160,22 +165,26 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
                     ConsentResource consentResource = consentCoreService.getConsent(consentId, false);
 
                     if (consentResource == null) {
+                        log.error("Consent not found");
                         throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent not found");
                     }
 
                     String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
                     if (!consentType.equals(consentResource.getConsentType())) {
+                        log.error("Consent Type mismatch");
                         throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent Type mismatch");
                     }
 
                     if (!consentResource.getClientID().equals(consentManageData.getClientId())) {
                         //Throwing this error in a generic manner since client will not be able to identify if consent
                         // exists if consent does not belong to them
+                        log.error(ConsentManageConstants.NO_CONSENT_FOR_CLIENT_ERROR);
                         throw new ConsentException(ResponseStatus.BAD_REQUEST,
                                 ConsentManageConstants.NO_CONSENT_FOR_CLIENT_ERROR);
                     }
 
                     if (ConsentExtensionConstants.REVOKED_STATUS.equals(consentResource.getCurrentStatus())) {
+                        log.error("Consent already in revoked state");
                         throw new ConsentException(ResponseStatus.BAD_REQUEST,
                                 "Consent already in revoked state");
                     }
@@ -186,6 +195,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
                     boolean success = consentCoreService.revokeConsent(consentId,
                             ConsentExtensionConstants.REVOKED_STATUS, null, shouldRevokeTokens);
                     if (!success) {
+                        log.error("Token revocation unsuccessful");
                         throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
                                 "Token revocation unsuccessful");
                     }
@@ -196,9 +206,11 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
                             e.getMessage().replaceAll("[\r\n]+", ""));
                 }
             } else {
+                log.error("Consent ID invalid");
                 throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent ID invalid");
             }
         } else {
+            log.error("Request Path Invalid");
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Request Path Invalid");
         }
 
@@ -207,24 +219,28 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
     @Override
     public void handlePut(ConsentManageData consentManageData) throws ConsentException {
 
+        log.error("Method PUT is not supported");
         throw new ConsentException(ResponseStatus.METHOD_NOT_ALLOWED, "Method PUT is not supported");
     }
 
     @Override
     public void handlePatch(ConsentManageData consentManageData) throws ConsentException {
 
+        log.error("Method PATCH is not supported");
         throw new ConsentException(ResponseStatus.METHOD_NOT_ALLOWED, "Method PATCH is not supported");
     }
 
     @Override
     public void handleFileUploadPost(ConsentManageData consentManageData) throws ConsentException {
 
+        log.error("Method File Upload POST is not supported");
         throw new ConsentException(ResponseStatus.METHOD_NOT_ALLOWED, "Method File Upload POST is not supported");
     }
 
     @Override
     public void handleFileGet(ConsentManageData consentManageData) throws ConsentException {
 
+        log.error("Method File Upload GET is not supported");
         throw new ConsentException(ResponseStatus.METHOD_NOT_ALLOWED, "Method File Upload GET is not supported");
     }
 

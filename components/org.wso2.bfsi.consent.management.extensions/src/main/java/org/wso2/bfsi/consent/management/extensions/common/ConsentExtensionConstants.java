@@ -97,4 +97,12 @@ public class ConsentExtensionConstants {
     public static final String ERROR_DESCRIPTION = "error_description";
     public static final String STATE = "state";
     public static final String REDIRECT_URI = "redirect_uri";
+    public static final String CLAIMS = "claims";
+    public static final String USER_INFO = "userinfo";
+    public static final String ID_TOKEN = "id_token";
+    public static final String OB_INTENT_ID = "openbanking_intent_id";
+    public static final String VALUE = "value";
+    public static final String CREATION_DATE_TIME = "CreationDateTime";
+    public static final String STTAUS_UPDATE_DATE_TIME = "StatusUpdateDateTime";
+    public static final String STATUS = "Status";
 }
