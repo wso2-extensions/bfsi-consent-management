@@ -375,11 +375,6 @@
                 <version>${carbon.identity.local.auth.api.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.org.apache.oltu.oauth2</groupId>
-                <artifactId>oltu</artifactId>
-                <version>${oltu.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.application.mgt</artifactId>
                 <version>${carbon.identity.framework.version}</version>
@@ -516,7 +511,6 @@
         <carbon.identity.local.auth.api.version>2.5.10</carbon.identity.local.auth.api.version>
         <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
         <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
-        <oltu.version>1.0.0.wso2v3</oltu.version>
         <!-- Unit Test Dependency versions -->
         <org.testng.version>7.3.0</org.testng.version>
         <jacoco.version>0.8.6</jacoco.version>

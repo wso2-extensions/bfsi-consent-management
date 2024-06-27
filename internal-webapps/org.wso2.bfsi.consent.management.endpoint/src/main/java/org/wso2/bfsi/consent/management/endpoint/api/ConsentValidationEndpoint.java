@@ -19,10 +19,10 @@
 package org.wso2.bfsi.consent.management.endpoint.api;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
@@ -41,6 +41,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -106,31 +107,26 @@ public class ConsentValidationEndpoint {
 
         String payload = ConsentUtils.getStringPayload(request);
         JSONObject requestData;
-        Object requestDataObj;
 
         if (ConsentUtils.getConsentJWTPayloadValidatorConfigEnabled()) {
             try {
                 ConsentExtensionUtils.validateJWTSignatureWithPublicKey(payload, requestSignatureAlias);
-                requestData = CommonUtils.decodeRequestJWT(payload, "body");
+                requestData = new JSONObject(Objects
+                        .requireNonNull(CommonUtils.decodeRequestJWT(payload, "body")).toJSONString());
             } catch (ConsentManagementException e) {
                 log.error("Error while validating JWT signature", e);
                 throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Error while validating JWT " +
                         "signature");
-            } catch (ParseException e) {
+            } catch (JSONException | ParseException e) {
                 log.error("Error while decoding validation JWT", e);
                 throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Error while decoding validation JWT");
             }
         } else {
             try {
-                requestDataObj = new JSONParser(JSONParser.MODE_PERMISSIVE).parse(payload);
-            } catch (net.minidev.json.parser.ParseException e) {
+                requestData = new JSONObject(payload);
+            } catch (JSONException e) {
                 log.error("Unable to parse the request payload", e);
                 throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Unable to parse the request payload");
-            }
-            if (!(requestDataObj instanceof JSONObject)) {
-                throw new ConsentException(ResponseStatus.BAD_REQUEST, "Payload is not a JSON object");
-            } else {
-                requestData = (JSONObject) requestDataObj;
             }
         }
 
@@ -140,14 +136,14 @@ public class ConsentValidationEndpoint {
         TreeMap<String, String> headersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         while (headersIterator.hasNext()) {
             String headerName = headersIterator.next();
-            headersMap.put(headerName, requestHeaders.getAsString(headerName));
+            headersMap.put(headerName, requestHeaders.getString(headerName));
         }
 
-        JSONObject requestPayload = (JSONObject) requestData.get("body");
-        String requestPath = requestData.getAsString("electedResource");
-        String consentId = requestData.getAsString("consentId");
-        String userId = requestData.getAsString("userId");
-        String clientId = requestData.getAsString("clientId");
+        JSONObject requestPayload = requestData.getJSONObject("body");
+        String requestPath = requestData.getString("electedResource");
+        String consentId = requestData.getString("consentId");
+        String userId = requestData.getString("userId");
+        String clientId = requestData.getString("clientId");
 
         Map<String, String> resourceParams = (Map<String, String>) requestData.get("resourceParams");
 
@@ -177,12 +173,12 @@ public class ConsentValidationEndpoint {
         ConsentValidationResult validationResult = new ConsentValidationResult();
         consentValidator.validate(consentValidateData, validationResult);
 
-        JSONObject information = ConsentUtils.detailedConsentToJSON(
+        org.json.JSONObject information = ConsentUtils.detailedConsentToJSON(
                 consentValidateData.getComprehensiveConsent());
         information.put("additionalConsentInfo", validationResult.getConsentInformation());
         validationResult.setConsentInformation(information);
 
-        JSONObject responsePayload;
+        org.json.JSONObject responsePayload;
         try {
             responsePayload = validationResult.generatePayload();
             responsePayload.put("consentInformation",

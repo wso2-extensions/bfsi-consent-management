@@ -37,7 +37,7 @@ public class ConsentAdminBuilder {
 
         String handlerConfig = (String) ConsentExtensionsDataHolder.getInstance().getConfigurationService()
                 .getConfigurations().get(ConsentManagementConstants.ADMIN_HANDLER);
-        consentAdminHandler = (ConsentAdminHandler) ConsentExtensionUtils.getClassInstanceFromFQN(handlerConfig);
+        consentAdminHandler = ConsentExtensionUtils.getClassInstanceFromFQN(handlerConfig, ConsentAdminHandler.class);
 
         log.debug("Admin handler loaded successfully");
     }

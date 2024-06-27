@@ -105,7 +105,7 @@ public class ConsentExtensionUtils {
         JSONObject dataObject = response.getJSONObject(ConsentExtensionConstants.DATA);
         dataObject.put(ConsentExtensionConstants.CONSENT_ID, createdConsent.getConsentID());
         dataObject.put(ConsentExtensionConstants.CREATION_DATE_TIME, convertToISO8601(createdConsent.getCreatedTime()));
-        dataObject.put(ConsentExtensionConstants.STTAUS_UPDATE_DATE_TIME,
+        dataObject.put(ConsentExtensionConstants.STATUS_UPDATE_DATE_TIME,
                 convertToISO8601(createdConsent.getUpdatedTime()));
         dataObject.put(ConsentExtensionConstants.STATUS, createdConsent.getCurrentStatus());
 
@@ -127,7 +127,7 @@ public class ConsentExtensionUtils {
         JSONObject dataObject = receiptJSON.getJSONObject(ConsentExtensionConstants.DATA);
         dataObject.put(ConsentExtensionConstants.CONSENT_ID, consent.getConsentID());
         dataObject.put(ConsentExtensionConstants.CREATION_DATE_TIME, convertToISO8601(consent.getCreatedTime()));
-        dataObject.put(ConsentExtensionConstants.STTAUS_UPDATE_DATE_TIME,
+        dataObject.put(ConsentExtensionConstants.STATUS_UPDATE_DATE_TIME,
                 convertToISO8601(consent.getUpdatedTime()));
         dataObject.put(ConsentExtensionConstants.STATUS, consent.getCurrentStatus());
 

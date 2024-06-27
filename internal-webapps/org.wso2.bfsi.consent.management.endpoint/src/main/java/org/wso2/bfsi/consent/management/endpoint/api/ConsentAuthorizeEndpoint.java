@@ -22,11 +22,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.consent.management.endpoint.utils.ConsentCache;
@@ -266,7 +265,7 @@ public class ConsentAuthorizeEndpoint {
             }
 
             boolean approval;
-            if (payload.containsKey(ConsentExtensionConstants.APPROVAL)) {
+            if (payload.has(ConsentExtensionConstants.APPROVAL)) {
                 try {
                     if (payload.get(ConsentExtensionConstants.APPROVAL) instanceof Boolean) {
                         approval = (Boolean) payload.get(ConsentExtensionConstants.APPROVAL);
@@ -286,7 +285,7 @@ public class ConsentAuthorizeEndpoint {
 
             ConsentPersistData consentPersistData = new ConsentPersistData(payload, headers, approval, consentData);
 
-            if (payload.containsKey(ConsentExtensionConstants.COOKIES)) {
+            if (payload.has(ConsentExtensionConstants.COOKIES)) {
                 Object cookies = payload.get(ConsentExtensionConstants.COOKIES);
                 if (cookies instanceof Map) {
                     consentPersistData.setBrowserCookies((Map<String, String>) cookies);
@@ -294,7 +293,7 @@ public class ConsentAuthorizeEndpoint {
                     JSONObject cookiesJson = (JSONObject) cookies;
                     Map<String, String> cookiesMap = new HashMap<>();
                     cookiesJson.keySet().forEach(key -> {
-                        String value = cookiesJson.getAsString(key);
+                        String value = cookiesJson.getString(key);
                         cookiesMap.put(key, value);
                     });
                 }
@@ -326,7 +325,7 @@ public class ConsentAuthorizeEndpoint {
                 Map<String, String> consentAttributes = consentCoreService.
                         getConsentAttributes(consentData.getConsentId()).getConsentAttributes();
                 consentAttributes.forEach((key, value) -> {
-                    if (JSONValue.isValidJson(value) && value.contains("sessionDataKey")) {
+                    if (ConsentUtils.isValidJson(value) && value.contains("sessionDataKey")) {
                         keysToDelete.add(key);
                     }
                 });

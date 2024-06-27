@@ -63,8 +63,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

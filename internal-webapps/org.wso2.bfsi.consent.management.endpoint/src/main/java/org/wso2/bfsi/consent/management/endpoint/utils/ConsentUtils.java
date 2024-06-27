@@ -28,10 +28,6 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
@@ -47,6 +43,9 @@ import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
@@ -70,6 +69,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Key;
 import java.security.interfaces.RSAPrivateKey;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -87,7 +87,6 @@ public class ConsentUtils {
 
     private static final Log log = LogFactory.getLog(ConsentUtils.class);
     private static final Gson gson = new Gson();
-    private static final JSONParser parser = new JSONParser(JSONParser.MODE_PERMISSIVE);
 
     /**
      * Extract headers from a request object.
@@ -119,18 +118,12 @@ public class ConsentUtils {
      * toolkit is the manage scenario.
      */
     public static Object getPayload(HttpServletRequest request) {
-        try {
-            String payload = getStringPayload(request);
-            if (payload == null) {
-                log.debug("Payload is empty. Returning null");
-                return null;
-            }
-            return parser.parse(payload);
-        } catch (ParseException e) {
-            //Not throwing error since error should be formatted by manage toolkit
-            log.error(String.format("%s. Returning null", ConsentConstants.ERROR_PAYLOAD_PARSE), e);
+        String payload = getStringPayload(request);
+        if (payload == null) {
+            log.debug("Payload is empty. Returning null");
             return null;
         }
+        return payload;
     }
 
     /**
@@ -246,10 +239,10 @@ public class ConsentUtils {
      */
     public static void setCommonDataToResponse(ConsentData consentData, JSONObject jsonObject) {
 
-        if (!jsonObject.containsKey(ConsentExtensionConstants.TYPE)) {
+        if (!jsonObject.has(ConsentExtensionConstants.TYPE)) {
             jsonObject.put(ConsentExtensionConstants.TYPE, consentData.getType());
         }
-        if (!jsonObject.containsKey(ConsentExtensionConstants.APPLICATION)) {
+        if (!jsonObject.has(ConsentExtensionConstants.APPLICATION)) {
             jsonObject.put(ConsentExtensionConstants.APPLICATION, consentData.getApplication());
         }
     }
@@ -349,8 +342,8 @@ public class ConsentUtils {
         consentResource.put(ConsentExtensionConstants.CLIENT_ID, detailedConsentResource.getClientID());
         try {
             consentResource.put(ConsentExtensionConstants.RECEIPT,
-                    parser.parse(detailedConsentResource.getReceipt()));
-        } catch (ParseException e) {
+                   new JSONObject(detailedConsentResource.getReceipt()));
+        } catch (JSONException e) {
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Exception occurred while parsing" +
                     " receipt");
         }
@@ -383,7 +376,7 @@ public class ConsentUtils {
             resourceJSON.put(ConsentExtensionConstants.AUTH_STATUS, resource.getAuthorizationStatus());
             resourceJSON.put(ConsentExtensionConstants.AUTH_TYPE, resource.getAuthorizationType());
             resourceJSON.put(ConsentExtensionConstants.UPDATE_TIME, resource.getUpdatedTime());
-            authorizationResources.add(resourceJSON);
+            authorizationResources.put(resourceJSON);
         }
         consentResource.put(ConsentExtensionConstants.AUTH_RESOURCES, authorizationResources);
         JSONArray consentMappingResources = new JSONArray();
@@ -395,7 +388,7 @@ public class ConsentUtils {
             resourceJSON.put(ConsentExtensionConstants.ACCOUNT_ID, resource.getAccountID());
             resourceJSON.put(ConsentExtensionConstants.PERMISSION, resource.getPermission());
             resourceJSON.put(ConsentExtensionConstants.MAPPING_STATUS, resource.getMappingStatus());
-            consentMappingResources.add(resourceJSON);
+            consentMappingResources.put(resourceJSON);
         }
         consentResource.put(ConsentExtensionConstants.MAPPING_RESOURCES, consentMappingResources);
         return consentResource;
@@ -440,7 +433,7 @@ public class ConsentUtils {
         try {
             signedJWT = new SignedJWT(headerBuilder.build(), JWTClaimsSet.parse(payload));
             signedJWT.sign(signer);
-        } catch (java.text.ParseException | JOSEException e) {
+        } catch (ParseException | JOSEException e) {
             throw new ConsentManagementRuntimeException("Error occurred while signing JWT");
         }
         return signedJWT.serialize();
@@ -486,5 +479,23 @@ public class ConsentUtils {
             }
         }
         return resourceParams;
+    }
+
+    /**
+     * Check whether the given string is a valid JSON or not.
+     * @param json  JSON string
+     * @return true if the string is a valid JSON, false otherwise
+     */
+    public static boolean isValidJson(String json) {
+        try {
+            new JSONObject(json);
+        } catch (JSONException e) {
+            try {
+                new JSONArray(json);
+            } catch (JSONException ne) {
+                return false;
+            }
+        }
+        return true;
     }
 }
