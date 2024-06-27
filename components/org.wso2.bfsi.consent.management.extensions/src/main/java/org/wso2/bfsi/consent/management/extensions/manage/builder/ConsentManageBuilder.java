@@ -33,11 +33,15 @@ public class ConsentManageBuilder {
     private static final Log log = LogFactory.getLog(ConsentManageBuilder.class);
     private ConsentManageHandler consentManageHandler = null;
 
-    public void build() {
+    public ConsentManageBuilder() {
+        build();
+    }
+
+    private void build() {
 
         String handlerConfig = (String) ConsentExtensionsDataHolder.getInstance().getConfigurationService()
                 .getConfigurations().get(ConsentManagementConstants.MANAGE_HANDLER);
-        consentManageHandler = (ConsentManageHandler) ConsentExtensionUtils.getClassInstanceFromFQN(handlerConfig);
+        consentManageHandler = ConsentExtensionUtils.getClassInstanceFromFQN(handlerConfig, ConsentManageHandler.class);
 
         log.debug("Manage handler loaded successfully");
     }

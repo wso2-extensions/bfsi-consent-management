@@ -34,6 +34,9 @@ public class ConsentExtensionExporter {
     private static ConsentValidateBuilder consentValidateBuilder;
     private static ConsentAdminBuilder consentAdminBuilder;
 
+    private ConsentExtensionExporter() {
+    }
+
     public static ConsentExtensionExporter getInstance() {
         if (consentExtExporter == null) {
             synchronized (ConsentExtensionExporter.class) {

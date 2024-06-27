@@ -63,6 +63,7 @@ public class ConsentExtensionConstants {
     public static final String REVOKED_STATUS = "revoked";
     public static final String REJECTED_STATUS = "rejected";
     public static final String CREATED_STATUS = "created";
+    public static final String DEFAULT_AUTH_TYPE = "authorisation";
     public static final String EXPIRATION_DATE = "ExpirationDateTime";
     public static final String TRANSACTION_FROM_DATE = "TransactionFromDateTime";
     public static final String TRANSACTION_TO_DATE = "TransactionToDateTime";
@@ -76,7 +77,6 @@ public class ConsentExtensionConstants {
     public static final String IDENTIFICATION = "Identification";
     public static final String NAME = "Name";
     public static final String SECONDARY_IDENTIFICATION = "SecondaryIdentification";
-    public static final String INSTRUCTED_AMOUNT = "InstructedAmount";
     public static final String CURRENCY = "Currency";
     public static final String AMOUNT = "Amount";
 
@@ -122,7 +122,8 @@ public class ConsentExtensionConstants {
     public static final String IDENTIFICATION_TITLE = "Identification";
     public static final String NAME_TITLE = "Name";
     public static final String SECONDARY_IDENTIFICATION_TITLE = "Secondary Identification";
-    public static final String OPEN_ENDED_AUTHORIZATION = "Open Ended Authorization Requested";
+    public static final String OPEN_ENDED_AUTHORIZATION = "Open Ended Authorisation Requested";
+    public static final String INSTRUCTED_AMOUNT = "InstructedAmount";
     public static final String INSTRUCTED_AMOUNT_TITLE = "Instructed Amount";
     public static final String CURRENCY_TITLE = "Currency";
     public static final String AMOUNT_TITLE = "Amount";
@@ -134,7 +135,6 @@ public class ConsentExtensionConstants {
     public static final String ACCOUNT_DATA = "account_data";
     public static final String SELECTED_ACCOUNT = "selectedAccount";
     public static final String DISPLAY_NAME = "display_name";
-    public static final String DEFAULT_AUTH_TYPE = "authorization";
     public static final String PAYMENT_ACCOUNT = "paymentAccount";
     public static final String COF_ACCOUNT = "cofAccount";
     public static final String PRIMARY = "primary";
@@ -143,7 +143,6 @@ public class ConsentExtensionConstants {
     public static final String ERROR_DESCRIPTION = "error_description";
     public static final String STATE = "state";
     public static final String REDIRECT_URI = "redirect_uri";
-
     //Consent Admin Handler Constants
     public static final String CONSENT_IDS = "consentIds";
     public static final String CLIENT_IDS = "clientIds";
@@ -170,4 +169,12 @@ public class ConsentExtensionConstants {
     public static final String PREVIOUS_STATUS = "previousStatus";
     public static final String CONSENT_FILE = "consentFile";
     public static final String CONSENT_REVOKE_FROM_DASHBOARD_REASON = "Revoke the consent from dashboard";
+    public static final String CLAIMS = "claims";
+    public static final String USER_INFO = "userinfo";
+    public static final String ID_TOKEN = "id_token";
+    public static final String OB_INTENT_ID = "openbanking_intent_id";
+    public static final String VALUE = "value";
+    public static final String CREATION_DATE_TIME = "CreationDateTime";
+    public static final String STATUS_UPDATE_DATE_TIME = "StatusUpdateDateTime";
+    public static final String STATUS = "Status";
 }

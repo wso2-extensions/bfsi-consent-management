@@ -36,13 +36,16 @@ public class ConsentValidateBuilder {
     private ConsentValidator consentValidator = null;
     private String requestSignatureAlias = null;
 
+    public ConsentValidateBuilder() {
+        build();
+    }
 
-    public void build() {
+    private void build() {
 
         Map<String, Object> configs =  ConsentExtensionsDataHolder.getInstance().getConfigurationService()
                 .getConfigurations();
         String handlerConfig = (String)  configs.get(ConsentManagementConstants.CONSENT_VALIDATOR);
-        consentValidator = (ConsentValidator) ConsentExtensionUtils.getClassInstanceFromFQN(handlerConfig);
+        consentValidator = ConsentExtensionUtils.getClassInstanceFromFQN(handlerConfig, ConsentValidator.class);
         requestSignatureAlias = (String) configs.get(ConsentManagementConstants.SIGNATURE_ALIAS);
         log.debug("Admin handler loaded successfully");
     }

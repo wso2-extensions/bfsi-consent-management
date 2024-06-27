@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.consent.management.extensions.authorize;
 
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.extensions.authorize.model.ConsentData;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
 

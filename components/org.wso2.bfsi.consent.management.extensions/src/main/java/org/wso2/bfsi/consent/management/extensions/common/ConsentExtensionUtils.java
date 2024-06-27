@@ -22,9 +22,9 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jwt.SignedJWT;
-import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 import org.wso2.bfsi.consent.management.common.util.Generated;
@@ -79,7 +79,7 @@ public class ConsentExtensionUtils {
      * @return Whether the consent ID is valid
      */
     public static boolean isConsentIdValid(String consentId) {
-        return (consentId.length() == 36 && Pattern.matches(ConsentExtensionConstants.UUID_REGEX, consentId));
+        return (Pattern.matches(ConsentExtensionConstants.UUID_REGEX, consentId));
     }
 
     /**
@@ -102,12 +102,12 @@ public class ConsentExtensionUtils {
      * @return  JSONObject Initiation Response
      */
     public static JSONObject getInitiationResponse(JSONObject response, DetailedConsentResource createdConsent) {
-        JSONObject dataObject = (JSONObject) response.get(ConsentExtensionConstants.DATA);
+        JSONObject dataObject = response.getJSONObject(ConsentExtensionConstants.DATA);
         dataObject.put(ConsentExtensionConstants.CONSENT_ID, createdConsent.getConsentID());
-        dataObject.put("CreationDateTime", convertToISO8601(createdConsent.getCreatedTime()));
-        dataObject.put("StatusUpdateDateTime", convertToISO8601(createdConsent.getUpdatedTime()));
-        dataObject.put("Status", createdConsent.getCurrentStatus());
-
+        dataObject.put(ConsentExtensionConstants.CREATION_DATE_TIME, convertToISO8601(createdConsent.getCreatedTime()));
+        dataObject.put(ConsentExtensionConstants.STTAUS_UPDATE_DATE_TIME,
+                convertToISO8601(createdConsent.getUpdatedTime()));
+        dataObject.put(ConsentExtensionConstants.STATUS, createdConsent.getCurrentStatus());
 
         response.remove(ConsentExtensionConstants.DATA);
         response.put(ConsentExtensionConstants.DATA, dataObject);
@@ -124,25 +124,27 @@ public class ConsentExtensionUtils {
      */
     public static JSONObject getInitiationRetrievalResponse(JSONObject receiptJSON, ConsentResource consent) {
 
-        JSONObject dataObject = (JSONObject) receiptJSON.get("Data");
-        dataObject.put("ConsentId", consent.getConsentID());
-        dataObject.put("Status", consent.getCurrentStatus());
-        dataObject.put("StatusUpdateDateTime", convertToISO8601(consent.getUpdatedTime()));
-        dataObject.put("CreationDateTime", convertToISO8601(consent.getCreatedTime()));
+        JSONObject dataObject = receiptJSON.getJSONObject(ConsentExtensionConstants.DATA);
+        dataObject.put(ConsentExtensionConstants.CONSENT_ID, consent.getConsentID());
+        dataObject.put(ConsentExtensionConstants.CREATION_DATE_TIME, convertToISO8601(consent.getCreatedTime()));
+        dataObject.put(ConsentExtensionConstants.STTAUS_UPDATE_DATE_TIME,
+                convertToISO8601(consent.getUpdatedTime()));
+        dataObject.put(ConsentExtensionConstants.STATUS, consent.getCurrentStatus());
 
-        receiptJSON.remove("Data");
-        receiptJSON.put("Data", dataObject);
+        receiptJSON.remove(ConsentExtensionConstants.DATA);
+        receiptJSON.put(ConsentExtensionConstants.DATA, dataObject);
 
         return receiptJSON;
     }
 
     @Generated(message = "Ignoring since method contains no logics")
-    public static Object getClassInstanceFromFQN(String classpath) {
+    public static <T> T  getClassInstanceFromFQN(String classpath, Class<T> className) {
 
         try {
-            return Class.forName(classpath).getDeclaredConstructor().newInstance();
+            Object classObj = Class.forName(classpath).getDeclaredConstructor().newInstance();
+            return className.cast(classObj);
         } catch (ClassNotFoundException e) {
-            log.error("Class not found: " + classpath.replaceAll("[\r\n]", ""));
+            log.error(String.format("Class not found: %s", classpath.replaceAll("[\r\n]", "")));
             throw new ConsentManagementRuntimeException("Cannot find the defined class", e);
         } catch (InstantiationException | InvocationTargetException |
                  NoSuchMethodException | IllegalAccessException e) {
@@ -163,13 +165,7 @@ public class ConsentExtensionUtils {
     public static boolean validateJWTSignatureWithPublicKey(String jwtString, String alias)
             throws ConsentManagementException {
 
-        Certificate certificate;
-        try {
-            KeyStore trustStore = getTrustStore();
-            certificate = trustStore.getCertificate(alias);
-        } catch (Exception e) {
-            throw new ConsentManagementException("Error while retrieving certificate from truststore");
-        }
+        Certificate certificate = getCertificateFromAlias(alias);
 
         if (certificate == null) {
             throw new ConsentManagementException("Certificate not found for provided alias");
@@ -180,6 +176,7 @@ public class ConsentExtensionUtils {
             JWSVerifier verifier = new RSASSAVerifier((RSAPublicKey) publicKey);
             return SignedJWT.parse(jwtString).verify(verifier);
         } catch (JOSEException | java.text.ParseException e) {
+            log.error("Error occurred while validating JWT signature", e);
             throw new ConsentManagementException("Error occurred while validating JWT signature");
         }
 
@@ -189,26 +186,42 @@ public class ConsentExtensionUtils {
      * Util method to get the configured trust store by carbon config or cached instance.
      *
      * @return Keystore instance of the truststore
-     * @throws Exception Error when loading truststore or carbon truststore config unavailable
+     * @throws ConsentManagementException Error when loading truststore or carbon truststore config unavailable
      */
-    public static KeyStore getTrustStore() throws Exception {
+    public static KeyStore getTrustStore() throws ConsentManagementException {
         if (ConsentExtensionsDataHolder.getInstance().getTrustStore() == null) {
             String trustStoreLocation = System.getProperty("javax.net.ssl.trustStore");
             String trustStorePassword = System.getProperty("javax.net.ssl.trustStorePassword");
             String trustStoreType = System.getProperty("javax.net.ssl.trustStoreType");
 
             if (trustStoreLocation == null || trustStorePassword == null || trustStoreType == null) {
-                throw new Exception("Trust store config not available");
+                log.error("Either of the Trust store configs (Location, Password or Type) is not available");
+                throw new ConsentManagementException("Trust store config not available");
             }
 
             try (InputStream keyStoreStream = new FileInputStream(trustStoreLocation)) {
-                KeyStore keyStore = KeyStore.getInstance(trustStoreType); // or "PKCS12"
-                keyStore.load(keyStoreStream, trustStorePassword.toCharArray());
-                ConsentExtensionsDataHolder.getInstance().setTrustStore(keyStore);
+                KeyStore trustStore = KeyStore.getInstance(trustStoreType); // or "PKCS12"
+                trustStore.load(keyStoreStream, trustStorePassword.toCharArray());
+                ConsentExtensionsDataHolder.getInstance().setTrustStore(trustStore);
             } catch (IOException | CertificateException | KeyStoreException | NoSuchAlgorithmException e) {
-                throw new Exception("Error while loading truststore.", e);
+                throw new ConsentManagementException("Error while loading truststore.", e);
             }
         }
         return ConsentExtensionsDataHolder.getInstance().getTrustStore();
+    }
+
+    /**
+     * Util method to get the certificate from the trust store by alias.
+     * @param alias  Alias of the certificate
+     * @return  Certificate instance
+     * @throws ConsentManagementException  Error while retrieving certificate from truststore
+     */
+    public static Certificate getCertificateFromAlias(String alias) throws ConsentManagementException {
+        try {
+            KeyStore trustStore = getTrustStore();
+            return trustStore.getCertificate(alias);
+        } catch (KeyStoreException | ConsentManagementException e) {
+            throw new ConsentManagementException("Error while retrieving certificate from truststore");
+        }
     }
 }

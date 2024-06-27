@@ -18,10 +18,10 @@
 
 package org.wso2.bfsi.consent.management.extensions.authorize.impl;
 
-import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
 import org.wso2.bfsi.consent.management.extensions.authorize.ConsentPersistStep;
@@ -52,7 +52,13 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
             ConsentData consentData = consentPersistData.getConsentData();
             ConsentResource consentResource;
 
-            if (consentData.getConsentId() == null && consentData.getConsentResource() == null) {
+            if (consentData == null) {
+                log.error("Consent data is not available");
+                throw new ConsentException(ResponseStatus.BAD_REQUEST, AuthErrorCode.SERVER_ERROR.name(),
+                        "Consent data is not available");
+            }
+
+            if (consentData.getConsentId() == null) {
                 log.error("Consent ID not available in consent data");
                 throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.SERVER_ERROR,
                         "Consent ID not available in consent data", consentData.getState());
@@ -89,13 +95,10 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
         String consentStatus;
         String authStatus;
 
-        if (isApproved) {
-            consentStatus = ConsentExtensionConstants.AUTHORIZED_STATUS;
-            authStatus = ConsentExtensionConstants.AUTHORIZED_STATUS;
-        } else {
-            consentStatus = ConsentExtensionConstants.REJECTED_STATUS;
-            authStatus = ConsentExtensionConstants.REJECTED_STATUS;
-        }
+        consentStatus = isApproved ? ConsentExtensionConstants.AUTHORIZED_STATUS :
+                ConsentExtensionConstants.REJECTED_STATUS;
+        authStatus = isApproved ? ConsentExtensionConstants.AUTHORIZED_STATUS :
+                ConsentExtensionConstants.REJECTED_STATUS;
 
         ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
                 .bindUserAccountsToConsent(consentResource, consentData.getUserId(),
@@ -118,8 +121,8 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
 
         //Check whether payment account exists
         //Payment Account is the debtor account sent in the payload
-        if (persistPayload.containsKey(ConsentExtensionConstants.PAYMENT_ACCOUNT) &&
-                StringUtils.isNotBlank((String) persistPayload.get(ConsentExtensionConstants.PAYMENT_ACCOUNT))) {
+        if (persistPayload.has(ConsentExtensionConstants.PAYMENT_ACCOUNT) &&
+                StringUtils.isNotBlank(persistPayload.getString(ConsentExtensionConstants.PAYMENT_ACCOUNT))) {
             //Check whether account Id is in String format
             if (!(persistPayload.get(ConsentExtensionConstants.PAYMENT_ACCOUNT) instanceof String)) {
                 log.error(ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
@@ -127,10 +130,10 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
                         ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
             }
 
-            String paymentAccount = (String) persistPayload.get(ConsentExtensionConstants.PAYMENT_ACCOUNT);
+            String paymentAccount = persistPayload.getString(ConsentExtensionConstants.PAYMENT_ACCOUNT);
             accountIDsMapWithPermissions.put(paymentAccount, permissionsDefault);
-        } else if (persistPayload.containsKey(ConsentExtensionConstants.COF_ACCOUNT) &&
-                StringUtils.isNotBlank((String) persistPayload.get(ConsentExtensionConstants.COF_ACCOUNT))) {
+        } else if (persistPayload.has(ConsentExtensionConstants.COF_ACCOUNT) &&
+                StringUtils.isNotBlank(persistPayload.getString(ConsentExtensionConstants.COF_ACCOUNT))) {
             //Check whether account Id is in String format
             if (!(persistPayload.get(ConsentExtensionConstants.COF_ACCOUNT) instanceof String)) {
                 log.error(ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
@@ -138,7 +141,7 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
                         ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
             }
 
-            String paymentAccount = (String) persistPayload.get(ConsentExtensionConstants.COF_ACCOUNT);
+            String paymentAccount = persistPayload.getString(ConsentExtensionConstants.COF_ACCOUNT);
             accountIDsMapWithPermissions.put(paymentAccount, permissionsDefault);
         } else {
             //Check whether account Ids are in array format

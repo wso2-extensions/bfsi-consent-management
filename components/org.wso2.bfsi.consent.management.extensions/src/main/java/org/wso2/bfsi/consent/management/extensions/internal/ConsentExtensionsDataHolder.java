@@ -74,17 +74,14 @@ public class ConsentExtensionsDataHolder {
         this.configurationService = configurationService;
 
         ConsentStepsBuilder consentStepsBuilder = new ConsentStepsBuilder();
-        consentStepsBuilder.build();
         this.setConsentStepsBuilder(consentStepsBuilder);
         ConsentExtensionExporter.setConsentStepsBuilder(consentStepsBuilder);
 
         ConsentManageBuilder consentManageBuilder = new ConsentManageBuilder();
-        consentManageBuilder.build();
         this.setConsentManageBuilder(consentManageBuilder);
         ConsentExtensionExporter.setConsentManageBuilder(consentManageBuilder);
 
         ConsentValidateBuilder consentValidateBuilder = new ConsentValidateBuilder();
-        consentValidateBuilder.build();
         this.setConsentValidateBuilder(consentValidateBuilder);
         ConsentExtensionExporter.setConsentValidateBuilder(consentValidateBuilder);
 

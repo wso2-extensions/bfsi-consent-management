@@ -18,11 +18,10 @@
 
 package org.wso2.bfsi.consent.management.extensions.authorize.impl;
 
-
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
@@ -68,12 +67,12 @@ public class DefaultConsentRetrievalStep implements ConsentRetrievalStep {
 
             AuthorizationResource authorizationResource = consentCoreService.searchAuthorizations(consentId).get(0);
             if (!authorizationResource.getAuthorizationStatus().equals(ConsentExtensionConstants.CREATED_STATUS)) {
-                log.error("Authorization not in authorizable state");
+                log.error("Authorisation not in authorisable state");
                 //Currently throwing error as 400 response. Developer also have the option of appending a fieldIS_ERROR
                 // to the jsonObject and showing it to the user in the webapp. If so, the IS_ERROR have to bechecked in
                 // any later steps.
                 throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.INVALID_REQUEST,
-                        "Authorization not in authorizable state", consentData.getState());
+                        "Authorisation not in authorisable state", consentData.getState());
             }
 
             consentData.setType(consentResource.getConsentType());

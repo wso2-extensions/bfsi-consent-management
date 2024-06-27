@@ -18,8 +18,7 @@
 
 package org.wso2.bfsi.consent.management.extensions.authorize.model;
 
-
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;

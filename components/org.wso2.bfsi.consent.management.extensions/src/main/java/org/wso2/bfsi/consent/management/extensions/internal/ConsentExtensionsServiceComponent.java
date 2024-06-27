@@ -47,9 +47,7 @@ public class ConsentExtensionsServiceComponent {
 
         context.getBundleContext().registerService(ConsentExtensionExporter.class.getName(),
                 ConsentExtensionExporter.getInstance(), null);
-        if (log.isDebugEnabled()) {
-            log.debug("Consent extensions are registered successfully.");
-        }
+        log.debug("Consent extensions are registered successfully.");
     }
 
     @Reference(
@@ -65,7 +63,7 @@ public class ConsentExtensionsServiceComponent {
 
     public void unsetConfigService(ConsentManagementConfigurationService configurationService) {
 
-        ConsentExtensionsDataHolder.getInstance().setConfigurationService(configurationService);
+        ConsentExtensionsDataHolder.getInstance().setConfigurationService(null);
 
     }
 
