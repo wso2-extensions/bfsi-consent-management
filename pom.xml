@@ -367,7 +367,7 @@
         <axiom.wso2.version>1.2.11-wso2v28</axiom.wso2.version>
         <commons-lang.version>3.4</commons-lang.version>
         <json-smart.version>2.4.10</json-smart.version>
-        <org.json.version>3.0.0.wso2v5</org.json.version>
+        <org.json.version>3.0.0.wso2v4</org.json.version>
         <commons-collections.version>4.4</commons-collections.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
         <hibernate-validator>6.0.20.Final</hibernate-validator>

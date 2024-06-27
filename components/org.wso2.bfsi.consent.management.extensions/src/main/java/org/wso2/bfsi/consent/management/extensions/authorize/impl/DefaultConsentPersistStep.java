@@ -122,7 +122,7 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
         //Check whether payment account exists
         //Payment Account is the debtor account sent in the payload
         if (persistPayload.has(ConsentExtensionConstants.PAYMENT_ACCOUNT) &&
-                StringUtils.isNotBlank((String) persistPayload.get(ConsentExtensionConstants.PAYMENT_ACCOUNT))) {
+                StringUtils.isNotBlank(persistPayload.getString(ConsentExtensionConstants.PAYMENT_ACCOUNT))) {
             //Check whether account Id is in String format
             if (!(persistPayload.get(ConsentExtensionConstants.PAYMENT_ACCOUNT) instanceof String)) {
                 log.error(ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
@@ -130,10 +130,10 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
                         ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
             }
 
-            String paymentAccount = (String) persistPayload.get(ConsentExtensionConstants.PAYMENT_ACCOUNT);
+            String paymentAccount = persistPayload.getString(ConsentExtensionConstants.PAYMENT_ACCOUNT);
             accountIDsMapWithPermissions.put(paymentAccount, permissionsDefault);
         } else if (persistPayload.has(ConsentExtensionConstants.COF_ACCOUNT) &&
-                StringUtils.isNotBlank((String) persistPayload.get(ConsentExtensionConstants.COF_ACCOUNT))) {
+                StringUtils.isNotBlank(persistPayload.getString(ConsentExtensionConstants.COF_ACCOUNT))) {
             //Check whether account Id is in String format
             if (!(persistPayload.get(ConsentExtensionConstants.COF_ACCOUNT) instanceof String)) {
                 log.error(ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
@@ -141,7 +141,7 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
                         ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
             }
 
-            String paymentAccount = (String) persistPayload.get(ConsentExtensionConstants.COF_ACCOUNT);
+            String paymentAccount = persistPayload.getString(ConsentExtensionConstants.COF_ACCOUNT);
             accountIDsMapWithPermissions.put(paymentAccount, permissionsDefault);
         } else {
             //Check whether account Ids are in array format

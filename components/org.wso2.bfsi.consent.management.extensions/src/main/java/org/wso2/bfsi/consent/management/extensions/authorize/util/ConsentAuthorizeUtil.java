@@ -155,7 +155,7 @@ public class ConsentAuthorizeUtil {
 
             // Checks if 'data' object is present in the receipt
             if (receipt.has("Data")) {
-                JSONObject data = (JSONObject) receipt.get("Data");
+                JSONObject data = receipt.getJSONObject("Data");
 
                 String type = consentResource.getConsentType();
                 switch (type) {
@@ -194,7 +194,7 @@ public class ConsentAuthorizeUtil {
         JSONObject jsonElementPaymentType = new JSONObject();
 
         if (data.has(ConsentExtensionConstants.INITIATION)) {
-            JSONObject initiation = (JSONObject) data.get(ConsentExtensionConstants.INITIATION);
+            JSONObject initiation = data.getJSONObject(ConsentExtensionConstants.INITIATION);
 
             if (initiation.has(ConsentExtensionConstants.CURRENCY_OF_TRANSFER)) {
                 //For International Payments
@@ -252,7 +252,7 @@ public class ConsentAuthorizeUtil {
             consentDataJSON.put(jsonElementEndToEndIdentification);
 
             //Adding InstructedAmount
-            JSONObject instructedAmount = (JSONObject) initiation.get(ConsentExtensionConstants.INSTRUCTED_AMOUNT);
+            JSONObject instructedAmount = initiation.getJSONObject(ConsentExtensionConstants.INSTRUCTED_AMOUNT);
             JSONArray instructedAmountArray = new JSONArray();
 
             if (instructedAmount.getString(ConsentExtensionConstants.AMOUNT_TITLE) != null) {
@@ -289,7 +289,7 @@ public class ConsentAuthorizeUtil {
     private static void populateAccountData(JSONObject data, JSONArray consentDataJSON) throws ConsentException {
 
         //Adding Permissions
-        JSONArray permissions = (JSONArray) data.get(ConsentExtensionConstants.PERMISSIONS);
+        JSONArray permissions = data.getJSONArray(ConsentExtensionConstants.PERMISSIONS);
         if (permissions != null) {
             JSONObject jsonElementPermissions = new JSONObject();
             jsonElementPermissions.put(ConsentExtensionConstants.TITLE,
@@ -396,7 +396,7 @@ public class ConsentAuthorizeUtil {
      */
     public static void populateDebtorAccount(JSONObject initiation, JSONArray consentDataJSON) {
         if (initiation.get(ConsentExtensionConstants.DEBTOR_ACC) != null) {
-            JSONObject debtorAccount = (JSONObject) initiation.get(ConsentExtensionConstants.DEBTOR_ACC);
+            JSONObject debtorAccount = initiation.getJSONObject(ConsentExtensionConstants.DEBTOR_ACC);
             JSONArray debtorAccountArray = new JSONArray();
 
             //Adding Debtor Account Scheme Name
@@ -441,7 +441,7 @@ public class ConsentAuthorizeUtil {
      */
     public static void populateCreditorAccount(JSONObject initiation, JSONArray consentDataJSON) {
         if (initiation.get(ConsentExtensionConstants.CREDITOR_ACC) != null) {
-            JSONObject creditorAccount = (JSONObject) initiation.get(ConsentExtensionConstants.CREDITOR_ACC);
+            JSONObject creditorAccount = initiation.getJSONObject(ConsentExtensionConstants.CREDITOR_ACC);
             JSONArray creditorAccountArray = new JSONArray();
             //Adding Debtor Account Scheme Name
             if (creditorAccount.getString(ConsentExtensionConstants.SCHEME_NAME) != null) {

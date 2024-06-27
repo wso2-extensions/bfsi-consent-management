@@ -117,7 +117,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             }
 
             String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
-            JSONObject requestObject = (JSONObject) request;
+            JSONObject requestObject = new JSONObject(request);
 
             //Validate Initiation request
             ConsentPayloadValidationResult validationResponse =

@@ -100,7 +100,7 @@ public class Utils {
         Map<String, Object> returnMaps = new HashMap<>();
 
         //Sets "data_requested" that contains the human-readable scope-requested information
-        JSONArray dataRequestedJsonArray = (JSONArray) dataSet.get(ConsentExtensionConstants.CONSENT_DATA);
+        JSONArray dataRequestedJsonArray = dataSet.getJSONArray(ConsentExtensionConstants.CONSENT_DATA);
         Map<String, List<String>> dataRequested = new LinkedHashMap<>();
 
         for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.length(); requestedDataIndex++) {

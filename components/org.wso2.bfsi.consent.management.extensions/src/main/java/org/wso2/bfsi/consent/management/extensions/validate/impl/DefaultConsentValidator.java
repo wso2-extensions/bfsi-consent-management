@@ -126,7 +126,7 @@ public class DefaultConsentValidator implements ConsentValidator {
     private void validateAccountSubmission(ConsentValidateData consentValidateData, JSONObject receiptJSON,
                                            ConsentValidationResult consentValidationResult) {
 
-        JSONArray permissions = (JSONArray) ((JSONObject) receiptJSON.get("Data")).get("Permissions");
+        JSONArray permissions = receiptJSON.getJSONObject("Data").getJSONArray("Permissions");
 
         // Perform URI Validation.
         String uri = consentValidateData.getRequestPath();
@@ -155,7 +155,7 @@ public class DefaultConsentValidator implements ConsentValidator {
             return;
         }
 
-        if (isConsentExpired(((JSONObject) receiptJSON.get("Data")).getString("ExpirationDateTime"))) {
+        if (isConsentExpired(receiptJSON.getJSONObject("Data").getString("ExpirationDateTime"))) {
             consentValidationResult.setErrorMessage(CONSENT_EXPIRED_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_UNAUTHORIZED);
@@ -193,7 +193,7 @@ public class DefaultConsentValidator implements ConsentValidator {
         }
 
         //Validate whether the consent is expired
-        if (isConsentExpired(((JSONObject) receiptJSON.get(ConsentExtensionConstants.DATA))
+        if (isConsentExpired(receiptJSON.getJSONObject(ConsentExtensionConstants.DATA)
                 .getString(ConsentExtensionConstants.EXPIRATION_DATE))) {
             consentValidationResult.setErrorMessage(CONSENT_EXPIRED_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
@@ -214,7 +214,7 @@ public class DefaultConsentValidator implements ConsentValidator {
             return;
         }
 
-        JSONObject data = (JSONObject) consentValidateData.getPayload().get(ConsentExtensionConstants.DATA);
+        JSONObject data = consentValidateData.getPayload().getJSONObject(ConsentExtensionConstants.DATA);
         // Check if requested consent ID in the body to initiation consent ID.
         if (!data.has(ConsentExtensionConstants.CONSENT_ID) ||
                 data.get(ConsentExtensionConstants.CONSENT_ID) == null ||
@@ -263,12 +263,12 @@ public class DefaultConsentValidator implements ConsentValidator {
         JSONObject submissionData = new JSONObject();
         JSONObject submissionInitiation = new JSONObject();
 
-        JSONObject requestInitiation = (JSONObject) ((JSONObject) initiationJson
-                .get(ConsentExtensionConstants.DATA)).get(ConsentExtensionConstants.INITIATION);
+        JSONObject requestInitiation = initiationJson.getJSONObject(ConsentExtensionConstants.DATA)
+                .getJSONObject(ConsentExtensionConstants.INITIATION);
 
         if (submissionJson.has(ConsentExtensionConstants.DATA) &&
                 submissionJson.get(ConsentExtensionConstants.DATA) instanceof JSONObject) {
-            submissionData = (JSONObject) submissionJson.get(ConsentExtensionConstants.DATA);
+            submissionData = submissionJson.getJSONObject(ConsentExtensionConstants.DATA);
         } else {
             log.error("Invalid Submission payload Data Object found");
             consentValidationResult.setErrorMessage("Invalid Submission payload Data Object found");
@@ -291,7 +291,7 @@ public class DefaultConsentValidator implements ConsentValidator {
 
         if (submissionData.has(ConsentExtensionConstants.INITIATION) &&
                 submissionData.get(ConsentExtensionConstants.INITIATION) instanceof JSONObject) {
-            submissionInitiation = (JSONObject) submissionData.get(ConsentExtensionConstants.INITIATION);
+            submissionInitiation = submissionData.getJSONObject(ConsentExtensionConstants.INITIATION);
         } else {
             log.error("Invalid Submission payload Initiation Object found");
             consentValidationResult.setErrorMessage("Invalid Submission payload Initiation Object found");

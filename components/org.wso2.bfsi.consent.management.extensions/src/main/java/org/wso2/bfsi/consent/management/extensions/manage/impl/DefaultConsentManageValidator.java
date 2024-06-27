@@ -71,7 +71,7 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
             return dataValidationResult;
         }
 
-        JSONObject data = (JSONObject) initiation.get("Data");
+        JSONObject data = initiation.getJSONObject("Data");
 
         if (!data.has("Permissions") || !(data.get("Permissions") instanceof JSONArray)) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
@@ -138,7 +138,7 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
             return dataValidationResult;
         }
 
-        JSONObject data = (JSONObject) initiation.get(ConsentExtensionConstants.DATA);
+        JSONObject data = initiation.getJSONObject(ConsentExtensionConstants.DATA);
 
         //Validate json payload expirationDateTime is a future date
         if (data.has(ConsentExtensionConstants.EXPIRATION_DATE) && !ConsentManageUtils
@@ -187,14 +187,14 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
         if (!(boolean) dataValidationResult.isValid()) {
             return dataValidationResult;
         }
-        JSONObject data = (JSONObject) request.get("Data");
+        JSONObject data = request.getJSONObject("Data");
 
         //Check request body is valid and not empty
         ConsentPayloadValidationResult validationResult = validateInitiationObjInRequestBody(data);
         if (!(boolean) validationResult.isValid()) {
             return validationResult;
         }
-        JSONObject initiation = (JSONObject) data.get("Initiation");
+        JSONObject initiation = data.getJSONObject("Initiation");
 
         ConsentPayloadValidationResult initiationValidationResult =
                 validatePaymentInitiationPayload(initiation);
@@ -251,7 +251,7 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
 
         //Validate DebtorAccount
         if (initiation.has(ConsentExtensionConstants.DEBTOR_ACC)) {
-            JSONObject debtorAccount = (JSONObject) initiation.get(ConsentExtensionConstants.DEBTOR_ACC);
+            JSONObject debtorAccount = initiation.getJSONObject(ConsentExtensionConstants.DEBTOR_ACC);
             ConsentPayloadValidationResult validationResult = validateDebtorAccount(debtorAccount);
             if (!(boolean) validationResult.isValid()) {
                 return validationResult;
@@ -260,7 +260,7 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
 
         //Validate CreditorAccount
         if (initiation.has(ConsentExtensionConstants.CREDITOR_ACC)) {
-            JSONObject creditorAccount = (JSONObject) initiation.get(ConsentExtensionConstants.CREDITOR_ACC);
+            JSONObject creditorAccount = initiation.getJSONObject(ConsentExtensionConstants.CREDITOR_ACC);
             ConsentPayloadValidationResult validationResult = validateCreditorAccount(creditorAccount);
 
             if (!(boolean) validationResult.isValid()) {
@@ -280,7 +280,7 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
                     "Invalid Local Instrument value found");
         }
 
-        JSONObject instructedAmount = (JSONObject) initiation.get(ConsentExtensionConstants.INSTRUCTED_AMOUNT);
+        JSONObject instructedAmount = initiation.getJSONObject(ConsentExtensionConstants.INSTRUCTED_AMOUNT);
         if (Double.parseDouble(instructedAmount.getString(ConsentExtensionConstants.AMOUNT)) < 1) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
