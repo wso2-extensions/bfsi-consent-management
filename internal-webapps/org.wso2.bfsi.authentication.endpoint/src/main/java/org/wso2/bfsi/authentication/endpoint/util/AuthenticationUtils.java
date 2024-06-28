@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.authentication.endpoint.util;
 
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,17 +41,17 @@ public class AuthenticationUtils {
 
         String errorResponse = "";
         try {
-            if (data.containsKey(Constants.ERROR)) {
+            if (data.has(Constants.ERROR)) {
                 errorResponse = errorResponse.concat(Constants.ERROR_URI_FRAGMENT)
                         .concat(URLEncoder.encode(data.get(Constants.ERROR).toString(),
                                 StandardCharsets.UTF_8.toString()));
             }
-            if (data.containsKey(Constants.ERROR_DESCRIPTION)) {
+            if (data.has(Constants.ERROR_DESCRIPTION)) {
                 errorResponse = errorResponse.concat(Constants.ERROR_DESCRIPTION_PARAMETER)
                         .concat(URLEncoder.encode(data.get(Constants.ERROR_DESCRIPTION).toString(),
                                 StandardCharsets.UTF_8.toString()));
             }
-            if (data.containsKey(Constants.STATE)) {
+            if (data.has(Constants.STATE)) {
                 errorResponse = errorResponse.concat(Constants.STATE_PARAMETER)
                         .concat(URLEncoder.encode(data.get(Constants.STATE).toString(),
                                 StandardCharsets.UTF_8.toString()));

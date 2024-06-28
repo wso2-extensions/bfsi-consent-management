@@ -19,9 +19,6 @@
 package org.wso2.bfsi.authentication.endpoint;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
@@ -30,6 +27,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.bfsi.authentication.endpoint.util.AuthenticationUtils;
@@ -103,7 +102,7 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
 
             Map<String, Object> updatedConsentData = bfsiAuthServletTK.updateConsentData(request);
             if (updatedConsentData != null) {
-                consentData.putAll(updatedConsentData);
+                updatedConsentData.forEach(consentData::put);
             }
         }
 
@@ -144,16 +143,16 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
             } else {
                 String retrievalResponse = IOUtils.toString(dataResponse.getEntity().getContent(),
                         String.valueOf(StandardCharsets.UTF_8));
-                JSONObject data = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(retrievalResponse);
+                JSONObject data = new JSONObject(retrievalResponse);
                 String errorResponse = AuthenticationUtils.getErrorResponseForRedirectURL(data);
-                if (data.containsKey(Constants.REDIRECT_URI) && StringUtils.isNotEmpty(errorResponse)) {
+                if (data.has(Constants.REDIRECT_URI) && StringUtils.isNotEmpty(errorResponse)) {
                     URI errorURI = new URI(data.get(Constants.REDIRECT_URI).toString().concat(errorResponse));
                     return errorURI.toString();
                 } else {
                     return null;
                 }
             }
-        } catch (IOException | ParseException | URISyntaxException e) {
+        } catch (IOException | JSONException | URISyntaxException e) {
             log.error("Exception while calling persistence endpoint", e);
             return null;
         }
