@@ -412,13 +412,15 @@ public class ConsentAuthorizeUtil {
             }
 
             //Adding Debtor Account Name
-            if (debtorAccount.getString(ConsentExtensionConstants.NAME) != null) {
+            if (debtorAccount.has(ConsentExtensionConstants.NAME) &&
+                    debtorAccount.getString(ConsentExtensionConstants.NAME) != null) {
                 debtorAccountArray.put(ConsentExtensionConstants.NAME_TITLE + " : " +
                         debtorAccount.getString(ConsentExtensionConstants.NAME));
             }
 
             //Adding Debtor Account Secondary Identification
-            if (debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) != null) {
+            if (debtorAccount.has(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) &&
+                    debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) != null) {
                 debtorAccountArray.put(ConsentExtensionConstants.SECONDARY_IDENTIFICATION_TITLE + " : " +
                         debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION));
             }
