@@ -118,12 +118,16 @@ public class ConsentUtils {
      * toolkit is the manage scenario.
      */
     public static Object getPayload(HttpServletRequest request) {
-        String payload = getStringPayload(request);
-        if (payload == null) {
-            log.debug("Payload is empty. Returning null");
-            return null;
+        try {
+            return new JSONObject(getStringPayload(request));
+        } catch (JSONException e) {
+            try {
+                return new JSONArray(getStringPayload(request));
+            } catch (JSONException ex) {
+                log.error(ConsentConstants.ERROR_PAYLOAD_PARSE, ex);
+                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, ConsentConstants.ERROR_PAYLOAD_PARSE);
+            }
         }
-        return payload;
     }
 
     /**

@@ -21,7 +21,6 @@ package org.wso2.bfsi.consent.management.endpoint.utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.minidev.json.JSONValue;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.bfsi.consent.management.common.caching.ConsentManagementBaseCache;
@@ -178,7 +177,7 @@ public class ConsentCache extends ConsentManagementBaseCache<ConsentCacheKey, Ob
                             getConsentAttributes(consentData.getConsentId()).getConsentAttributes();
 
                     consentAttributes.forEach((key, value) -> {
-                        if (JSONValue.isValidJson(value) &&
+                        if (ConsentUtils.isValidJson(value) &&
                                 value.contains(ConsentExtensionConstants.SESSION_DATA_KEY)) {
                             keysToDelete.add(key);
                         }

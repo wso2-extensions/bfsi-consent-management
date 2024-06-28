@@ -173,12 +173,12 @@ public class ConsentValidationEndpoint {
         ConsentValidationResult validationResult = new ConsentValidationResult();
         consentValidator.validate(consentValidateData, validationResult);
 
-        org.json.JSONObject information = ConsentUtils.detailedConsentToJSON(
+        JSONObject information = ConsentUtils.detailedConsentToJSON(
                 consentValidateData.getComprehensiveConsent());
         information.put("additionalConsentInfo", validationResult.getConsentInformation());
         validationResult.setConsentInformation(information);
 
-        org.json.JSONObject responsePayload;
+        JSONObject responsePayload;
         try {
             responsePayload = validationResult.generatePayload();
             responsePayload.put("consentInformation",
