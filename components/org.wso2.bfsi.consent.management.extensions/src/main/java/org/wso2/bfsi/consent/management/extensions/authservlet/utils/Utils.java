@@ -18,11 +18,11 @@
 
 package org.wso2.bfsi.consent.management.extensions.authservlet.utils;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.owasp.encoder.Encode;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 
@@ -58,6 +58,10 @@ public class Utils {
         } catch (Exception e) {
             // Intentionally catching Exception and if something goes wrong while finding the value for key, return
             // default, not to break the UI
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Error while retrieving the value for key: %s from resource bundle.",
+                        key.replaceAll("[\n\r]", "")));
+            }
             return Encode.forHtml(key);
         }
     }
@@ -96,16 +100,16 @@ public class Utils {
         Map<String, Object> returnMaps = new HashMap<>();
 
         //Sets "data_requested" that contains the human-readable scope-requested information
-        JSONArray dataRequestedJsonArray = (JSONArray) dataSet.get(ConsentExtensionConstants.CONSENT_DATA);
+        JSONArray dataRequestedJsonArray = dataSet.getJSONArray(ConsentExtensionConstants.CONSENT_DATA);
         Map<String, List<String>> dataRequested = new LinkedHashMap<>();
 
-        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.size(); requestedDataIndex++) {
-            JSONObject dataObj = (JSONObject) dataRequestedJsonArray.get(requestedDataIndex);
-            String title = dataObj.getAsString(ConsentExtensionConstants.TITLE);
-            JSONArray dataArray = (JSONArray) dataObj.get(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
+        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.length(); requestedDataIndex++) {
+            JSONObject dataObj = dataRequestedJsonArray.getJSONObject(requestedDataIndex);
+            String title = dataObj.getString(ConsentExtensionConstants.TITLE);
+            JSONArray dataArray = dataObj.getJSONArray(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
 
             ArrayList<String> listData = new ArrayList<>();
-            for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
+            for (int dataIndex = 0; dataIndex < dataArray.length(); dataIndex++) {
                 listData.add(dataArray.get(dataIndex).toString());
             }
             dataRequested.put(title, listData);
@@ -132,16 +136,16 @@ public class Utils {
         Map<String, Object> returnMaps = new HashMap<>();
 
         //Sets "data_requested" that contains the human-readable scope-requested information
-        JSONArray dataRequestedJsonArray = (JSONArray) dataSet.get(ConsentExtensionConstants.CONSENT_DATA);
+        JSONArray dataRequestedJsonArray = dataSet.getJSONArray(ConsentExtensionConstants.CONSENT_DATA);
         Map<String, List<String>> dataRequested = new LinkedHashMap<>();
 
-        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.size(); requestedDataIndex++) {
-            JSONObject dataObj = (JSONObject) dataRequestedJsonArray.get(requestedDataIndex);
-            String title = dataObj.getAsString(ConsentExtensionConstants.TITLE);
-            JSONArray dataArray = (JSONArray) dataObj.get(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
+        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.length(); requestedDataIndex++) {
+            JSONObject dataObj = dataRequestedJsonArray.getJSONObject(requestedDataIndex);
+            String title = dataObj.getString(ConsentExtensionConstants.TITLE);
+            JSONArray dataArray = dataObj.getJSONArray(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
 
             ArrayList<String> listData = new ArrayList<>();
-            for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
+            for (int dataIndex = 0; dataIndex < dataArray.length(); dataIndex++) {
                 listData.add(dataArray.get(dataIndex).toString());
             }
             dataRequested.put(title, listData);
@@ -173,17 +177,17 @@ public class Utils {
         Map<String, Object> returnMaps = new HashMap<>();
 
         //Sets "data_requested" that contains the human-readable scope-requested information
-        JSONArray dataRequestedJsonArray = (JSONArray) dataSet.get(ConsentExtensionConstants.CONSENT_DATA);
+        JSONArray dataRequestedJsonArray = dataSet.getJSONArray(ConsentExtensionConstants.CONSENT_DATA);
         Map<String, List<String>> dataRequested = new LinkedHashMap<>();
 
-        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.size(); requestedDataIndex++) {
-            JSONObject dataObj = (JSONObject) dataRequestedJsonArray.get(requestedDataIndex);
-            String title = dataObj.getAsString(ConsentExtensionConstants.TITLE);
-            JSONArray dataArray = (JSONArray) dataObj.get(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
+        for (int requestedDataIndex = 0; requestedDataIndex < dataRequestedJsonArray.length(); requestedDataIndex++) {
+            JSONObject dataObj = dataRequestedJsonArray.getJSONObject(requestedDataIndex);
+            String title = dataObj.getString(ConsentExtensionConstants.TITLE);
+            JSONArray dataArray = dataObj.getJSONArray(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
 
             ArrayList<String> listData = new ArrayList<>();
-            for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
-                listData.add((String) dataArray.get(dataIndex));
+            for (int dataIndex = 0; dataIndex < dataArray.length(); dataIndex++) {
+                listData.add(dataArray.getString(dataIndex));
             }
             dataRequested.put(title, listData);
         }
@@ -212,20 +216,20 @@ public class Utils {
      */
     public static String getDebtorAccFromConsentData(JSONArray consentDataObject) {
 
-        for (int requestedDataIndex = 0; requestedDataIndex < consentDataObject.size(); requestedDataIndex++) {
-            JSONObject dataObj = (JSONObject) consentDataObject.get(requestedDataIndex);
-            String title = dataObj.getAsString(ConsentExtensionConstants.TITLE);
+        for (int requestedDataIndex = 0; requestedDataIndex < consentDataObject.length(); requestedDataIndex++) {
+            JSONObject dataObj = consentDataObject.getJSONObject(requestedDataIndex);
+            String title = dataObj.getString(ConsentExtensionConstants.TITLE);
 
             if (ConsentExtensionConstants.DEBTOR_ACC_TITLE.equals(title)) {
-                JSONArray dataArray = (JSONArray) dataObj.get(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
+                JSONArray dataArray = dataObj.getJSONArray(StringUtils.lowerCase(ConsentExtensionConstants.DATA));
 
-                for (int dataIndex = 0; dataIndex < dataArray.size(); dataIndex++) {
-                    String data = (String) dataArray.get(dataIndex);
+                for (int dataIndex = 0; dataIndex < dataArray.length(); dataIndex++) {
+                    String data = dataArray.getString(dataIndex);
                     if (data.contains(ConsentExtensionConstants.IDENTIFICATION_TITLE)) {
 
                         //Values are set to the array as {name:value} Strings in Consent Retrieval step,
                         // hence splitting by : and getting the 2nd element to get the value
-                        return (((String) dataArray.get(dataIndex)).split(":")[1]).trim();
+                        return ((dataArray.getString(dataIndex)).split(":")[1]).trim();
                     }
                 }
             }
@@ -236,11 +240,11 @@ public class Utils {
     private static List<Map<String, String>>  addAccList (JSONObject dataSet) {
         // add accounts list
         List<Map<String, String>> accountData = new ArrayList<>();
-        JSONArray accountsArray = (JSONArray) dataSet.get("accounts");
-        for (int accountIndex = 0; accountIndex < accountsArray.size(); accountIndex++) {
-            JSONObject object = (JSONObject) accountsArray.get(accountIndex);
-            String accountId = object.getAsString(ConsentExtensionConstants.ACCOUNT_ID);
-            String displayName = object.getAsString(ConsentExtensionConstants.DISPLAY_NAME);
+        JSONArray accountsArray = dataSet.getJSONArray("accounts");
+        for (int accountIndex = 0; accountIndex < accountsArray.length(); accountIndex++) {
+            JSONObject object = accountsArray.getJSONObject(accountIndex);
+            String accountId = object.getString(ConsentExtensionConstants.ACCOUNT_ID);
+            String displayName = object.getString(ConsentExtensionConstants.DISPLAY_NAME);
             Map<String, String> data = new HashMap<>();
             data.put(ConsentExtensionConstants.ACCOUNT_ID, accountId);
             data.put(ConsentExtensionConstants.DISPLAY_NAME, displayName);

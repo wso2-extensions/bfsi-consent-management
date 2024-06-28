@@ -18,8 +18,7 @@
 
 package org.wso2.bfsi.consent.management.extensions.validate.model;
 
-
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 
 /**
  * Data wrapper for the result of consent validation.

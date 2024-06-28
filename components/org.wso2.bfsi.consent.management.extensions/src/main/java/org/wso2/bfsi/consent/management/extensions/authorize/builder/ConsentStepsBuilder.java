@@ -41,7 +41,11 @@ public class ConsentStepsBuilder {
     private static final String RETRIEVE = "Retrieve";
     private static final String PERSIST = "Persist";
 
-    public void build() {
+    public ConsentStepsBuilder() {
+        build();
+    }
+
+    private void build() {
 
         try {
             Map<String, Map<Integer, String>> stepsConfig = ConsentExtensionsDataHolder.getInstance()
@@ -49,22 +53,22 @@ public class ConsentStepsBuilder {
             Map<Integer, String> persistIntegerStringMap = stepsConfig.get(PERSIST);
             if (persistIntegerStringMap != null) {
                 consentPersistSteps = persistIntegerStringMap.keySet().stream()
-                        .map(integer -> (ConsentPersistStep) ConsentExtensionUtils
-                                .getClassInstanceFromFQN(persistIntegerStringMap.get(integer)))
+                        .map(integer -> ConsentExtensionUtils.getClassInstanceFromFQN(
+                                persistIntegerStringMap.get(integer), ConsentPersistStep.class))
                         .collect(Collectors.toList());
                 log.debug("Persistence steps loaded successfully");
             }
             Map<Integer, String> retrieveIntegerStringMap = stepsConfig.get(RETRIEVE);
             if (retrieveIntegerStringMap != null) {
                 consentRetrievalSteps = retrieveIntegerStringMap.keySet().stream()
-                        .map(integer -> (ConsentRetrievalStep) ConsentExtensionUtils
-                                .getClassInstanceFromFQN(retrieveIntegerStringMap.get(integer)))
+                        .map(integer -> ConsentExtensionUtils.getClassInstanceFromFQN(
+                                retrieveIntegerStringMap.get(integer), ConsentRetrievalStep.class))
                         .collect(Collectors.toList());
                 log.debug("Retrieval steps loaded successfully");
             }
         } catch (ConsentManagementRuntimeException e) {
             log.error(String.format("Authorize steps not loaded successfully. Please verify configurations. %s",
-                    e.getMessage().replaceAll("\n\r", "")));
+                    e.getMessage().replaceAll("\n\r", "")), e);
         }
     }
 

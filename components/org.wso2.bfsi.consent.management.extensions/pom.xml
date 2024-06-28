@@ -11,7 +11,7 @@
     <artifactId>org.wso2.bfsi.consent.management.extensions</artifactId>
     <name>WSO2 BFSI - Consent Extensions</name>
     <description>WSO2 BFSI - Consent Extensions Module</description>
-    <url>http://maven.apache.org</url>
+    <url>https://wso2.com</url>
     <packaging>bundle</packaging>
 
     <dependencies>
@@ -19,15 +19,9 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.wso2.eclipse.osgi</groupId>-->
-<!--            <artifactId>org.eclipse.osgi.services</artifactId>-->
-<!--            <version>3.5.100.v20160504-1419</version>-->
-<!--            <scope>compile</scope>-->
-<!--        </dependency>-->
         <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.bfsi.consent.management</groupId>
@@ -78,19 +72,6 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-surefire-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <suiteXmlFiles>-->
-<!--                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>-->
-<!--                    </suiteXmlFiles>-->
-<!--                    <systemPropertyVariables>-->
-<!--                        <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>-->
-<!--                    </systemPropertyVariables>-->
-<!--                    <reuseForks>true</reuseForks>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -183,12 +164,15 @@
                             org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
                             org.apache.commons.lang3;version="${commons-lang.version}",
                             org.apache.commons.logging;version="${commons.logging.version}",
-                            net.minidev.json.*;version="${json-smart.version}",
+                            org.json.*;version="${json-smart.version}",
                             javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
                             org.wso2.bfsi.consent.management.common.*;version="${project.version}",
                             org.wso2.bfsi.consent.management.dao.*;version="${project.version}",
                             org.wso2.bfsi.consent.management.service.*;version="${project.version}",
-                            *
+                            com.fasterxml.jackson.databind;version="${jackson.databind.version}",
+                            com.nimbusds.jose.*;version ="${org.wso2.orbit.nimbus.version}",
+                            com.nimbusds.jwt;version="${org.wso2.orbit.nimbus.version}",
+                            org.owasp.encoder;version="${encoder.wso2.version}"
                         </Import-Package>
                         <Export-Package>
                             !org.wso2.bfsi.consent.management.extensions.internal,

@@ -18,11 +18,11 @@
 
 package org.wso2.bfsi.consent.management.extensions.manage.impl;
 
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
 import org.wso2.bfsi.consent.management.extensions.manage.ConsentManageValidator;
@@ -71,16 +71,17 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
             return dataValidationResult;
         }
 
-        JSONObject data = (JSONObject) initiation.get("Data");
+        JSONObject data = initiation.getJSONObject("Data");
 
-        if (!data.containsKey("Permissions") || !(data.get("Permissions") instanceof JSONArray)) {
+        if (!data.has("Permissions") || !(data.get("Permissions") instanceof JSONArray)) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Permissions are not in correct format");
         }
 
-        JSONArray permissions = (JSONArray) data.get("Permissions");
-        for (Object permission : permissions) {
+        JSONArray permissions = data.getJSONArray("Permissions");
+        for (int i = 0; i < permissions.length(); i++) {
+            Object permission = permissions.get(i);
             if (!(permission instanceof String)) {
                 return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                         ResponseStatus.BAD_REQUEST.getReasonPhrase(),
@@ -93,29 +94,29 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
             }
         }
 
-        if (!data.containsKey("ExpirationDateTime") || !(data.get("ExpirationDateTime") instanceof String)) {
+        if (!data.has("ExpirationDateTime") || !(data.get("ExpirationDateTime") instanceof String)) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(), "ExpirationDateTime is invalid");
         }
 
-        if (!ConsentManageUtils.isConsentExpirationTimeValid(data.getAsString("ExpirationDateTime"))) {
+        if (!ConsentManageUtils.isConsentExpirationTimeValid(data.getString("ExpirationDateTime"))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "ExpirationDateTime should be a future time");
         }
 
-        if (!data.containsKey("TransactionFromDateTime") || !(data.get("TransactionFromDateTime") instanceof String)) {
+        if (!data.has("TransactionFromDateTime") || !(data.get("TransactionFromDateTime") instanceof String)) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(), "TransactionFromDateTime is invalid");
         }
 
-        if (!data.containsKey("TransactionToDateTime") || !(data.get("TransactionToDateTime") instanceof String)) {
+        if (!data.has("TransactionToDateTime") || !(data.get("TransactionToDateTime") instanceof String)) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(), "TransactionToDateTime is invalid");
         }
 
-        if (!ConsentManageUtils.isTransactionFromToTimeValid(data.getAsString("TransactionFromDateTime"),
-                data.getAsString("TransactionToDateTime"))) {
+        if (!ConsentManageUtils.isTransactionFromToTimeValid(data.getString("TransactionFromDateTime"),
+                data.getString("TransactionToDateTime"))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "TransactionToDateTime should be after TransactionFromDateTime");
@@ -137,17 +138,17 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
             return dataValidationResult;
         }
 
-        JSONObject data = (JSONObject) initiation.get(ConsentExtensionConstants.DATA);
+        JSONObject data = initiation.getJSONObject(ConsentExtensionConstants.DATA);
 
         //Validate json payload expirationDateTime is a future date
-        if (data.containsKey(ConsentExtensionConstants.EXPIRATION_DATE) && !ConsentManageUtils
-                .isConsentExpirationTimeValid(data.getAsString(ConsentExtensionConstants.EXPIRATION_DATE))) {
+        if (data.has(ConsentExtensionConstants.EXPIRATION_DATE) && !ConsentManageUtils
+                .isConsentExpirationTimeValid(data.getString(ConsentExtensionConstants.EXPIRATION_DATE))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "ExpirationDateTime should be after TransactionFromDateTime");
         }
 
-        if (data.containsKey(ConsentExtensionConstants.DEBTOR_ACC)) {
+        if (data.has(ConsentExtensionConstants.DEBTOR_ACC)) {
 
             Object debtorAccountObj = data.get(ConsentExtensionConstants.DEBTOR_ACC);
             //Check whether debtor account is a JsonObject
@@ -157,14 +158,13 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
                         "Debtor Account is not in correct format");
             }
 
-            JSONObject debtorAccount = (JSONObject) data.get(ConsentExtensionConstants.DEBTOR_ACC);
+            JSONObject debtorAccount = data.getJSONObject(ConsentExtensionConstants.DEBTOR_ACC);
             //Check whether debtor account is not empty
-            if (debtorAccount.isEmpty()) {
+            if (debtorAccount == null) {
                 return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                         ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                         "Data object is not in correct format");
             }
-
 
         } else {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
@@ -187,14 +187,14 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
         if (!(boolean) dataValidationResult.isValid()) {
             return dataValidationResult;
         }
-        JSONObject data = (JSONObject) request.get("Data");
+        JSONObject data = request.getJSONObject("Data");
 
         //Check request body is valid and not empty
         ConsentPayloadValidationResult validationResult = validateInitiationObjInRequestBody(data);
         if (!(boolean) validationResult.isValid()) {
             return validationResult;
         }
-        JSONObject initiation = (JSONObject) data.get("Initiation");
+        JSONObject initiation = data.getJSONObject("Initiation");
 
         ConsentPayloadValidationResult initiationValidationResult =
                 validatePaymentInitiationPayload(initiation);
@@ -213,8 +213,8 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
      */
     public static ConsentPayloadValidationResult validateDataObjInRequestBody(JSONObject requestBody) {
 
-        if (!requestBody.containsKey("Data") || !(requestBody.get("Data")
-                instanceof JSONObject) || ((JSONObject) requestBody.get("Data")).isEmpty()) {
+        if (!requestBody.has("Data") || !(requestBody.get("Data")
+                instanceof JSONObject) || (requestBody.get("Data")) == null) {
             log.error("Invalid request payload");
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(), "Invalid request payload");
@@ -231,8 +231,8 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
      */
     public static ConsentPayloadValidationResult validateInitiationObjInRequestBody(JSONObject requestBody) {
 
-        if (!requestBody.containsKey("Initiation") || !(requestBody.get("Initiation")
-                instanceof JSONObject) || ((JSONObject) requestBody.get("Initiation")).isEmpty()) {
+        if (!requestBody.has("Initiation") || !(requestBody.get("Initiation")
+                instanceof JSONObject) || (requestBody.get("Initiation")) == null) {
             log.error("Invalid request payload");
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(), "Invalid request payload");
@@ -250,8 +250,8 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
     public static ConsentPayloadValidationResult validatePaymentInitiationPayload(JSONObject initiation) {
 
         //Validate DebtorAccount
-        if (initiation.containsKey(ConsentExtensionConstants.DEBTOR_ACC)) {
-            JSONObject debtorAccount = (JSONObject) initiation.get(ConsentExtensionConstants.DEBTOR_ACC);
+        if (initiation.has(ConsentExtensionConstants.DEBTOR_ACC)) {
+            JSONObject debtorAccount = initiation.getJSONObject(ConsentExtensionConstants.DEBTOR_ACC);
             ConsentPayloadValidationResult validationResult = validateDebtorAccount(debtorAccount);
             if (!(boolean) validationResult.isValid()) {
                 return validationResult;
@@ -259,8 +259,8 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
         }
 
         //Validate CreditorAccount
-        if (initiation.containsKey(ConsentExtensionConstants.CREDITOR_ACC)) {
-            JSONObject creditorAccount = (JSONObject) initiation.get(ConsentExtensionConstants.CREDITOR_ACC);
+        if (initiation.has(ConsentExtensionConstants.CREDITOR_ACC)) {
+            JSONObject creditorAccount = initiation.getJSONObject(ConsentExtensionConstants.CREDITOR_ACC);
             ConsentPayloadValidationResult validationResult = validateCreditorAccount(creditorAccount);
 
             if (!(boolean) validationResult.isValid()) {
@@ -273,22 +273,22 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
         }
 
         //Validate Local Instrument
-        if (initiation.containsKey("LocalInstrument") && !ConsentManageUtils
-                .validateLocalInstrument(initiation.getAsString("LocalInstrument"))) {
+        if (initiation.has("LocalInstrument") && !ConsentManageUtils
+                .validateLocalInstrument(initiation.getString("LocalInstrument"))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Invalid Local Instrument value found");
         }
 
-        JSONObject instructedAmount = (JSONObject) initiation.get(ConsentExtensionConstants.INSTRUCTED_AMOUNT);
-        if (Double.parseDouble(instructedAmount.getAsString(ConsentExtensionConstants.AMOUNT)) < 1) {
+        JSONObject instructedAmount = initiation.getJSONObject(ConsentExtensionConstants.INSTRUCTED_AMOUNT);
+        if (Double.parseDouble(instructedAmount.getString(ConsentExtensionConstants.AMOUNT)) < 1) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Invalid Instructed Amount value found");
         }
 
         if (!ConsentManageUtils.validateMaxInstructedAmount(
-                instructedAmount.getAsString(ConsentExtensionConstants.AMOUNT))) {
+                instructedAmount.getString(ConsentExtensionConstants.AMOUNT))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Instructed Amount value exceeds the maximum limit");
@@ -305,56 +305,56 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
     private static ConsentPayloadValidationResult validateDebtorAccount(JSONObject debtorAccount) {
 
         //Check Debtor Account Scheme name exists
-        if (!debtorAccount.containsKey(ConsentExtensionConstants.SCHEME_NAME) ||
-                StringUtils.isEmpty(debtorAccount.getAsString(ConsentExtensionConstants.SCHEME_NAME))) {
+        if (!debtorAccount.has(ConsentExtensionConstants.SCHEME_NAME) ||
+                StringUtils.isEmpty(debtorAccount.getString(ConsentExtensionConstants.SCHEME_NAME))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Debtor Account Scheme Name should be present in the request");
         }
 
         //Validate Debtor Account Scheme name
-        if (debtorAccount.containsKey(ConsentExtensionConstants.SCHEME_NAME) &&
-                (debtorAccount.getAsString(ConsentExtensionConstants.SCHEME_NAME) == null ||
+        if (debtorAccount.has(ConsentExtensionConstants.SCHEME_NAME) &&
+                (debtorAccount.getString(ConsentExtensionConstants.SCHEME_NAME) == null ||
                         !ConsentManageUtils.isDebtorAccSchemeNameValid(debtorAccount
-                                .getAsString(ConsentExtensionConstants.SCHEME_NAME)))) {
+                                .getString(ConsentExtensionConstants.SCHEME_NAME)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Debtor Account Scheme Name is not in the correct format");
         }
 
         //Check Debtor Account Identification existing
-        if (!debtorAccount.containsKey(ConsentExtensionConstants.IDENTIFICATION) ||
-                StringUtils.isEmpty(debtorAccount.getAsString(ConsentExtensionConstants.IDENTIFICATION))) {
+        if (!debtorAccount.has(ConsentExtensionConstants.IDENTIFICATION) ||
+                StringUtils.isEmpty(debtorAccount.getString(ConsentExtensionConstants.IDENTIFICATION))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Debtor Account Identification should be present in the request");
         }
 
         //Validate Debtor Account Identification
-        if (debtorAccount.containsKey(ConsentExtensionConstants.IDENTIFICATION) &&
-                (debtorAccount.getAsString(ConsentExtensionConstants.IDENTIFICATION) == null ||
+        if (debtorAccount.has(ConsentExtensionConstants.IDENTIFICATION) &&
+                (debtorAccount.getString(ConsentExtensionConstants.IDENTIFICATION) == null ||
                         !ConsentManageUtils.isDebtorAccIdentificationValid(debtorAccount
-                                .getAsString(ConsentExtensionConstants.IDENTIFICATION)))) {
+                                .getString(ConsentExtensionConstants.IDENTIFICATION)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Debtor Account Identification is not in the correct format");
         }
 
         //Validate Debtor Account Name
-        if (debtorAccount.containsKey(ConsentExtensionConstants.NAME) &&
-                (debtorAccount.getAsString(ConsentExtensionConstants.NAME) == null ||
+        if (debtorAccount.has(ConsentExtensionConstants.NAME) &&
+                (debtorAccount.getString(ConsentExtensionConstants.NAME) == null ||
                         !ConsentManageUtils.isDebtorAccNameValid(debtorAccount
-                                .getAsString(ConsentExtensionConstants.NAME)))) {
+                                .getString(ConsentExtensionConstants.NAME)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Debtor Account Name is not in the correct format");
         }
 
         //Validate Debtor Account Secondary Identification
-        if (debtorAccount.containsKey(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) &&
-                (debtorAccount.getAsString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) == null ||
+        if (debtorAccount.has(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) &&
+                (debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) == null ||
                         !ConsentManageUtils.isDebtorAccSecondaryIdentificationValid(debtorAccount
-                                .getAsString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION)))) {
+                                .getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Debtor Account Secondary Identification is not in the correct format");
@@ -372,56 +372,56 @@ public class DefaultConsentManageValidator implements ConsentManageValidator {
     private static ConsentPayloadValidationResult validateCreditorAccount(JSONObject creditorAccount) {
 
         //Check Debtor Account Scheme name exists
-        if (!creditorAccount.containsKey(ConsentExtensionConstants.SCHEME_NAME) ||
-                StringUtils.isEmpty(creditorAccount.getAsString(ConsentExtensionConstants.SCHEME_NAME))) {
+        if (!creditorAccount.has(ConsentExtensionConstants.SCHEME_NAME) ||
+                StringUtils.isEmpty(creditorAccount.getString(ConsentExtensionConstants.SCHEME_NAME))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Creditor Account Scheme Name should be present in the request");
         }
 
         //Validate Debtor Account Scheme name
-        if (creditorAccount.containsKey(ConsentExtensionConstants.SCHEME_NAME) &&
-                (creditorAccount.getAsString(ConsentExtensionConstants.SCHEME_NAME) == null ||
+        if (creditorAccount.has(ConsentExtensionConstants.SCHEME_NAME) &&
+                (creditorAccount.getString(ConsentExtensionConstants.SCHEME_NAME) == null ||
                         !ConsentManageUtils.isDebtorAccSchemeNameValid(creditorAccount
-                                .getAsString(ConsentExtensionConstants.SCHEME_NAME)))) {
+                                .getString(ConsentExtensionConstants.SCHEME_NAME)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Creditor Account Scheme Name is not in the correct format");
         }
 
         //Check Debtor Account Identification existing
-        if (!creditorAccount.containsKey(ConsentExtensionConstants.IDENTIFICATION) ||
-                StringUtils.isEmpty(creditorAccount.getAsString(ConsentExtensionConstants.IDENTIFICATION))) {
+        if (!creditorAccount.has(ConsentExtensionConstants.IDENTIFICATION) ||
+                StringUtils.isEmpty(creditorAccount.getString(ConsentExtensionConstants.IDENTIFICATION))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Creditor Account Identification should be present in the request");
         }
 
         //Validate Debtor Account Identification
-        if (creditorAccount.containsKey(ConsentExtensionConstants.IDENTIFICATION) &&
-                (creditorAccount.getAsString(ConsentExtensionConstants.IDENTIFICATION) == null ||
+        if (creditorAccount.has(ConsentExtensionConstants.IDENTIFICATION) &&
+                (creditorAccount.getString(ConsentExtensionConstants.IDENTIFICATION) == null ||
                         !ConsentManageUtils.isDebtorAccIdentificationValid(creditorAccount
-                                .getAsString(ConsentExtensionConstants.IDENTIFICATION)))) {
+                                .getString(ConsentExtensionConstants.IDENTIFICATION)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Creditor Account Identification is not in the correct format");
         }
 
         //Validate Debtor Account Name
-        if (creditorAccount.containsKey(ConsentExtensionConstants.NAME) &&
-                (creditorAccount.getAsString(ConsentExtensionConstants.NAME) == null ||
+        if (creditorAccount.has(ConsentExtensionConstants.NAME) &&
+                (creditorAccount.getString(ConsentExtensionConstants.NAME) == null ||
                         !ConsentManageUtils.isDebtorAccNameValid(creditorAccount
-                                .getAsString(ConsentExtensionConstants.NAME)))) {
+                                .getString(ConsentExtensionConstants.NAME)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Creditor Account Name is not in the correct format");
         }
 
         //Validate Debtor Account Secondary Identification
-        if (creditorAccount.containsKey(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) &&
-                (creditorAccount.getAsString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) == null ||
+        if (creditorAccount.has(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) &&
+                (creditorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) == null ||
                         !ConsentManageUtils.isDebtorAccSecondaryIdentificationValid(creditorAccount
-                                .getAsString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION)))) {
+                                .getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION)))) {
             return new ConsentPayloadValidationResult(false, ResponseStatus.BAD_REQUEST,
                     ResponseStatus.BAD_REQUEST.getReasonPhrase(),
                     "Creditor Account Secondary Identification is not in the correct format");

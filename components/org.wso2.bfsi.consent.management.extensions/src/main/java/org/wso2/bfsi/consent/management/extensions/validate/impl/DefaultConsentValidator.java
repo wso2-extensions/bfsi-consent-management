@@ -20,13 +20,12 @@ package org.wso2.bfsi.consent.management.extensions.validate.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
@@ -58,13 +57,10 @@ public class DefaultConsentValidator implements ConsentValidator {
     public void validate(ConsentValidateData consentValidateData, ConsentValidationResult consentValidationResult)
             throws ConsentException {
 
-        String uri = consentValidateData.getRequestPath();
         JSONObject receiptJSON;
         try {
-            receiptJSON = (JSONObject) (new JSONParser(JSONParser.MODE_PERMISSIVE)).
-                    parse(consentValidateData.getComprehensiveConsent().getReceipt());
-
-        } catch (ParseException e) {
+            receiptJSON = new JSONObject(consentValidateData.getComprehensiveConsent().getReceipt());
+        } catch (JSONException e) {
             log.error(e.getMessage().replaceAll("[\n\r]", ""));
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Exception occurred while validating" +
                     " permissions");
@@ -130,7 +126,7 @@ public class DefaultConsentValidator implements ConsentValidator {
     private void validateAccountSubmission(ConsentValidateData consentValidateData, JSONObject receiptJSON,
                                            ConsentValidationResult consentValidationResult) {
 
-        JSONArray permissions = (JSONArray) ((JSONObject) receiptJSON.get("Data")).get("Permissions");
+        JSONArray permissions = receiptJSON.getJSONObject("Data").getJSONArray("Permissions");
 
         // Perform URI Validation.
         String uri = consentValidateData.getRequestPath();
@@ -140,9 +136,10 @@ public class DefaultConsentValidator implements ConsentValidator {
             consentValidationResult.setHttpCode(401);
             return;
         }
-        if ((uri.matches(ACCOUNTS_REGEX) && !permissions.contains("ReadAccountsDetail")) ||
-                (uri.matches(TRANSACTIONS_REGEX) && !permissions.contains("ReadTransactionsDetail")) ||
-                (uri.matches(BALANCES_REGEX)) && !permissions.contains("ReadBalances")) {
+        String persmissionString = permissions.toString();
+        if ((uri.matches(ACCOUNTS_REGEX) && !persmissionString.contains("ReadAccountsDetail")) ||
+                (uri.matches(TRANSACTIONS_REGEX) && !persmissionString.contains("ReadTransactionsDetail")) ||
+                (uri.matches(BALANCES_REGEX)) && !persmissionString.contains("ReadBalances")) {
             consentValidationResult.setErrorMessage(PERMISSION_MISMATCH_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(401);
@@ -158,7 +155,7 @@ public class DefaultConsentValidator implements ConsentValidator {
             return;
         }
 
-        if (isConsentExpired(((JSONObject) receiptJSON.get("Data")).getAsString("ExpirationDateTime"))) {
+        if (isConsentExpired(receiptJSON.getJSONObject("Data").getString("ExpirationDateTime"))) {
             consentValidationResult.setErrorMessage(CONSENT_EXPIRED_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_UNAUTHORIZED);
@@ -196,8 +193,8 @@ public class DefaultConsentValidator implements ConsentValidator {
         }
 
         //Validate whether the consent is expired
-        if (isConsentExpired(((JSONObject) receiptJSON.get(ConsentExtensionConstants.DATA))
-                .getAsString(ConsentExtensionConstants.EXPIRATION_DATE))) {
+        if (isConsentExpired(receiptJSON.getJSONObject(ConsentExtensionConstants.DATA)
+                .getString(ConsentExtensionConstants.EXPIRATION_DATE))) {
             consentValidationResult.setErrorMessage(CONSENT_EXPIRED_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_UNAUTHORIZED);
@@ -217,9 +214,9 @@ public class DefaultConsentValidator implements ConsentValidator {
             return;
         }
 
-        JSONObject data = (JSONObject) consentValidateData.getPayload().get(ConsentExtensionConstants.DATA);
+        JSONObject data = consentValidateData.getPayload().getJSONObject(ConsentExtensionConstants.DATA);
         // Check if requested consent ID in the body to initiation consent ID.
-        if (!data.containsKey(ConsentExtensionConstants.CONSENT_ID) ||
+        if (!data.has(ConsentExtensionConstants.CONSENT_ID) ||
                 data.get(ConsentExtensionConstants.CONSENT_ID) == null ||
                 !data.get(ConsentExtensionConstants.CONSENT_ID)
                         .equals(consentValidateData.getComprehensiveConsent().getConsentID())) {
@@ -266,12 +263,12 @@ public class DefaultConsentValidator implements ConsentValidator {
         JSONObject submissionData = new JSONObject();
         JSONObject submissionInitiation = new JSONObject();
 
-        JSONObject requestInitiation = (JSONObject) ((JSONObject) initiationJson
-                .get(ConsentExtensionConstants.DATA)).get(ConsentExtensionConstants.INITIATION);
+        JSONObject requestInitiation = initiationJson.getJSONObject(ConsentExtensionConstants.DATA)
+                .getJSONObject(ConsentExtensionConstants.INITIATION);
 
-        if (submissionJson.containsKey(ConsentExtensionConstants.DATA) &&
+        if (submissionJson.has(ConsentExtensionConstants.DATA) &&
                 submissionJson.get(ConsentExtensionConstants.DATA) instanceof JSONObject) {
-            submissionData = (JSONObject) submissionJson.get(ConsentExtensionConstants.DATA);
+            submissionData = submissionJson.getJSONObject(ConsentExtensionConstants.DATA);
         } else {
             log.error("Invalid Submission payload Data Object found");
             consentValidationResult.setErrorMessage("Invalid Submission payload Data Object found");
@@ -281,7 +278,7 @@ public class DefaultConsentValidator implements ConsentValidator {
         }
 
         // Check if requested consent ID in the body to initiation consent ID.
-        if (!submissionData.containsKey(ConsentExtensionConstants.CONSENT_ID) ||
+        if (!submissionData.has(ConsentExtensionConstants.CONSENT_ID) ||
                 submissionData.get(ConsentExtensionConstants.CONSENT_ID) == null ||
                 !submissionData.get(ConsentExtensionConstants.CONSENT_ID)
                         .equals(detailedConsentResource.getConsentID())) {
@@ -292,9 +289,9 @@ public class DefaultConsentValidator implements ConsentValidator {
             return;
         }
 
-        if (submissionData.containsKey(ConsentExtensionConstants.INITIATION) &&
+        if (submissionData.has(ConsentExtensionConstants.INITIATION) &&
                 submissionData.get(ConsentExtensionConstants.INITIATION) instanceof JSONObject) {
-            submissionInitiation = (JSONObject) submissionData.get(ConsentExtensionConstants.INITIATION);
+            submissionInitiation = submissionData.getJSONObject(ConsentExtensionConstants.INITIATION);
         } else {
             log.error("Invalid Submission payload Initiation Object found");
             consentValidationResult.setErrorMessage("Invalid Submission payload Initiation Object found");
@@ -358,7 +355,7 @@ public class DefaultConsentValidator implements ConsentValidator {
 
         try {
             ObjectMapper mapper = new ObjectMapper();
-            return (mapper.readTree(object1.toJSONString())).equals(mapper.readTree(object2.toJSONString()));
+            return (mapper.readTree(object1.toString())).equals(mapper.readTree(object2.toString()));
         } catch (JsonProcessingException e) {
             log.error("Error occurred while comparing the JSON Objects", e);
             return false;

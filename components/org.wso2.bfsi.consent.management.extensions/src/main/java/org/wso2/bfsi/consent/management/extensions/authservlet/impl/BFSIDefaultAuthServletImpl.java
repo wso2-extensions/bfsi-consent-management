@@ -19,8 +19,8 @@
 package org.wso2.bfsi.consent.management.extensions.authservlet.impl;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import net.minidev.json.JSONObject;
-import org.wso2.bfsi.consent.management.extensions.authservlet.OBAuthServletInterface;
+import org.json.JSONObject;
+import org.wso2.bfsi.consent.management.extensions.authservlet.BFSIAuthServletInterface;
 import org.wso2.bfsi.consent.management.extensions.authservlet.utils.Utils;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 
@@ -32,16 +32,16 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * The default implementation for OB flow.
+ * The default implementation for BFSI flow.
  */
-public class OBDefaultAuthServletImpl implements OBAuthServletInterface {
+public class BFSIDefaultAuthServletImpl implements BFSIAuthServletInterface {
 
     private String jspPath;
     @Override
     public Map<String, Object> updateRequestAttribute(HttpServletRequest request, JSONObject dataSet,
                                                       ResourceBundle resourceBundle) {
 
-        String consentType = dataSet.getAsString("type");
+        String consentType = dataSet.getString("type");
         switch (consentType) {
 
             case ConsentExtensionConstants.ACCOUNTS:

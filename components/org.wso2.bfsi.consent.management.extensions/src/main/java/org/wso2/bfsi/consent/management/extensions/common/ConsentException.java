@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.consent.management.extensions.common;
 
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 
 import java.net.URI;
 

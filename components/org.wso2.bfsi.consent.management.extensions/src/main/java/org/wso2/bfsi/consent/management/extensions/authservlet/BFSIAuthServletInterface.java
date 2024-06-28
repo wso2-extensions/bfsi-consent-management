@@ -18,7 +18,7 @@
 
 package org.wso2.bfsi.consent.management.extensions.authservlet;
 
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -28,17 +28,45 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * The interface to define how the servlet extension should be implemented.
  */
-public interface OBAuthServletInterface {
+public interface BFSIAuthServletInterface {
 
+    /**
+     * Method to update the request attributes.
+     * @param request         Http Servlet Request
+     * @param dataSet         Data Set containing required parameters
+     * @param resourceBundle  Resource Bundle
+     * @return Map of updated request attributes
+     */
     Map<String, Object> updateRequestAttribute(HttpServletRequest request,
                                                JSONObject dataSet, ResourceBundle resourceBundle);
 
+    /**
+     * Method to update the session attributes.
+     * @param request         Http Servlet Request
+     * @param dataSet         Data Set containing required parameters
+     * @param resourceBundle  Resource Bundle
+     * @return Map of updated session attributes
+     */
     Map<String, Object> updateSessionAttribute(HttpServletRequest request,
                                                JSONObject dataSet, ResourceBundle resourceBundle);
 
+    /**
+     * Method to update the consent data.
+     * @param request  Http Servlet Request
+     * @return  Map of updated consent data
+     */
     Map<String, Object> updateConsentData(HttpServletRequest request);
 
+    /**
+     * Method to update the consent metadata.
+     * @param request  Http Servlet Request
+     * @return  Map of updated consent metadata
+     */
     Map<String, String> updateConsentMetaData(HttpServletRequest request);
 
+    /**
+     * Method to get the JSP path.
+     * @return
+     */
     String getJSPPath();
 }
