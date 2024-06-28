@@ -173,7 +173,6 @@ public class ConsentExtensionConstants {
     public static final String SESSION_DATA_KEY_CONSENT = "sessionDataKeyConsent";
     public static final String CONSENT = "consent";
     public static final String LOCATION = "Location";
-
     public static final int STATUS_FOUND = 302;
     public static final String APPROVAL = "approval";
     public static final String COOKIES = "cookies";
