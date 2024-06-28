@@ -30,13 +30,13 @@
 
                     <%-- Change heading based on the consent type --%>
                     <c:choose>
-                        <c:when test="${consentType eq 'accounts'}">
+                        <c:when test="${consent_type eq 'accounts'}">
                             <strong>${app}</strong> requests account details on your account.
                         </c:when>
-                        <c:when test="${consentType eq 'fundsconfirmations'}">
+                        <c:when test="${consent_type eq 'fundsconfirmations'}">
                             <strong>${app}</strong> requests access to confirm the availability of funds in your account.
                         </c:when>
-                        <c:when test="${consentType eq 'payments'}">
+                        <c:when test="${consent_type eq 'payments'}">
                             <strong>${app}</strong> requests consent to do a payment transaction ${intentSubText}
                         </c:when>
                     </c:choose>
@@ -59,7 +59,7 @@
             <%-- Setting data based on the consent type --%>
             <c:choose>
                 <%-- Setting accounts related data --%>
-                <c:when test="${consentType eq 'accounts'}">
+                <c:when test="${consent_type eq 'accounts'}">
                     <div class="form-group ui form select">
                         <c:if test="${not empty account_data}">
                             <h5 class="ui body col-md-12">
@@ -81,7 +81,7 @@
                 </c:when>
 
                 <%-- Setting confirmation of funds related data --%>
-                <c:when test="${consentType eq 'fundsconfirmations'}">
+                <c:when test="${consent_type eq 'fundsconfirmations'}">
                     <c:if test="${isReauthorization eq true}">
                         <div class="form-group ui form">
                             <strong>
@@ -92,7 +92,7 @@
                 </c:when>
 
                 <%-- Setting payments related data --%>
-                <c:when test="${consentType eq 'payments'}">
+                <c:when test="${consent_type eq 'payments'}">
                     <c:if test="${not empty selectedAccount}">
                         <div class="form-group ui form">
                             <div class="col-md-12 ui box">
@@ -167,7 +167,7 @@
                 <input type="hidden" name="sessionDataKeyConsent" value="${sessionDataKeyConsent}"/>
                 <input type="hidden" name="consent" id="consent" value="deny"/>
                 <input type="hidden" name="app" id="app" value="${app}"/>
-                <input type="hidden" name="type" id="type" value="${consentType}"/>
+                <input type="hidden" name="type" id="type" value="${consent_type}"/>
                 <input type="hidden" name="accounts[]" id="account" value="">
                 <input type="hidden" name="accNames" id="accountName" value=""/>
                 <input type="hidden" name="paymentAccount" id="paymentAccount"
