@@ -124,8 +124,8 @@ public class ConsentUtils {
             try {
                 return new JSONArray(getStringPayload(request));
             } catch (JSONException ex) {
-                log.error(ConsentConstants.ERROR_PAYLOAD_PARSE, ex);
-                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, ConsentConstants.ERROR_PAYLOAD_PARSE);
+                log.error(ConsentConstants.ERROR_PAYLOAD_PARSE + ". Returning null", ex);
+                return null;
             }
         }
     }
@@ -460,16 +460,19 @@ public class ConsentUtils {
      * @param resourceParams Map containing the resource parameters
      * @return Extracted query parameter map
      */
-    public static Map<String, String> addQueryParametersToResourceParamMap(Map<String, String> resourceParams)
+    public static Map<String, String> addQueryParametersToResourceParamMap(JSONObject resourceParams)
             throws URISyntaxException {
 
         if (resourceParams.isEmpty()) {
             return new HashMap<>();
         }
 
-        URI url = new URI(resourceParams.get(ConsentExtensionConstants.RESOURCE));
+        Map<String, String> resourceParamsMap = new HashMap<>();
+        resourceParams.keySet()
+                .forEach(key -> resourceParamsMap.put(key, resourceParams.getString(key)));
 
-        resourceParams.put(ConsentExtensionConstants.RESOURCE_PATH, url.getRawPath());
+        URI url = new URI(resourceParams.getString(ConsentExtensionConstants.RESOURCE));
+        resourceParamsMap.put(ConsentExtensionConstants.RESOURCE_PATH, url.getRawPath());
 
         if (url.getRawQuery() != null) {
             String[] params = url.getRawQuery().split("&");
@@ -478,11 +481,11 @@ public class ConsentUtils {
                 if (param.split("=").length == 2) {
                     String name = param.split("=")[0];
                     String value = param.split("=")[1];
-                    resourceParams.put(name, value);
+                    resourceParamsMap.put(name, value);
                 }
             }
         }
-        return resourceParams;
+        return resourceParamsMap;
     }
 
     /**

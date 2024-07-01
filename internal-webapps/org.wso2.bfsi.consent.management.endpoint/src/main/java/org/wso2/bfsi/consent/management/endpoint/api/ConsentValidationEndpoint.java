@@ -28,6 +28,7 @@ import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
 import org.wso2.bfsi.consent.management.endpoint.utils.ConsentUtils;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentException;
+import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionExporter;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionUtils;
 import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
@@ -39,6 +40,7 @@ import org.wso2.bfsi.consent.management.service.impl.ConsentCoreServiceImpl;
 
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -130,7 +132,7 @@ public class ConsentValidationEndpoint {
             }
         }
 
-        JSONObject requestHeaders = (JSONObject) requestData.get("headers");
+        JSONObject requestHeaders = (JSONObject) requestData.get(ConsentExtensionConstants.HEADERS);
         Set<String> headerNames = requestHeaders.keySet();
         Iterator<String> headersIterator = headerNames.iterator();
         TreeMap<String, String> headersMap = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -139,28 +141,31 @@ public class ConsentValidationEndpoint {
             headersMap.put(headerName, requestHeaders.getString(headerName));
         }
 
-        JSONObject requestPayload = requestData.getJSONObject("body");
-        String requestPath = requestData.getString("electedResource");
-        String consentId = requestData.getString("consentId");
-        String userId = requestData.getString("userId");
-        String clientId = requestData.getString("clientId");
+        JSONObject requestPayload = requestData.has(ConsentExtensionConstants.BODY) ?
+                requestData.getJSONObject(ConsentExtensionConstants.BODY) : null;
+        String requestPath = requestData.getString(ConsentExtensionConstants.ELECTED_RESOURCE);
+        String consentId = requestData.getString(ConsentExtensionConstants.CC_CONSENT_ID);
+        String userId = requestData.getString(ConsentExtensionConstants.USER_ID);
+        String clientId = requestData.getString(ConsentExtensionConstants.CLIENT_ID);
 
-        Map<String, String> resourceParams = (Map<String, String>) requestData.get("resourceParams");
+        JSONObject resourceParams = requestData.getJSONObject(ConsentExtensionConstants.RESOURCE_PARAMS);
 
         if (consentId == null) {
             throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent Id is mandatory for consent validation");
         }
 
+        Map<String, String> resourceParamsMap = new HashMap<>();
         try {
             //Adding query parameters to the resource map
-            resourceParams = ConsentUtils.addQueryParametersToResourceParamMap(resourceParams);
+            resourceParamsMap = ConsentUtils.addQueryParametersToResourceParamMap(resourceParams);
         } catch (URISyntaxException e) {
             log.error("Error while extracting query parameters", e);
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Error while extracting query parameters");
+            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
+            "Error while extracting query parameters");
         }
 
         ConsentValidateData consentValidateData = new ConsentValidateData(requestHeaders, requestPayload,
-                requestPath, consentId, userId, clientId, resourceParams, headersMap);
+                requestPath, consentId, userId, clientId, resourceParamsMap, headersMap);
 
         try {
             DetailedConsentResource consentResource = consentCoreService.getDetailedConsent(consentId);
@@ -175,18 +180,18 @@ public class ConsentValidationEndpoint {
 
         JSONObject information = ConsentUtils.detailedConsentToJSON(
                 consentValidateData.getComprehensiveConsent());
-        information.put("additionalConsentInfo", validationResult.getConsentInformation());
+        information.put(ConsentExtensionConstants.ADDITIONAL_CONSENT_INFO, validationResult.getConsentInformation());
         validationResult.setConsentInformation(information);
 
         JSONObject responsePayload;
         try {
             responsePayload = validationResult.generatePayload();
-            responsePayload.put("consentInformation",
+            responsePayload.put(ConsentExtensionConstants.CONSENT_INFO,
                     ConsentUtils.signJWTWithDefaultKey(validationResult.getConsentInformation().toString()));
         } catch (Exception e) {
             log.error("Error occurred while getting private key", e);
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Error while getting private key");
         }
-        return Response.status(HttpServletResponse.SC_OK).entity(responsePayload).build();
+        return Response.status(HttpServletResponse.SC_OK).entity(responsePayload.toString()).build();
     }
 }

@@ -273,7 +273,9 @@ public class ConsentAuthorizeUtil {
             consentDataJSON.put(jsonElementInstructedAmount);
 
             // Adding Debtor Account
-            populateDebtorAccount(initiation, consentDataJSON);
+            if (initiation.has(ConsentExtensionConstants.DEBTOR_ACC)) {
+                populateDebtorAccount(initiation, consentDataJSON);
+            }
             // Adding Creditor Account
             populateCreditorAccount(initiation, consentDataJSON);
 

@@ -176,4 +176,12 @@ public class ConsentExtensionConstants {
     public static final int STATUS_FOUND = 302;
     public static final String APPROVAL = "approval";
     public static final String COOKIES = "cookies";
+
+    // Consent Validate Constants
+    public static final String HEADERS = "headers";
+    public static final String BODY = "body";
+    public static final String ELECTED_RESOURCE = "electedResource";
+    public static final String RESOURCE_PARAMS = "resourceParams";
+    public static final String ADDITIONAL_CONSENT_INFO = "additionalConsentInfo";
+    public static final String CONSENT_INFO = "consentInformation";
 }
