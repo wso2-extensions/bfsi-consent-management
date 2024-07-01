@@ -22,6 +22,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationServiceImpl;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 import org.wso2.bfsi.consent.management.common.util.CarbonUtils;
 import org.wso2.bfsi.consent.management.common.util.CommonTestUtil;
@@ -34,6 +36,7 @@ import java.io.File;
 public class ConsentManagementConfigParserTests {
 
     String absolutePathForTestResources;
+    ConsentManagementConfigurationService configService;
 
     @BeforeClass
     public void beforeClass() throws ReflectiveOperationException {
@@ -77,5 +80,49 @@ public class ConsentManagementConfigParserTests {
         String carbonConfigDirPath = CarbonUtils.getCarbonConfigDirPath();
         System.setProperty("carbon.config.dir.path", carbonConfigDirPath);
         Assert.assertEquals(CarbonUtils.getCarbonConfigDirPath(), carbonConfigDirPath);
+    }
+
+    @Test(priority = 5)
+    public void testGetConfigurationsFromService() {
+
+        configService = new ConsentManagementConfigurationServiceImpl();
+        Assert.assertNotNull(configService.getConfigurations());
+        Assert.assertNotNull(configService.getConsentAuthorizeSteps());
+    }
+
+    @Test(priority = 6)
+    public void testGetDataSourceName() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getDataSourceName(), "jdbc/WSO2OB_DB");
+    }
+
+    @Test(priority = 7)
+    public void testGetConnectionVerificationTimeout() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConnectionVerificationTimeout(), 2);
+    }
+
+    @Test(priority = 8)
+    public void testGetConsentValidationConfig() {
+
+        Assert.assertNotNull(ConsentManagementConfigParser.getInstance().getConsentValidationConfig());
+    }
+
+    @Test(priority = 9)
+    public void testGetConsentCacheAccessExpiry() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentCacheAccessExpiry(), 60);
+    }
+
+    @Test(priority = 10)
+    public void testGetConsentCacheModifiedExpiry() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentCacheModifiedExpiry(), 60);
+    }
+
+    @Test(priority = 11)
+    public void testGetPreserveConsent() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getPreserveConsent(), "false");
     }
 }

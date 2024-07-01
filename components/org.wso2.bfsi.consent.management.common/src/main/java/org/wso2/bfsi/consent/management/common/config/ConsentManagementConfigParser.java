@@ -18,6 +18,7 @@
 
 package org.wso2.bfsi.consent.management.common.config;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -34,11 +35,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
+
+import static java.util.Map.Entry.comparingByKey;
 
 /**
  * Config parser for bfsi-consent-management.xml.
@@ -50,6 +56,7 @@ public class ConsentManagementConfigParser {
     private static final Object lock = new Object();
     private static volatile ConsentManagementConfigParser parser;
     private static final Map<String, Object> configuration = new HashMap<>();
+    private static final Map<String, Map<Integer, String>> authorizeSteps = new HashMap<>();
 
     /**
      * Private Constructor of config parser.
@@ -79,18 +86,21 @@ public class ConsentManagementConfigParser {
     /**
      * Method to read the configuration (in a recursive manner) as a model and put them in the configuration map.
      */
+    @SuppressFBWarnings("PATH_TRAVERSAL_IN")
+    // Suppressed content - new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
+    // Suppression reason - False Positive : File path is constructed using CarbonUtils.getCarbonConfigDirPath()
+    // Suppressed warning count - 1
     private void buildConfiguration() {
 
         StAXOMBuilder builder;
         File configXml = new File(CarbonUtils.getCarbonConfigDirPath(), ConsentManagementConstants.CONFIG_FILE);
-
         if (configXml.exists()) {
             try (FileInputStream fileInputStream = new FileInputStream(configXml)) {
-
                 builder = new StAXOMBuilder(fileInputStream);
                 OMElement rootElement = builder.getDocumentElement();
                 Stack<String> nameStack = new Stack<>();
                 readChildElements(rootElement, nameStack);
+                buildConsentAuthSteps(rootElement);
             } catch (IOException | XMLStreamException | OMException e) {
                 throw new ConsentManagementRuntimeException("Error occurred while building configuration from" +
                         " bfsi-consent-management.xml", e);
@@ -192,21 +202,140 @@ public class ConsentManagementConfigParser {
         return textBuilder.toString();
     }
 
+    private void buildConsentAuthSteps(OMElement rootElement) {
+
+        OMElement consentElement = rootElement.getFirstChildWithName(
+                new QName(ConsentManagementConstants.OB_CONFIG_QNAME,
+                        ConsentManagementConstants.CONSENT_CONFIG_TAG));
+
+        if (consentElement != null) {
+            OMElement consentAuthorizeSteps = consentElement.getFirstChildWithName(
+                    new QName(ConsentManagementConstants.OB_CONFIG_QNAME,
+                            ConsentManagementConstants.AUTHORIZE_STEPS_CONFIG_TAG));
+
+            if (consentAuthorizeSteps != null) {
+                //obtaining each step type element under AuthorizeSteps tag
+                Iterator stepTypeElement = consentAuthorizeSteps.getChildElements();
+                while (stepTypeElement.hasNext()) {
+                    OMElement stepType = (OMElement) stepTypeElement.next();
+                    String consentTypeName = stepType.getLocalName();
+                    Map<Integer, String> executors = new HashMap<>();
+                    //obtaining each step under each consent type
+                    Iterator<OMElement> obExecutor = stepType.getChildrenWithName(
+                            new QName(ConsentManagementConstants.OB_CONFIG_QNAME,
+                                    ConsentManagementConstants.STEP_CONFIG_TAG));
+                    if (obExecutor != null) {
+                        while (obExecutor.hasNext()) {
+                            OMElement executorElement = obExecutor.next();
+                            //Retrieve class name and priority from executor config
+                            String obExecutorClass = executorElement.getAttributeValue(new QName("class"));
+                            String obExecutorPriority = executorElement.getAttributeValue(new QName("priority"));
+
+                            if (StringUtils.isEmpty(obExecutorClass)) {
+                                //Throwing exceptions since we cannot proceed without invalid executor names
+                                throw new ConsentManagementRuntimeException("Executor class is not defined " +
+                                        "correctly in open-banking.xml");
+                            }
+                            int priority = Integer.MAX_VALUE;
+                            if (!StringUtils.isEmpty(obExecutorPriority)) {
+                                priority = Integer.parseInt(obExecutorPriority);
+                            }
+                            executors.put(priority, obExecutorClass);
+                        }
+                    }
+                    //Ordering the executors based on the priority number
+                    LinkedHashMap<Integer, String> priorityMap = executors.entrySet()
+                            .stream()
+                            .sorted(comparingByKey())
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                                    LinkedHashMap::new));
+                    authorizeSteps.put(consentTypeName, priorityMap);
+                }
+            }
+        }
+    }
+
     /**
-     * Returns the element with the provided key.
+     * Method to obtain map of configs.
+     *
+     * @return Config map
+     */
+    public Map<String, Object> getConfiguration() {
+
+        return this.configuration;
+    }
+
+    /**
+     * Returns the element with the provided key as a String.
      *
      * @param key local part name
      * @return Corresponding value for key
      */
-    public Object getConfigElementFromKey(String key) {
-
-        return configuration.get(key);
+    private  Optional<String> getConfigurationFromKeyAsString(final String key) {
+        return Optional.ofNullable((String) this.configuration.get(key));
     }
 
     public String getDataSourceName() {
-
-        return getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG) == null ? "" :
-                ((String) getConfigElementFromKey(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG)).trim();
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.JDBC_PERSISTENCE_CONFIG);
+        return source.map(String::trim).orElse("");
     }
 
+    /**
+     * Returns the database connection verification timeout in seconds configured.
+     *
+     * @return 1 if nothing is configured
+     */
+    public int getConnectionVerificationTimeout() {
+
+        Optional<String> timeout = getConfigurationFromKeyAsString(ConsentManagementConstants.DB_VERIFICATION_TIMEOUT);
+        return timeout.map(Integer::parseInt).orElse(1);
+    }
+
+    public Map<String, Map<Integer, String>> getConsentAuthorizeSteps() {
+
+        return authorizeSteps;
+    }
+
+    public String getConsentValidationConfig() {
+
+        Optional<String> source =
+                getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_JWT_PAYLOAD_VALIDATION);
+        return source.map(String::trim).orElse("");
+    }
+
+    public int getConsentCacheAccessExpiry() {
+
+        Optional<String> expiryTime = getConfigurationFromKeyAsString(ConsentManagementConstants.CACHE_ACCESS_EXPIRY);
+        return expiryTime.map(Integer::parseInt).orElse(60);
+    }
+
+    public int getConsentCacheModifiedExpiry() {
+
+        Optional<String> expiryTime = getConfigurationFromKeyAsString(ConsentManagementConstants.CACHE_MODIFY_EXPIRY);
+        return expiryTime.map(Integer::parseInt).orElse(60);
+    }
+
+    public String getPreserveConsent() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.PRESERVE_CONSENT);
+        return source.map(String::trim).orElse("false");
+    }
+
+    public String getAuthServletExtension() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.AUTH_SERVLET_EXTENSION);
+        return source.map(String::trim).orElse("");
+    }
+
+    public String getConsentAPIUsername() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_USERNAME);
+        return source.map(String::trim).orElse("admin");
+    }
+
+    public String getConsentAPIPassword() {
+
+        Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_PASSWORD);
+        return source.map(String::trim).orElse("admin");
+    }
 }

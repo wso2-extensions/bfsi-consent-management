@@ -31,6 +31,7 @@
     <name>WSO2 BFSI - Consent Common</name>
     <description>WSO2 BFSI - Consent Common Module</description>
     <url>http://maven.apache.org</url>
+    <packaging>bundle</packaging>
 
     <dependencies>
         <dependency>
@@ -45,16 +46,75 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.minidev</groupId>
+            <artifactId>json-smart</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-log4j2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.ops4j.pax.logging</groupId>
+                    <artifactId>pax-logging-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+        </dependency>
         <!-- Unit Test Dependencies -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+            <artifactId>org.wso2.carbon.identity.oauth</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <failOnError>true</failOnError>
+                    <spotbugsXmlOutputDirectory>${project.build.directory}/spotbugs</spotbugsXmlOutputDirectory>
+                    <excludeFilterFile>${project.basedir}/src/main/resources/findbugs-exclude.xml</excludeFilterFile>
+                    <includeFilterFile>${project.basedir}/src/main/resources/findbugs-include.xml</includeFilterFile>
+                    <plugins>
+                        <plugin>
+                            <groupId>com.h3xstream.findsecbugs</groupId>
+                            <artifactId>findsecbugs-plugin</artifactId>
+                            <version>${com.h3xstream.findsecbugs.version}</version>
+                        </plugin>
+                    </plugins>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>analyze-compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -75,8 +135,12 @@
                 <configuration>
                     <excludes>
                         <!-- Excluding them in coverage reports -->
+                        <exclude>**/*ServiceComponent.class</exclude>
+                        <exclude>**/*DataHolder.class</exclude>
                         <exclude>**/*Constants.class</exclude>
                         <exclude>**/*Exception.class</exclude>
+                        <exclude>**/*Cache.class</exclude>
+                        <exclude>**/*CacheKey.class</exclude>
                         <!-- Excluded since involves datasource initialization -->
                         <exclude>**/DatabaseUtil.class</exclude>
                         <exclude>**/*PersistenceManager.class</exclude>
@@ -166,6 +230,49 @@
                     <source>11</source>
                     <target>11</target>
                     <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>
+                            ${project.artifactId}
+                        </Bundle-SymbolicName>
+                        <Private-Package>
+                            org.wso2.bfsi.consent.management.common.internal
+                        </Private-Package>
+                        <Import-Package>
+                            org.osgi.framework;version="${osgi.framework.imp.pkg.version.range}",
+                            org.osgi.service.component;version="${osgi.service.component.imp.pkg.version.range}",
+                            org.apache.commons.lang3;version="${commons-lang.version}",
+                            org.apache.commons.logging;version="${commons.logging.version}",
+                            org.apache.axiom.*;version="${axiom.osgi.version.range}",
+                            net.minidev.json.*; version="${json-smart.version}",
+                            com.nimbusds.jose;version="${org.wso2.orbit.nimbus.version}",
+                            org.wso2.bfsi.consent.management.common.*; version="${project.version}",
+                            org.wso2.carbon.identity.oauth.*;version="${identity.inbound.auth.oauth.version.range}",
+                            org.wso2.carbon.identity.oauth2;version="${identity.inbound.auth.oauth.version.range}",
+                            org.wso2.carbon.identity.oauth2.util.*;version="${identity.inbound.auth.oauth.version.range}",
+                            javax.cache
+                        </Import-Package>
+                        <Export-Package>
+                            !org.wso2.bfsi.consent.management.common.internal,
+                            org.wso2.bfsi.consent.management.common.*;version="${project.version}",
+                        </Export-Package>
+                        <_dsannotations>*</_dsannotations>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>
