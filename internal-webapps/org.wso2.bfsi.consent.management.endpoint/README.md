@@ -90,7 +90,7 @@ import org.wso2.bfsi.consent.management.endpoint.api.AdminApi;
 public class Example {
   public static void main(String[] args) {
     ApiClient defaultClient = Configuration.getDefaultApiClient();
-    defaultClient.setBasePath("https://localhost:9446/api/openbanking/consent");
+    defaultClient.setBasePath("https://localhost:9446/api/bfsi/consent");
 
     AdminApi apiInstance = new AdminApi(defaultClient);
     String consentID = "consentID_example"; // String | 
@@ -111,7 +111,7 @@ public class Example {
 
 ## Documentation for API Endpoints
 
-All URIs are relative to *https://localhost:9446/api/openbanking/consent*
+All URIs are relative to *https://localhost:9446/api/bfsi/consent*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------

@@ -196,38 +196,6 @@ public class ConsentAuthorizeUtil {
         if (data.has(ConsentExtensionConstants.INITIATION)) {
             JSONObject initiation = data.getJSONObject(ConsentExtensionConstants.INITIATION);
 
-            if (initiation.has(ConsentExtensionConstants.CURRENCY_OF_TRANSFER)) {
-                //For International Payments
-                //Adding Payment Type
-                paymentTypeArray.put(ConsentExtensionConstants.INTERNATIONAL_PAYMENTS);
-
-                jsonElementPaymentType.put(ConsentExtensionConstants.TITLE,
-                        ConsentExtensionConstants.PAYMENT_TYPE_TITLE);
-                jsonElementPaymentType.put(StringUtils.lowerCase(ConsentExtensionConstants.DATA),
-                        paymentTypeArray);
-                consentDataJSON.put(jsonElementPaymentType);
-
-                //Adding Currency Of Transfer
-                JSONArray currencyTransferArray = new JSONArray();
-                currencyTransferArray.put(initiation.getString(ConsentExtensionConstants.CURRENCY_OF_TRANSFER));
-
-                JSONObject jsonElementCurTransfer = new JSONObject();
-                jsonElementCurTransfer.put(ConsentExtensionConstants.TITLE,
-                        ConsentExtensionConstants.CURRENCY_OF_TRANSFER_TITLE);
-                jsonElementCurTransfer.put(StringUtils.lowerCase(ConsentExtensionConstants.DATA),
-                        currencyTransferArray);
-                consentDataJSON.put(jsonElementCurTransfer);
-            } else {
-                //Adding Payment Type
-                paymentTypeArray.put(ConsentExtensionConstants.DOMESTIC_PAYMENTS);
-
-                jsonElementPaymentType.put(ConsentExtensionConstants.TITLE,
-                        ConsentExtensionConstants.PAYMENT_TYPE_TITLE);
-                jsonElementPaymentType.put(StringUtils.lowerCase(ConsentExtensionConstants.DATA),
-                        paymentTypeArray);
-                consentDataJSON.put(jsonElementPaymentType);
-            }
-
             //Adding InstructionIdentification
             JSONArray identificationArray = new JSONArray();
             identificationArray.put(initiation.getString(ConsentExtensionConstants.INSTRUCTION_IDENTIFICATION));

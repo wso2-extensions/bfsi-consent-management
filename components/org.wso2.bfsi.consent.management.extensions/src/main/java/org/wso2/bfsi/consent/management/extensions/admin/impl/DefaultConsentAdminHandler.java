@@ -114,7 +114,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             for (DetailedConsentResource result : results) {
                 searchResults.put(ConsentAdminUtils.detailedConsentToJSON(result));
             }
-            response.append(ConsentExtensionConstants.DATA.toLowerCase(), searchResults);
+            response.put(ConsentExtensionConstants.DATA.toLowerCase(), searchResults);
             count = searchResults.length();
             total = results.size();
         } catch (ConsentManagementException e) {
@@ -134,12 +134,12 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         }
 
         JSONObject metadata = new JSONObject();
-        metadata.append(ConsentExtensionConstants.COUNT, count);
-        metadata.append(ConsentExtensionConstants.OFFSET, offset);
-        metadata.append(ConsentExtensionConstants.LIMIT, limit);
-        metadata.append(ConsentExtensionConstants.TOTAL, total);
+        metadata.put(ConsentExtensionConstants.COUNT, count);
+        metadata.put(ConsentExtensionConstants.OFFSET, offset);
+        metadata.put(ConsentExtensionConstants.LIMIT, limit);
+        metadata.put(ConsentExtensionConstants.TOTAL, total);
 
-        response.append(ConsentExtensionConstants.METADATA, metadata);
+        response.put(ConsentExtensionConstants.METADATA, metadata);
         consentAdminData.setResponseStatus(ResponseStatus.OK);
         consentAdminData.setResponsePayload(response);
     }
@@ -203,20 +203,20 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
                 JSONObject consentResourceJSON = new JSONObject();
                 ConsentHistoryResource consentHistoryResource = result.getValue();
                 DetailedConsentResource detailedConsentHistory = consentHistoryResource.getDetailedConsentResource();
-                consentResourceJSON.append(ConsentExtensionConstants.HISTORY_ID, result.getKey());
-                consentResourceJSON.append(ConsentExtensionConstants.AMENDED_REASON,
+                consentResourceJSON.put(ConsentExtensionConstants.HISTORY_ID, result.getKey());
+                consentResourceJSON.put(ConsentExtensionConstants.AMENDED_REASON,
                         consentHistoryResource.getReason());
-                consentResourceJSON.append(ConsentExtensionConstants.AMENDED_TIME,
+                consentResourceJSON.put(ConsentExtensionConstants.AMENDED_TIME,
                         detailedConsentHistory.getUpdatedTime());
-                consentResourceJSON.append(ConsentExtensionConstants.CONSENT_DATA,
+                consentResourceJSON.put(ConsentExtensionConstants.CONSENT_DATA,
                         ConsentAdminUtils.detailedConsentToJSON(detailedConsentHistory));
                 consentHistory.put(consentResourceJSON);
             }
-            response.append(ConsentExtensionConstants.CC_CONSENT_ID, consentId);
-            response.append(ConsentExtensionConstants.CURRENT_CONSENT,
+            response.put(ConsentExtensionConstants.CC_CONSENT_ID, consentId);
+            response.put(ConsentExtensionConstants.CURRENT_CONSENT,
                     ConsentAdminUtils.detailedConsentToJSON(ConsentExtensionsDataHolder.getInstance()
                             .getConsentCoreService().getDetailedConsent(consentId)));
-            response.append(ConsentExtensionConstants.AMENDMENT_HISTORY, consentHistory);
+            response.put(ConsentExtensionConstants.AMENDMENT_HISTORY, consentHistory);
             count = consentHistory.length();
         } catch (ConsentManagementException e) {
             log.error("Error while retrieving consent amendment history data", e);
@@ -224,8 +224,8 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         }
 
         JSONObject metadata = new JSONObject();
-        metadata.append(ConsentExtensionConstants.AMENDMENT_COUNT, count);
-        response.append(ConsentExtensionConstants.METADATA, metadata);
+        metadata.put(ConsentExtensionConstants.AMENDMENT_COUNT, count);
+        response.put(ConsentExtensionConstants.METADATA, metadata);
         consentAdminData.setResponseStatus(ResponseStatus.OK);
         consentAdminData.setResponsePayload(response);
     }
@@ -263,21 +263,21 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             JSONArray consentAuditRecords = new JSONArray();
             for (ConsentStatusAuditRecord statusAuditRecord : results) {
                 JSONObject statusAuditRecordJSON = new JSONObject();
-                statusAuditRecordJSON.append(ConsentExtensionConstants.STATUS_AUDIT_ID,
+                statusAuditRecordJSON.put(ConsentExtensionConstants.STATUS_AUDIT_ID,
                         statusAuditRecord.getStatusAuditID());
-                statusAuditRecordJSON.append(ConsentExtensionConstants.CC_CONSENT_ID,
+                statusAuditRecordJSON.put(ConsentExtensionConstants.CC_CONSENT_ID,
                         statusAuditRecord.getConsentID());
-                statusAuditRecordJSON.append(ConsentExtensionConstants.CURRENT_STATUS,
+                statusAuditRecordJSON.put(ConsentExtensionConstants.CURRENT_STATUS,
                         statusAuditRecord.getCurrentStatus());
-                statusAuditRecordJSON.append(ConsentExtensionConstants.ACTION_TIME,
+                statusAuditRecordJSON.put(ConsentExtensionConstants.ACTION_TIME,
                         statusAuditRecord.getActionTime());
-                statusAuditRecordJSON.append(ConsentExtensionConstants.REASON, statusAuditRecord.getReason());
-                statusAuditRecordJSON.append(ConsentExtensionConstants.ACTION_BY, statusAuditRecord.getActionBy());
-                statusAuditRecordJSON.append(ConsentExtensionConstants.PREVIOUS_STATUS,
+                statusAuditRecordJSON.put(ConsentExtensionConstants.REASON, statusAuditRecord.getReason());
+                statusAuditRecordJSON.put(ConsentExtensionConstants.ACTION_BY, statusAuditRecord.getActionBy());
+                statusAuditRecordJSON.put(ConsentExtensionConstants.PREVIOUS_STATUS,
                         statusAuditRecord.getPreviousStatus());
                 consentAuditRecords.put(statusAuditRecordJSON);
             }
-            response.append(ConsentExtensionConstants.DATA.toLowerCase(), consentAuditRecords);
+            response.put(ConsentExtensionConstants.DATA.toLowerCase(), consentAuditRecords);
             count = consentAuditRecords.length();
             total = results.size();
         } catch (ConsentManagementException e) {
@@ -298,11 +298,11 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         }
 
         JSONObject metadata = new JSONObject();
-        metadata.append(ConsentExtensionConstants.COUNT, count);
-        metadata.append(ConsentExtensionConstants.OFFSET, offset);
-        metadata.append(ConsentExtensionConstants.LIMIT, limit);
-        metadata.append(ConsentExtensionConstants.TOTAL, total);
-        response.append(ConsentExtensionConstants.METADATA, metadata);
+        metadata.put(ConsentExtensionConstants.COUNT, count);
+        metadata.put(ConsentExtensionConstants.OFFSET, offset);
+        metadata.put(ConsentExtensionConstants.LIMIT, limit);
+        metadata.put(ConsentExtensionConstants.TOTAL, total);
+        response.put(ConsentExtensionConstants.METADATA, metadata);
         consentAdminData.setResponseStatus(ResponseStatus.OK);
         consentAdminData.setResponsePayload(response);
     }
@@ -324,7 +324,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
         try {
             ConsentFile file = ConsentExtensionsDataHolder.getInstance().getConsentCoreService()
                     .getConsentFile(consentId);
-            response.append(ConsentExtensionConstants.CONSENT_FILE, file.getConsentFile());
+            response.put(ConsentExtensionConstants.CONSENT_FILE, file.getConsentFile());
         } catch (ConsentManagementException e) {
             log.error("Error while retrieving consent file");
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
