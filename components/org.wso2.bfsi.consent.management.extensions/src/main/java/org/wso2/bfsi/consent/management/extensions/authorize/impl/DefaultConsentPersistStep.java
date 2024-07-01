@@ -21,6 +21,7 @@ package org.wso2.bfsi.consent.management.extensions.authorize.impl;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
@@ -36,7 +37,6 @@ import org.wso2.bfsi.consent.management.extensions.internal.ConsentExtensionsDat
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -145,14 +145,14 @@ public class DefaultConsentPersistStep implements ConsentPersistStep {
             accountIDsMapWithPermissions.put(paymentAccount, permissionsDefault);
         } else {
             //Check whether account Ids are in array format
-            if (!(persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS) instanceof List)) {
+            if (!(persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS) instanceof JSONArray)) {
                 log.error(ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
                 throw new ConsentException(ResponseStatus.BAD_REQUEST,
                         ConsentAuthorizeConstants.ACCOUNT_ID_NOT_FOUND_ERROR);
             }
 
             //Check whether account Ids are strings
-            List accountIds = (List) persistPayload.get(ConsentExtensionConstants.ACCOUNT_IDS);
+            JSONArray accountIds = persistPayload.getJSONArray(ConsentExtensionConstants.ACCOUNT_IDS);
             for (Object account : accountIds) {
                 if (!(account instanceof String)) {
                     log.error(ConsentAuthorizeConstants.ACCOUNT_ID_FORMAT_ERROR);

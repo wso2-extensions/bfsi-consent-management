@@ -196,38 +196,6 @@ public class ConsentAuthorizeUtil {
         if (data.has(ConsentExtensionConstants.INITIATION)) {
             JSONObject initiation = data.getJSONObject(ConsentExtensionConstants.INITIATION);
 
-            if (initiation.has(ConsentExtensionConstants.CURRENCY_OF_TRANSFER)) {
-                //For International Payments
-                //Adding Payment Type
-                paymentTypeArray.put(ConsentExtensionConstants.INTERNATIONAL_PAYMENTS);
-
-                jsonElementPaymentType.put(ConsentExtensionConstants.TITLE,
-                        ConsentExtensionConstants.PAYMENT_TYPE_TITLE);
-                jsonElementPaymentType.put(StringUtils.lowerCase(ConsentExtensionConstants.DATA),
-                        paymentTypeArray);
-                consentDataJSON.put(jsonElementPaymentType);
-
-                //Adding Currency Of Transfer
-                JSONArray currencyTransferArray = new JSONArray();
-                currencyTransferArray.put(initiation.getString(ConsentExtensionConstants.CURRENCY_OF_TRANSFER));
-
-                JSONObject jsonElementCurTransfer = new JSONObject();
-                jsonElementCurTransfer.put(ConsentExtensionConstants.TITLE,
-                        ConsentExtensionConstants.CURRENCY_OF_TRANSFER_TITLE);
-                jsonElementCurTransfer.put(StringUtils.lowerCase(ConsentExtensionConstants.DATA),
-                        currencyTransferArray);
-                consentDataJSON.put(jsonElementCurTransfer);
-            } else {
-                //Adding Payment Type
-                paymentTypeArray.put(ConsentExtensionConstants.DOMESTIC_PAYMENTS);
-
-                jsonElementPaymentType.put(ConsentExtensionConstants.TITLE,
-                        ConsentExtensionConstants.PAYMENT_TYPE_TITLE);
-                jsonElementPaymentType.put(StringUtils.lowerCase(ConsentExtensionConstants.DATA),
-                        paymentTypeArray);
-                consentDataJSON.put(jsonElementPaymentType);
-            }
-
             //Adding InstructionIdentification
             JSONArray identificationArray = new JSONArray();
             identificationArray.put(initiation.getString(ConsentExtensionConstants.INSTRUCTION_IDENTIFICATION));
@@ -273,7 +241,9 @@ public class ConsentAuthorizeUtil {
             consentDataJSON.put(jsonElementInstructedAmount);
 
             // Adding Debtor Account
-            populateDebtorAccount(initiation, consentDataJSON);
+            if (initiation.has(ConsentExtensionConstants.DEBTOR_ACC)) {
+                populateDebtorAccount(initiation, consentDataJSON);
+            }
             // Adding Creditor Account
             populateCreditorAccount(initiation, consentDataJSON);
 
@@ -412,13 +382,15 @@ public class ConsentAuthorizeUtil {
             }
 
             //Adding Debtor Account Name
-            if (debtorAccount.getString(ConsentExtensionConstants.NAME) != null) {
+            if (debtorAccount.has(ConsentExtensionConstants.NAME) &&
+                    debtorAccount.getString(ConsentExtensionConstants.NAME) != null) {
                 debtorAccountArray.put(ConsentExtensionConstants.NAME_TITLE + " : " +
                         debtorAccount.getString(ConsentExtensionConstants.NAME));
             }
 
             //Adding Debtor Account Secondary Identification
-            if (debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) != null) {
+            if (debtorAccount.has(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) &&
+                    debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION) != null) {
                 debtorAccountArray.put(ConsentExtensionConstants.SECONDARY_IDENTIFICATION_TITLE + " : " +
                         debtorAccount.getString(ConsentExtensionConstants.SECONDARY_IDENTIFICATION));
             }

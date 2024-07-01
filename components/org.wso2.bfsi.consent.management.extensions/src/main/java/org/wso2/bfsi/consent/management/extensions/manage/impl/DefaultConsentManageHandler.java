@@ -36,7 +36,6 @@ import org.wso2.bfsi.consent.management.extensions.manage.ConsentManageValidator
 import org.wso2.bfsi.consent.management.extensions.manage.model.ConsentManageData;
 import org.wso2.bfsi.consent.management.extensions.manage.model.ConsentPayloadValidationResult;
 import org.wso2.bfsi.consent.management.extensions.manage.utils.ConsentManageConstants;
-import org.wso2.bfsi.consent.management.service.ConsentCoreService;
 
 
 /**
@@ -45,8 +44,7 @@ import org.wso2.bfsi.consent.management.service.ConsentCoreService;
 public class DefaultConsentManageHandler implements ConsentManageHandler {
 
     private static final Log log = LogFactory.getLog(DefaultConsentManageHandler.class);
-    private static final ConsentCoreService consentCoreService = ConsentExtensionsDataHolder.getInstance()
-            .getConsentCoreService();
+
     @Override
     public void handleGet(ConsentManageData consentManageData) throws ConsentException {
 
@@ -63,7 +61,8 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
         String consentId = consentManageData.getRequestPath().split("/")[1];
         if (ConsentExtensionUtils.isConsentIdValid(consentId)) {
             try {
-                ConsentResource consent = consentCoreService.getConsent(consentId, false);
+                ConsentResource consent = ConsentExtensionsDataHolder.getInstance()
+                        .getConsentCoreService().getConsent(consentId, false);
                 if (consent == null) {
                     log.error("Consent not found");
                     throw new ConsentException(ResponseStatus.BAD_REQUEST, "Consent not found");
@@ -117,7 +116,7 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             }
 
             String consentType = ConsentExtensionUtils.getConsentType(consentManageData.getRequestPath());
-            JSONObject requestObject = new JSONObject(request);
+            JSONObject requestObject = (JSONObject) request;
 
             //Validate Initiation request
             ConsentPayloadValidationResult validationResponse =
@@ -131,7 +130,8 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             ConsentResource requestedConsent = new ConsentResource(consentManageData.getClientId(),
                     requestObject.toString(), consentType, ConsentExtensionConstants.AWAIT_AUTHORISE_STATUS);
 
-            DetailedConsentResource createdConsent = consentCoreService.createAuthorizableConsent(requestedConsent,
+            DetailedConsentResource createdConsent = ConsentExtensionsDataHolder.getInstance()
+                    .getConsentCoreService().createAuthorizableConsent(requestedConsent,
                     null, ConsentExtensionConstants.CREATED_STATUS, ConsentExtensionConstants.DEFAULT_AUTH_TYPE,
                     true);
 
@@ -162,7 +162,8 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
             String consentId = requestPathArray[1];
             if (ConsentExtensionUtils.isConsentIdValid(consentId)) {
                 try {
-                    ConsentResource consentResource = consentCoreService.getConsent(consentId, false);
+                    ConsentResource consentResource = ConsentExtensionsDataHolder.getInstance()
+                            .getConsentCoreService().getConsent(consentId, false);
 
                     if (consentResource == null) {
                         log.error("Consent not found");
@@ -192,7 +193,8 @@ public class DefaultConsentManageHandler implements ConsentManageHandler {
                     //Revoke tokens related to the consent if the flag 'shouldRevokeTokens' is true.
                     boolean shouldRevokeTokens = ConsentExtensionConstants.AUTHORIZED_STATUS
                             .equals(consentResource.getCurrentStatus());
-                    boolean success = consentCoreService.revokeConsent(consentId,
+                    boolean success = ConsentExtensionsDataHolder.getInstance()
+                            .getConsentCoreService().revokeConsent(consentId,
                             ConsentExtensionConstants.REVOKED_STATUS, null, shouldRevokeTokens);
                     if (!success) {
                         log.error("Token revocation unsuccessful");
