@@ -506,11 +506,11 @@
         <oltu.version>1.0.0.wso2v3</oltu.version>
         <jackson.databind.version>2.16.1</jackson.databind.version>
         <!-- Base product dependency versions -->
-        <identity.inbound.auth.oauth.version>7.0.26</identity.inbound.auth.oauth.version>
-        <carbon.identity.local.auth.api.version>2.5.10</carbon.identity.local.auth.api.version>
-        <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
         <carbon.identity.framework.version>7.0.75</carbon.identity.framework.version>
-        <carbon.identity.framework.version.range>[5.25.234, 8.0.0)</carbon.identity.framework.version.range>
+        <carbon.identity.framework.version.range>[7.0.75, 8.0.0)</carbon.identity.framework.version.range>
+        <identity.inbound.auth.oauth.version>7.0.26</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version.range>[7.0.26, 7.0.62)</identity.inbound.auth.oauth.version.range>
+        <carbon.identity.local.auth.api.version>2.5.10</carbon.identity.local.auth.api.version>
         <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
         <oltu.version>1.0.0.wso2v3</oltu.version>
         <!-- Unit Test Dependency versions -->
