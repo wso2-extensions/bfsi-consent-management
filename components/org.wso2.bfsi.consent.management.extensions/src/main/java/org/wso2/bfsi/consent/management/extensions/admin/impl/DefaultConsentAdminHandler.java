@@ -80,28 +80,28 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.FROM_TIME));
             fromTime = fromTimeValue == 0 ? null : fromTimeValue;
         } catch (NumberFormatException e) {
-            log.error("Number format incorrect in search for parameter fromTime. Ignoring parameter");
+            log.warn("Number format incorrect in search for parameter fromTime. Ignoring parameter");
         }
         try {
             long toTimeValue = ConsentAdminUtils.getLongFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.TO_TIME));
             toTime = toTimeValue == 0 ? null : toTimeValue;
         } catch (NumberFormatException e) {
-            log.error("Number format incorrect in search for parameter toTime. Ignoring parameter");
+            log.warn("Number format incorrect in search for parameter toTime. Ignoring parameter");
         }
         try {
             int limitValue = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.LIMIT));
             limit = limitValue == 0 ? null : limitValue;
         } catch (NumberFormatException e) {
-            log.error("Number format incorrect in search for parameter limit. Ignoring parameter");
+            log.warn("Number format incorrect in search for parameter limit. Ignoring parameter");
         }
         try {
             int offsetValue = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.OFFSET));
             offset = offsetValue == 0 ? null : offsetValue;
         } catch (NumberFormatException e) {
-            log.error("Number format incorrect in search for parameter limit. Ignoring parameter");
+            log.warn("Number format incorrect in search for parameter limit. Ignoring parameter");
         }
 
         int count, total = 0;
@@ -118,7 +118,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             count = searchResults.length();
             total = results.size();
         } catch (ConsentManagementException e) {
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
 
         //retrieve the total of the data set queried
@@ -129,7 +129,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
                         clientIDs, consentTypes, consentStatuses, userIDs, fromTime, toTime, null, null);
                 total = results.size();
             } catch (ConsentManagementException e) {
-                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
             }
         }
 
@@ -174,7 +174,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             consentAdminData.setResponseStatus(ResponseStatus.NO_CONTENT);
         } catch (ConsentManagementException e) {
             throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
-                    "Exception occurred while revoking consents");
+                    "Exception occurred while revoking consents", e);
         }
     }
 
@@ -220,7 +220,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             count = consentHistory.length();
         } catch (ConsentManagementException e) {
             log.error("Error while retrieving consent amendment history data", e);
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
 
         JSONObject metadata = new JSONObject();
@@ -245,13 +245,13 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             limit = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.LIMIT));
         } catch (NumberFormatException e) {
-            log.error("Number format incorrect in search for parameter limit. Ignoring parameter");
+            log.warn("Number format incorrect in search for parameter limit. Ignoring parameter");
         }
         try {
             offset = ConsentAdminUtils.getIntFromQueryParam(ConsentAdminUtils
                     .validateAndGetQueryParam(queryParams, ConsentExtensionConstants.OFFSET));
         } catch (NumberFormatException e) {
-            log.error("Number format incorrect in search for parameter offset. Ignoring parameter");
+            log.warn("Number format incorrect in search for parameter offset. Ignoring parameter");
         }
         int count, total = 0;
 
@@ -282,7 +282,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             total = results.size();
         } catch (ConsentManagementException e) {
             log.error("Error while retrieving consent status audit data");
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
 
         //retrieve the total of the data set queried
@@ -293,7 +293,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
                                 null, null);
                 total = results.size();
             } catch (ConsentManagementException e) {
-                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+                throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
             }
         }
 
@@ -327,7 +327,7 @@ public class DefaultConsentAdminHandler implements ConsentAdminHandler {
             response.put(ConsentExtensionConstants.CONSENT_FILE, file.getConsentFile());
         } catch (ConsentManagementException e) {
             log.error("Error while retrieving consent file");
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage(), e);
         }
         consentAdminData.setResponseStatus(ResponseStatus.OK);
         consentAdminData.setResponsePayload(response);
