@@ -16,36 +16,6 @@
  * under the License.
  */
 
-function approvedDefaultClaim() {
-    var mandatoryClaimCBs = $(".mandatory-claim");
-    var checkedMandatoryClaimCBs = $(".mandatory-claim:checked");
-    var scopeApproval = $("input[name='scope-approval']");
-
-    // If scope approval radio button is rendered then we need to validate that it's checked
-    if (scopeApproval.length > 0) {
-        if (scopeApproval.is(":checked")) {
-            var checkScopeConsent = $("input[name='scope-approval']:checked");
-            $('#consent').val(checkScopeConsent.val());
-        } else {
-            $("#modal_scope_validation").modal();
-            return;
-        }
-    } else {
-        // Scope radio button was not rendered therefore set the consent to 'approve'
-        document.getElementById('consent').value = "approve";
-    }
-
-    if (checkedMandatoryClaimCBs.length === mandatoryClaimCBs.length) {
-        document.getElementById("profile").submit();
-    } else {
-        $("#modal_claim_validation").modal();
-    }
-}
-
-function denyDefaultClaim() {
-    document.getElementById('consent').value = "deny";
-    document.getElementById("profile").submit();
-}
 
 // Update the selected account list according to the selected checkbox values.
 function updateAcc() {
@@ -62,93 +32,9 @@ function updateAcc() {
     document.getElementById('accountName').value = accNames;
 }
 
-// Confirm selected accounts
-function approvedAcc() {
-    updateAcc();
-    document.getElementById('consent').value = "approve";
-    validateAccFrm();
-}
-
-// Submit account selection from
-function validateAccFrm() {
-    if (document.getElementById('type').value == "accounts") {
-        if (document.getElementById('account').value === "" ||
-            document.getElementById('account').value === "default") {
-            $(".acc-err").show();
-            return false;
-        } else {
-            document.getElementById("oauth2_authz_consent").submit();
-        }
-    }
-
-    if (document.getElementById('type').value == "payments") {
-        if (document.getElementById('paymentAccount').value === "" ||
-            document.getElementById('paymentAccount').value === "default") {
-            $(".acc-err").show();
-            return false;
-        } else {
-            document.getElementById("oauth2_authz_confirm").submit();
-        }
-    }
-
-    if (document.getElementById('type').value == "fundsconfirmations") {
-        document.getElementById("oauth2_authz_confirm").submit();
-    }
-}
-
-// Confirm sharing data
-function approvedAU() {
-    document.getElementById('consent').value = true;
-    validateAUFrm();
-}
-
 function deny() {
     document.getElementById('consent').value = false;
     document.getElementById("oauth2_authz_confirm").submit();
-}
-
-// Submit data sharing from
-function validateAUFrm() {
-    if (document.getElementById('type').value == "accounts") {
-        if (document.getElementById('account').value === "" ||
-            document.getElementById('account').value === "default") {
-            $(".acc-err").show();
-            return false;
-        } else {
-            console.log("Hello");
-            setTimeout(() => {  console.log("World!"); }, 2000);
-            document.getElementById("oauth2_authz_confirm").submit();
-        }
-    }
-
-    if (document.getElementById('type').value == "payments") {
-        if (document.getElementById('paymentAccount').value === "" ||
-            document.getElementById('paymentAccount').value === "default") {
-            $(".acc-err").show();
-            return false;
-        } else {
-            document.getElementById("oauth2_authz_confirm").submit();
-        }
-    }
-
-    if (document.getElementById('type').value == "fundsconfirmations") {
-        document.getElementById("oauth2_authz_confirm").submit();
-    }
-}
-function updatePaymentAcc() {
-
-    var accIds = "";
-    var accNames = "";
-    //Get values from checked checkboxes
-    $("input:checkbox[name=chkAccounts]:checked").each(function(){
-        accIds =  accIds.concat(":", $(this).val());
-        accNames =  accNames.concat(":", $(this).attr("id"));
-    });
-    accIds = accIds.replace(/^\:/, '');
-    accNames = accNames.replace(/^\:/, '');
-    document.getElementById('account').value = accIds;
-    document.getElementById('accountName').value = accNames;
-    document.getElementById('paymentAccount').value = accIds;
 }
 
 // Confirm sharing data
@@ -159,11 +45,11 @@ function approvedConsent() {
 
 // Submit data sharing from
 function validateFrm() {
-    if (document.getElementById('type').value == "accounts") {
+    if (document.getElementById('type').value === "accounts") {
         document.getElementById("oauth2_authz_confirm").submit()
     }
 
-    if (document.getElementById('type').value == "payments") {
+    if (document.getElementById('type').value === "payments") {
         if (document.getElementById('selectedAccount').value === "" ||
             document.getElementById('selectedAccount').value === "default") {
             $(".acc-err").show();
@@ -175,7 +61,7 @@ function validateFrm() {
         }
     }
 
-    if (document.getElementById('type').value == "fundsconfirmations") {
+    if (document.getElementById('type').value === "fundsconfirmations") {
         document.getElementById("oauth2_authz_confirm").submit();
     }
 

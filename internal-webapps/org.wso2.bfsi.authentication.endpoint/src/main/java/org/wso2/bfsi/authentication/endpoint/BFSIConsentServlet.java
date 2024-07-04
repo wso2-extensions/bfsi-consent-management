@@ -59,7 +59,6 @@ import javax.servlet.http.HttpSession;
 
 import static org.wso2.bfsi.consent.management.extensions.authservlet.utils.Utils.i18n;
 
-
 /**
  * The servlet responsible for displaying the consent details in the auth UI flow.
  */
