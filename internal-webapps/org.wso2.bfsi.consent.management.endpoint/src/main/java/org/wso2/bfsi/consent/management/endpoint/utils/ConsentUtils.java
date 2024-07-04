@@ -331,7 +331,8 @@ public class ConsentUtils {
             }
         } catch (IOException e) {
             log.error("Error while sending authorize request to complete the authorize flow", e);
-            return null;
+            throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.SERVER_ERROR,
+                    "Error while sending authorize request to complete the authorize flow", consentData.getState());
         } catch (URISyntaxException e) {
             log.error("Authorize response URI syntax error", e);
             throw new ConsentException(consentData.getRedirectURI(), AuthErrorCode.SERVER_ERROR,
