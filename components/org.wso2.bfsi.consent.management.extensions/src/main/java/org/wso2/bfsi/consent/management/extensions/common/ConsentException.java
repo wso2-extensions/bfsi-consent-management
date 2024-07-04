@@ -31,11 +31,12 @@ public class ConsentException extends RuntimeException {
     private ResponseStatus status;
     private URI errorRedirectURI;
 
-    public ConsentException(ResponseStatus status, JSONObject payload, Throwable cause) {
+    public ConsentException(ResponseStatus status, String errorMessage, Throwable cause) {
 
         super(cause);
         this.status = status;
-        this.payload = payload;
+        this.payload = createDefaultErrorObject(null, String.valueOf(this.status.getStatusCode()),
+                errorMessage, null);
     }
 
     public ConsentException(ResponseStatus status, String errorCode, String errorMessage) {
