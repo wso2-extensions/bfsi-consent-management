@@ -246,7 +246,7 @@ public class Utils {
             String accountId = object.getString(ConsentExtensionConstants.ACCOUNT_ID);
             String displayName = object.getString(ConsentExtensionConstants.DISPLAY_NAME);
             Map<String, String> data = new HashMap<>();
-            data.put(ConsentExtensionConstants.ACCOUNT_ID, accountId);
+            data.put(ConsentExtensionConstants.AUTH_ACCOUNT_ID, accountId);
             data.put(ConsentExtensionConstants.DISPLAY_NAME, displayName);
             accountData.add(data);
         }
