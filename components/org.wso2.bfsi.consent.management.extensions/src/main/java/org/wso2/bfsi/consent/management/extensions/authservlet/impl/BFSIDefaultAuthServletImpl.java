@@ -91,6 +91,6 @@ public class BFSIDefaultAuthServletImpl implements BFSIAuthServletInterface {
     @Override
     public String getJSPPath() {
 
-        return "/ob_default.jsp";
+        return "/bfsi_default.jsp";
     }
 }
