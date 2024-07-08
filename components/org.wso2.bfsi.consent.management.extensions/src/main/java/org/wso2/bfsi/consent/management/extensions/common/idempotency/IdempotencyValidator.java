@@ -74,10 +74,11 @@ public class IdempotencyValidator {
             log.error("Client ID is empty. Hence cannot proceed with idempotency validation");
             return new IdempotencyValidationResult(false, false);
         }
-        String idempotencyKeyValue = consentManageData.getHeaders().get(getIdempotencyHeaderName());
+        String idempotencyKeyValue = consentManageData.getHeaders().get(getIdempotencyHeaderName())
+                .replaceAll("[\r\n]", "");
         // If idempotency key value is empty then cannot proceed with idempotency validation
         if (StringUtils.isBlank(idempotencyKeyValue)) {
-            log.error("Idempotency Key Valueis empty. Hence cannot proceed with idempotency validation");
+            log.error("Idempotency Key Value is empty. Hence cannot proceed with idempotency validation");
             return new IdempotencyValidationResult(false, false);
         }
         try {
@@ -91,7 +92,7 @@ public class IdempotencyValidator {
                 if (!consentIds.isEmpty()) {
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Idempotency Key  %s exists in the database. Hence this is an" +
-                                " idempotent request", idempotencyKeyValue));
+                                " idempotent request", idempotencyKeyValue.replaceAll("[\r\n]", "")));
                     }
                     for (String consentId : consentIds) {
                         DetailedConsentResource consentResource = consentCoreService.getDetailedConsent(consentId);
@@ -99,7 +100,7 @@ public class IdempotencyValidator {
                             return validateIdempotencyConditions(consentManageData, consentResource);
                         } else {
                             String errorMsg = String.format(IdempotencyConstants.ERROR_NO_CONSENT_DETAILS, consentId);
-                            log.error(errorMsg);
+                            log.error(errorMsg.replaceAll("[\r\n]", ""));
                             throw new IdempotencyValidationException(errorMsg);
                         }
                     }
@@ -133,7 +134,7 @@ public class IdempotencyValidator {
     private IdempotencyValidationResult validateIdempotencyWithoutPayload(ConsentManageData consentManageData,
                                                                           String idempotencyKeyName,
                                                                           String idempotencyKeyValue)
-            throws IdempotencyValidationException, IOException, ConsentManagementException {
+            throws IOException, ConsentManagementException {
 
         // Retrieve consent ids and idempotency key values that have the idempotency key name
         Map<String, String> attributes = IdempotencyValidationUtils.getAttributesFromIdempotencyKey(idempotencyKeyName);
@@ -142,7 +143,7 @@ public class IdempotencyValidator {
         if (!attributes.isEmpty()) {
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Idempotency Key  %s exists in the database. Hence this is an" +
-                        " idempotent request", idempotencyKeyValue));
+                        " idempotent request", idempotencyKeyValue.replaceAll("[\r\n]", "")));
             }
             for (Map.Entry<String, String> entry : attributes.entrySet()) {
                 // If the idempotency key value is different for the same consent id then it is not a valid idempotent
@@ -155,7 +156,7 @@ public class IdempotencyValidator {
                     return validateIdempotencyConditions(consentManageData, consentRequest);
                 } else {
                     String errorMsg = String.format(IdempotencyConstants.ERROR_NO_CONSENT_DETAILS, entry.getKey());
-                    log.error(errorMsg);
+                    log.error(errorMsg.replaceAll("[\r\n]", ""));
                     throw new IdempotencyValidationException(errorMsg);
                 }
             }
@@ -290,7 +291,8 @@ public class IdempotencyValidator {
             actualNode = mapper.readTree(consentReceipt);
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Expected payload for idempotent request is: %s. But actual payload " +
-                        "received is %s", expectedNode.toString(), actualNode.toString()));
+                        "received is %s", expectedNode.toString().replaceAll("[\r\n]", ""),
+                        actualNode.toString().replaceAll("[\r\n]", "")));
             }
         } catch (JsonProcessingException e) {
             log.error(IdempotencyConstants.JSON_COMPARING_ERROR, e);
