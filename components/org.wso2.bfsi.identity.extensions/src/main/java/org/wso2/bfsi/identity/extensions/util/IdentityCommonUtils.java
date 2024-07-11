@@ -73,7 +73,7 @@ public class IdentityCommonUtils {
         try {
             return Class.forName(classpath).getDeclaredConstructor().newInstance();
         } catch (ClassNotFoundException e) {
-            log.error("Class not found: " + classpath.replaceAll("[\r\n]", ""));
+            log.error(String.format("Class not found: %S", classpath.replaceAll("[\r\n]", "")));
             throw new ConsentManagementRuntimeException("Cannot find the defined class", e);
         } catch (InstantiationException | InvocationTargetException |
                  NoSuchMethodException | IllegalAccessException e) {

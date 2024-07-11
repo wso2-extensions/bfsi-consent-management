@@ -49,7 +49,7 @@ public class BFSICodeResponseTypeHandlerExtension extends CodeResponseTypeHandle
     public OAuth2AuthorizeRespDTO issue(OAuthAuthzReqMessageContext oauthAuthzMsgCtx) throws IdentityOAuth2Exception {
 
         try {
-            if (!CommonUtils.isRegulatoryApp(oauthAuthzMsgCtx.getAuthorizationReqDTO().getConsumerKey())) {
+            if (!isRegulatory(oauthAuthzMsgCtx.getAuthorizationReqDTO().getConsumerKey())) {
                 return issueCode(oauthAuthzMsgCtx);
             }
         } catch (RequestObjectException e) {
@@ -77,9 +77,15 @@ public class BFSICodeResponseTypeHandlerExtension extends CodeResponseTypeHandle
      * @throws IdentityOAuth2Exception If an error occurred while issuing the code.
      */
     @Generated(message = "Cannot test super calls")
-    private OAuth2AuthorizeRespDTO issueCode(
+    OAuth2AuthorizeRespDTO issueCode(
             OAuthAuthzReqMessageContext oAuthAuthzReqMessageContext) throws IdentityOAuth2Exception {
 
         return super.issue(oAuthAuthzReqMessageContext);
+    }
+
+    @Generated(message = "Ignoring because it requires a service call")
+    boolean isRegulatory(String clientId) throws RequestObjectException {
+
+        return CommonUtils.isRegulatoryApp(clientId);
     }
 }

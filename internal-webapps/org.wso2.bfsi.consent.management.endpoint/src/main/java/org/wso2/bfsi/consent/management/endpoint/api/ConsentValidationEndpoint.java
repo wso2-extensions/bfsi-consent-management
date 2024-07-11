@@ -114,7 +114,8 @@ public class ConsentValidationEndpoint {
             try {
                 ConsentExtensionUtils.validateJWTSignatureWithPublicKey(payload, requestSignatureAlias);
                 requestData = new JSONObject(Objects
-                        .requireNonNull(CommonUtils.decodeRequestJWT(payload, ConsentExtensionConstants.BODY)).toJSONString());
+                        .requireNonNull(CommonUtils.decodeRequestJWT(payload, ConsentExtensionConstants.BODY))
+                        .toJSONString());
             } catch (ConsentManagementException e) {
                 log.error("Error while validating JWT signature", e);
                 throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Error while validating JWT " +
