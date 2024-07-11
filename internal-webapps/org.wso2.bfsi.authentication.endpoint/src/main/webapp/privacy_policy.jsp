@@ -175,7 +175,7 @@ padding-left: inherit; margin-right: 15em; padding-right: inherit;">
                 <section style="margin-bottom: 2em;">
                     <h3 id="changes-to-this-policy" style="font-weight:400; color:black">Changes to this policy</h3>
                     <p>Upgraded versions of WSO2 Open Banking may contain changes to this policy and revisions to this policy will be packaged within such upgrades. Such changes would only apply to users who choose to use upgraded versions.</p>
-                    <p>The organization running WSO2 Open Banking may revise the Privacy Policy from time to time. You can find the most recent governing policy with the respective link provided by the organization running WSO2 IS 5.5. The organization will notify any changes to the privacy policy over our oficial public channels.</p>
+                    <p>The organization running WSO2 Open Banking may revise the Privacy Policy from time to time. You can find the most recent governing policy with the respective link provided by the organization running WSO2 IS 7.0. The organization will notify any changes to the privacy policy over our oficial public channels.</p>
                 </section>
                 
                 <section style="margin-bottom: 2em;">
@@ -194,7 +194,7 @@ padding-left: inherit; margin-right: 15em; padding-right: inherit;">
                     <h2 id="disclaimer" style="font-weight:400; color:black">Disclaimer</h2>
                     <ol>
                         <li>WSO2, its employees, partners, and affiliates do not have access to and do not require, store, process or control any of the data, including personal data contained in WSO2 Open Banking. All data, including personal data is controlled and processed by the entity or individual running WSO2 Open Banking.  WSO2, its employees partners and affiliates are not a data processor or a data controller within the meaning of any data privacy regulations.  WSO2 does not provide any warranties or undertake any responsibility or liability in connection with the lawfulness or the manner and purposes for which WSO2 Open Banking is used by such entities or persons.<br><br></li>
-                        <li>This privacy policy is for the informational purposes of the entity or persons  running WOS2 IS 5.5.0 and sets out the processes and functionality contained within WSO2 Open Banking regarding personal data protection. It is the responsibility of entities and persons running WSO2 Open Banking to create and administer its own rules and processes governing users’ personal data, and such  rules and processes may change the use, storage and disclosure policies contained herein. Therefore users should consult the entity or persons running WSO2 Open Banking for its own privacy policy for details governing users’ personal data. </li>
+                        <li>This privacy policy is for the informational purposes of the entity or persons  running WOS2 IS 7.0.0 and sets out the processes and functionality contained within WSO2 Open Banking regarding personal data protection. It is the responsibility of entities and persons running WSO2 Open Banking to create and administer its own rules and processes governing users’ personal data, and such  rules and processes may change the use, storage and disclosure policies contained herein. Therefore users should consult the entity or persons running WSO2 Open Banking for its own privacy policy for details governing users’ personal data. </li>
                     </ol>
                 </section>
             </div>
