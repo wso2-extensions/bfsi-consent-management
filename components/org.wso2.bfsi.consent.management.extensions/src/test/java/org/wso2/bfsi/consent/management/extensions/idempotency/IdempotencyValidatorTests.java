@@ -19,11 +19,8 @@
 package org.wso2.bfsi.consent.management.extensions.idempotency;
 
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -45,12 +42,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
+
 /**
  * Test class for IdempotencyValidator.
  */
-@PrepareForTest({ConsentManagementConfigParser.class, ConsentExtensionsDataHolder.class})
-@PowerMockIgnore("jdk.internal.reflect.*")
-public class IdempotencyValidatorTests extends PowerMockTestCase {
+public class IdempotencyValidatorTests {
 
     @Mock
     private ConsentManageData consentManageData;
@@ -125,8 +124,8 @@ public class IdempotencyValidatorTests extends PowerMockTestCase {
         headers.put(IdempotencyConstants.X_IDEMPOTENCY_KEY, "123456");
         headers.put(IdempotencyConstants.CONTENT_TYPE_TAG, "application/json");
 
-        consentManageData = Mockito.mock(ConsentManageData.class);
-        consentCoreServiceImpl = Mockito.mock(ConsentCoreServiceImpl.class);
+        consentManageData = mock(ConsentManageData.class);
+        consentCoreServiceImpl = mock(ConsentCoreServiceImpl.class);
 
         consentId = UUID.randomUUID().toString();
         consentIdList = new ArrayList<>();
@@ -136,162 +135,293 @@ public class IdempotencyValidatorTests extends PowerMockTestCase {
         attributeList.put(consentId, "123456");
     }
 
-    @BeforeMethod
-    public void beforeMethod() {
-        ConsentManagementConfigParser configParserMock = PowerMockito.mock(ConsentManagementConfigParser.class);
-        Mockito.doReturn(configs).when(configParserMock).getConfiguration();
-        Mockito.doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
-        Mockito.doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
-        ConsentExtensionsDataHolder consentExtensionsDataHolderMock = PowerMockito
-                .mock(ConsentExtensionsDataHolder.class);
-
-        PowerMockito.mockStatic(ConsentManagementConfigParser.class);
-        PowerMockito.when(ConsentManagementConfigParser.getInstance()).thenReturn(configParserMock);
-
-        PowerMockito.mockStatic(ConsentExtensionsDataHolder.class);
-        PowerMockito.when(ConsentExtensionsDataHolder.getInstance()).thenReturn(consentExtensionsDataHolderMock);
-        PowerMockito.when(consentExtensionsDataHolderMock.getConsentCoreService()).thenReturn(consentCoreServiceImpl);
-    }
-
     @Test
-    public void testValidateIdempotency() throws ConsentManagementException, IdempotencyValidationException {
-        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+    public void testValidateIdempotency() throws ConsentManagementException {
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
 
-        Assert.assertTrue(result.isIdempotent());
-        Assert.assertTrue(result.isValid());
-        Assert.assertNotNull(result.getConsent());
-        Assert.assertEquals(consentId, result.getConsentId());
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            OffsetDateTime offsetDateTime = OffsetDateTime.now();
+
+            Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                    .getDetailedConsent(Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+
+            Assert.assertTrue(result.isIdempotent());
+            Assert.assertTrue(result.isValid());
+            Assert.assertNotNull(result.getConsent());
+            Assert.assertEquals(consentId, result.getConsentId());
+        }
     }
 
     @Test(expectedExceptions = IdempotencyValidationException.class)
-    public void testValidateIdempotencyForRequestsWithoutPayload() throws ConsentManagementException,
-            IdempotencyValidationException {
-        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+    public void testValidateIdempotencyForRequestsWithoutPayload() throws ConsentManagementException {
 
-        Mockito.doReturn(attributeList).when(consentCoreServiceImpl).getConsentAttributesByName(Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn("{}").when(consentManageData).getPayload();
-        Mockito.doReturn("{}").when(consentManageData).getPayload();
-        Mockito.doReturn("/payments/".concat(consentId)).when(consentManageData).getRequestPath();
-        new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
+
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            OffsetDateTime offsetDateTime = OffsetDateTime.now();
+
+            Mockito.doReturn(attributeList).when(consentCoreServiceImpl).getConsentAttributesByName(Mockito.anyString());
+            Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                    .getDetailedConsent(Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn("{}").when(consentManageData).getPayload();
+            Mockito.doReturn("{}").when(consentManageData).getPayload();
+            Mockito.doReturn("/payments/".concat(consentId)).when(consentManageData).getRequestPath();
+            new IdempotencyValidator().validateIdempotency(consentManageData);
+        }
     }
 
     @Test
     public void testValidateIdempotencyWithoutIdempotencyKeyValue() throws IdempotencyValidationException {
 
-        Mockito.doReturn(new HashMap<>()).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
 
-        Assert.assertFalse(result.isIdempotent());
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            Mockito.doReturn(new HashMap<>()).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+
+            Assert.assertFalse(result.isIdempotent());
+        }
     }
 
     @Test
     public void testValidateIdempotencyWithoutRequest() throws IdempotencyValidationException {
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn("").when(consentManageData).getPayload();
-        IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
 
-        Assert.assertFalse(result.isIdempotent());
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
+
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn("").when(consentManageData).getPayload();
+            IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+
+            Assert.assertFalse(result.isIdempotent());
+        }
     }
 
     @Test
-    public void testValidateIdempotencyRetrievingAttributesWithException()
-            throws ConsentManagementException, IdempotencyValidationException {
+    public void testValidateIdempotencyRetrievingAttributesWithException() throws ConsentManagementException {
 
-        Mockito.doThrow(ConsentManagementException.class).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
 
-        Assert.assertFalse(result.isIdempotent());
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            Mockito.doThrow(ConsentManagementException.class).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+
+            Assert.assertFalse(result.isIdempotent());
+        }
     }
 
     @Test
-    public void testValidateIdempotencyWithoutAttribute()
-            throws ConsentManagementException, IdempotencyValidationException {
+    public void testValidateIdempotencyWithoutAttribute() throws ConsentManagementException {
 
-        Mockito.doReturn(new ArrayList<>()).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
 
-        Assert.assertFalse(result.isIdempotent());
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            Mockito.doReturn(new ArrayList<>()).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
+
+            Assert.assertFalse(result.isIdempotent());
+        }
     }
 
     @Test(expectedExceptions = IdempotencyValidationException.class)
     public void testValidateIdempotencyWithNullConsentRequest() throws ConsentManagementException {
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        Mockito.doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(Mockito.anyString());
-        new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
+
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            Mockito.doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(Mockito.anyString());
+            new IdempotencyValidator().validateIdempotency(consentManageData);
+        }
     }
 
     @Test(expectedExceptions = IdempotencyValidationException.class)
     public void testValidateIdempotencyWithNonMatchingClientId() throws ConsentManagementException {
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn("sampleClientID").when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        Mockito.doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(Mockito.anyString());
-        new IdempotencyValidator().validateIdempotency(consentManageData);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
+
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn("sampleClientID").when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            Mockito.doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(Mockito.anyString());
+            new IdempotencyValidator().validateIdempotency(consentManageData);
+        }
     }
 
     @Test(expectedExceptions = IdempotencyValidationException.class)
-    public void testValidateIdempotencyAfterAllowedTime()
-            throws ConsentManagementException, IdempotencyValidationException {
+    public void testValidateIdempotencyAfterAllowedTime() throws ConsentManagementException {
 
-        OffsetDateTime offsetDateTime = OffsetDateTime.now().minusHours(2);
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        new IdempotencyValidator().validateIdempotency(consentManageData);
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
+
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            OffsetDateTime offsetDateTime = OffsetDateTime.now().minusHours(2);
+
+            Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                    .getDetailedConsent(Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+            new IdempotencyValidator().validateIdempotency(consentManageData);
+        }
     }
 
     @Test(expectedExceptions = IdempotencyValidationException.class)
     public void testValidateIdempotencyWithNonMatchingPayload()
-            throws ConsentManagementException, IdempotencyValidationException {
+            throws ConsentManagementException {
 
-        OffsetDateTime offsetDateTime = OffsetDateTime.now();
+        try (MockedStatic<ConsentManagementConfigParser> configParser = mockStatic(ConsentManagementConfigParser.class);
+             MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder =
+                     mockStatic(ConsentExtensionsDataHolder.class)) {
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(DIFFERENT_PAYLOAD).when(consentManageData).getPayload();
-        new IdempotencyValidator().validateIdempotency(consentManageData);
+            ConsentManagementConfigParser configParserMock = mock(ConsentManagementConfigParser.class);
+            doReturn(configs).when(configParserMock).getConfiguration();
+            doReturn(true).when(configParserMock).isIdempotencyValidationEnabled();
+            doReturn("1").when(configParserMock).getIdempotencyAllowedTime();
+            configParser.when(ConsentManagementConfigParser::getInstance).thenReturn(configParserMock);
 
+            ConsentExtensionsDataHolder dataHolderMock = mock(ConsentExtensionsDataHolder.class);
+            doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
+            consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
+
+            OffsetDateTime offsetDateTime = OffsetDateTime.now();
+
+            Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
+                    .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
+            Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                    .getDetailedConsent(Mockito.anyString());
+            Mockito.doReturn(headers).when(consentManageData).getHeaders();
+            Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
+            Mockito.doReturn(DIFFERENT_PAYLOAD).when(consentManageData).getPayload();
+            new IdempotencyValidator().validateIdempotency(consentManageData);
+        }
     }
 
     private DetailedConsentResource getConsent(long createdTime) {
