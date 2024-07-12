@@ -70,7 +70,7 @@
                     <div class="form-group ui form select">
                         <c:if test="${not empty account_data}">
                             <h5 class="ui body col-md-12">
-                                Select the accounts you wish to authorise:
+                                Select the accounts you wish to authorize:
                             </h5>
                             <div class="col-md-12" >
                                 <c:forEach items="${account_data}" var="record">
@@ -112,7 +112,7 @@
                     <c:if test="${empty selectedAccount && not empty account_data}">
                         <div class="form-group ui form select">
                             <h5 class="ui body col-md-12">
-                                Select the accounts you wish to authorise:
+                                Select the accounts you wish to authorize:
                             </h5>
                             <div class="col-md-12">
                                 <select name="selectedAccount" id="selectedAccount">
@@ -132,7 +132,7 @@
                     <c:if test="${not empty account_data}">
                         <div class="form-group ui form select">
                             <h5 class="ui body col-md-12">
-                                Select the accounts you wish to authorise:
+                                Select the accounts you wish to authorize:
                             </h5>
                             <div class="col-md-12" >
                                 <c:forEach items="${account_data}" var="record">

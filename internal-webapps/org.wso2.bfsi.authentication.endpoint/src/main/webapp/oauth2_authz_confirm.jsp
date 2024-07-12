@@ -28,14 +28,14 @@
 <body>
 
     <p>You will be redirected back to the <%=Encode.forHtmlContent(request.getParameter("app"))%>. If the
-        redirection fails, please click the post button.....</p>
+        redirection fails, please click the submit button.....</p>
 
     <form method="post" id="oauth2_authz" name="oauth2_authz" action="../../oauth2/authorize">
         <input type="hidden" id="hasApprovedAlways" name="hasApprovedAlways" value="${hasApprovedAlways}"/>
         <input type="hidden" name="sessionDataKeyConsent" value="${sessionDataKeyConsent}"/>
         <input type="hidden" name="consent" id="consent" value="${consent}"/>
         <input type="hidden" name="user" id="user" value="${user}"/>
-        <button type="submit">POST</button>
+        <button type="submit">SUBMIT</button>
     </form>
 
     <script type="text/javascript">

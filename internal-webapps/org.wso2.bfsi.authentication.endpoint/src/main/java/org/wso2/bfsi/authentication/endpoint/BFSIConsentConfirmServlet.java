@@ -158,7 +158,7 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
         }
     }
     /**
-     * Retrieve the config.
+     * Retrieve the config value for Auth servlet Extension.
      */
      void setAuthExtension() {
          try {

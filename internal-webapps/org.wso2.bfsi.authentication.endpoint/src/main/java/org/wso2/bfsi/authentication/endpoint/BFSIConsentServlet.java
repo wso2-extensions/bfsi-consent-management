@@ -68,6 +68,7 @@ public class BFSIConsentServlet extends HttpServlet {
     private static final long serialVersionUID = 6106269076132678046L;
     private static Logger log = LoggerFactory.getLogger(BFSIConsentServlet.class);
     private static final String BUNDLE = "org.wso2.bfsi.authentication.endpoint.i18n";
+    private static final ConsentManagementConfigParser parser = ConsentManagementConfigParser.getInstance();
 
     @SuppressFBWarnings({"REQUESTDISPATCHER_FILE_DISCLOSURE", "TRUST_BOUNDARY_VIOLATION"})
     // Suppressed content - obAuthServlet.getJSPPath()
@@ -210,13 +211,13 @@ public class BFSIConsentServlet extends HttpServlet {
     }
 
     /**
-     * Retrieve the config.
+     * Retrieve the config value for Auth servlet Extension.
      */
     void setAuthExtension() {
 
         try {
-            bfsiAuthServletTK = (BFSIAuthServletInterface) Class.forName(ConsentManagementConfigParser.getInstance().
-                    getAuthServletExtension()).getDeclaredConstructor().newInstance();
+            bfsiAuthServletTK = (BFSIAuthServletInterface) Class.forName(parser.getAuthServletExtension())
+                    .getDeclaredConstructor().newInstance();
         } catch (InstantiationException | IllegalAccessException |
                 InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
             log.error("Webapp extension not found", e);
@@ -242,16 +243,16 @@ public class BFSIConsentServlet extends HttpServlet {
             boolean isConfiguredInWebapp = Boolean.parseBoolean(
                     configurationProperties.getProperty(Constants.LOCATION_OF_CREDENTIALS));
             if (!isConfiguredInWebapp) {
-                username = ConsentManagementConfigParser.getInstance().getConsentAPIUsername();
-                password = ConsentManagementConfigParser.getInstance().getConsentAPIPassword();
+                username = parser.getConsentAPIUsername();
+                password = parser.getConsentAPIPassword();
             } else {
                 username = configurationProperties.getProperty(Constants.USERNAME_IN_WEBAPP_CONFIGS);
                 password = configurationProperties.getProperty(Constants.PASSWORD_IN_WEBAPP_CONFIGS);
             }
         } catch (IOException | NullPointerException e) {
             log.error("Error occurred while reading the webapp properties file. Therefore using OB configurations.");
-            username = ConsentManagementConfigParser.getInstance().getConsentAPIUsername();
-            password = ConsentManagementConfigParser.getInstance().getConsentAPIPassword();
+            username = parser.getConsentAPIUsername();
+            password = parser.getConsentAPIPassword();
         }
         return Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
     }
