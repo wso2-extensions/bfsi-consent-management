@@ -21,9 +21,6 @@ package org.wso2.bfsi.consent.management.service.impl;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.testng.PowerMockTestCase;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -69,10 +66,7 @@ import static org.mockito.Mockito.mockStatic;
 /**
  * Test for BFSI consent management core service.
  */
-@PowerMockIgnore("jdk.internal.reflect.*")
-@PrepareForTest({DatabaseUtil.class, ConsentStoreInitializer.class, ConsentManagementDataHolder.class,
-        TokenRevocationUtil.class})
-public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
+public class ConsentMgtCoreServiceTests {
 
     private ConsentCoreServiceImpl consentCoreServiceImpl;
     @Mock
@@ -131,7 +125,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
             doReturn(ConsentMgtServiceTestData.getSampleTestAuthorizationResource(null, null))
                     .when(mockedConsentCoreDAO).storeAuthorizationResource(any(), any());
@@ -140,7 +134,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     consentCoreServiceImpl.createAuthorizableConsent(ConsentMgtServiceTestData
                                     .getSampleTestConsentResource(), ConsentMgtServiceTestData.SAMPLE_USER_ID,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
-                            ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE, true);
+                            ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE, true);
 
             Assert.assertNotNull(detailedConsentResource);
             Assert.assertNotNull(detailedConsentResource.getConsentID());
@@ -161,7 +155,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
             doReturn(ConsentMgtServiceTestData.getSampleTestAuthorizationResource(null, null))
                     .when(mockedConsentCoreDAO).storeAuthorizationResource(any(), any());
@@ -173,7 +167,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                                     .getSampleStoredTestConsentResourceWithAttributes(),
                             ConsentMgtServiceTestData.SAMPLE_USER_ID,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
-                            ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE, true);
+                            ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE, true);
 
             Assert.assertNotNull(detailedConsentResource);
             Assert.assertNotNull(detailedConsentResource.getConsentID());
@@ -195,7 +189,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
             doReturn(ConsentMgtServiceTestData.getSampleTestAuthorizationResource(null, null))
                     .when(mockedConsentCoreDAO).storeAuthorizationResource(any(), any());
@@ -204,7 +198,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     consentCoreServiceImpl.createAuthorizableConsent(ConsentMgtServiceTestData
                                     .getSampleStoredTestConsentResourceWithAttributes(), null,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
-                            ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE, true);
+                            ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE, true);
 
             Assert.assertNotNull(detailedConsentResource);
             Assert.assertNotNull(detailedConsentResource.getConsentID());
@@ -229,7 +223,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             consentResource.setClientID(null);
 
             consentCoreServiceImpl.createAuthorizableConsent(consentResource, ConsentMgtServiceTestData.SAMPLE_USER_ID,
-                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE,
+                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE,
                     false);
         }
     }
@@ -248,7 +242,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             consentResource.setReceipt(null);
 
             consentCoreServiceImpl.createAuthorizableConsent(consentResource, ConsentMgtServiceTestData.SAMPLE_USER_ID,
-                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE,
+                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE,
                     false);
         }
     }
@@ -267,7 +261,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             consentResource.setConsentType(null);
 
             consentCoreServiceImpl.createAuthorizableConsent(consentResource, ConsentMgtServiceTestData.SAMPLE_USER_ID,
-                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE,
+                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE,
                     false);
         }
     }
@@ -286,7 +280,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             consentResource.setCurrentStatus(null);
 
             consentCoreServiceImpl.createAuthorizableConsent(consentResource, ConsentMgtServiceTestData.SAMPLE_USER_ID,
-                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE,
+                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE,
                     false);
         }
     }
@@ -301,14 +295,14 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
             doReturn(ConsentMgtServiceTestData.getSampleTestAuthorizationResource(null, null))
                     .when(mockedConsentCoreDAO).storeAuthorizationResource(any(), any());
 
             consentCoreServiceImpl.createAuthorizableConsent(ConsentMgtServiceTestData
                             .getSampleStoredTestConsentResourceWithAttributes(), null, null,
-                    ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE, true);
+                    ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE, true);
         }
     }
 
@@ -322,7 +316,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
             doReturn(ConsentMgtServiceTestData.getSampleTestAuthorizationResource(null, null))
                     .when(mockedConsentCoreDAO).storeAuthorizationResource(any(), any());
@@ -349,7 +343,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             consentCoreServiceImpl.createAuthorizableConsent(ConsentMgtServiceTestData
                             .getSampleTestConsentResource(), ConsentMgtServiceTestData.SAMPLE_USER_ID,
                     ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
-                    ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE, true);
+                    ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE, true);
         }
     }
 
@@ -387,7 +381,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             DetailedConsentResource exclusiveConsent =
                     consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData
-                                    .getSampleStoredTestConsentResource(),
+                                    .getSampleStoredConsentResource(),
                             ConsentMgtServiceTestData.SAMPLE_USER_ID,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                             ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE,
@@ -410,10 +404,10 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             doThrow(ConsentDataRetrievalException.class)
                     .when(mockedConsentCoreDAO).searchConsents(any(), any(), any(), any(),
                             any(), any(), any(), any(), any(), any());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, false);
@@ -436,10 +430,10 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             doThrow(ConsentDataUpdationException.class)
                     .when(mockedConsentCoreDAO).updateConsentStatus(any(), anyString(),
                             anyString());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, true);
@@ -462,13 +456,13 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                             Mockito.anyInt());
             doNothing().when(mockedConsentCoreDAO).updateConsentStatus(any(), anyString(),
                     anyString());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .storeConsentResource(any(), any());
             doThrow(ConsentDataInsertionException.class)
                     .when(mockedConsentCoreDAO).storeConsentStatusAuditRecord(any(),
                             any(ConsentStatusAuditRecord.class));
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, true);
@@ -485,7 +479,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             sampleConsentResource.setClientID(null);
 
             consentCoreServiceImpl.createExclusiveConsent(sampleConsentResource,
@@ -505,7 +499,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             sampleConsentResource.setReceipt(null);
 
             consentCoreServiceImpl.createExclusiveConsent(sampleConsentResource,
@@ -525,7 +519,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             sampleConsentResource.setConsentType(null);
 
             consentCoreServiceImpl.createExclusiveConsent(sampleConsentResource,
@@ -545,7 +539,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource sampleConsentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             sampleConsentResource.setCurrentStatus(null);
 
             consentCoreServiceImpl.createExclusiveConsent(sampleConsentResource,
@@ -565,7 +559,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     null, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, true);
@@ -582,7 +576,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, null,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, true);
@@ -599,7 +593,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     null, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, true);
@@ -618,9 +612,25 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             doReturn(ConsentMgtServiceTestData.getSampleTestConsentResource())
                     .when(mockedConsentCoreDAO).storeConsentResource(any(), any());
+            doReturn(true).when(mockedConsentCoreDAO).storeConsentAttributes(any(), any());
+            doNothing().when(mockedConsentCoreDAO).updateConsentStatus(any(), anyString(), anyString());
+            doNothing().when(mockedConsentCoreDAO).updateConsentMappingStatus(any(), any(), anyString());
+            doReturn(ConsentMgtServiceTestData.getSampleStoredTestAuthorizationResource())
+                    .when(mockedConsentCoreDAO).storeAuthorizationResource(any(), any());
+            ArrayList<DetailedConsentResource> detailedConsentResources = new ArrayList<>();
+            detailedConsentResources.add(ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResource());
+
+            doReturn(detailedConsentResources).when(mockedConsentCoreDAO)
+                    .searchConsents(any(), any(), any(), any(), any(),
+                            any(), Mockito.anyLong(), Mockito.anyLong(), Mockito.anyInt(), Mockito.anyInt());
+            doReturn(ConsentMgtServiceTestData
+                    .getSampleTestConsentStatusAuditRecord(ConsentMgtServiceTestData.UNMATCHED_CONSENT_ID,
+                            ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
+                    .when(mockedConsentCoreDAO).storeConsentStatusAuditRecord(any(),
+                            any(ConsentStatusAuditRecord.class));
 
             DetailedConsentResource consentResource = consentCoreServiceImpl
-                    .createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+                    .createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                             ConsentMgtServiceTestData.SAMPLE_USER_ID,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                             null, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
@@ -639,7 +649,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, null,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS, true);
@@ -656,7 +666,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     null, true);
@@ -673,7 +683,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+            consentCoreServiceImpl.createExclusiveConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPE, ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS,
                     null, true);
@@ -690,12 +700,12 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource()).when(mockedConsentCoreDAO)
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource()).when(mockedConsentCoreDAO)
                     .getConsentResource(any(), anyString());
 
             // Get consent
             ConsentResource retrievedConsentResource = consentCoreServiceImpl.getConsent(ConsentMgtServiceTestData
-                    .getSampleStoredTestConsentResource().getConsentID(), false);
+                    .getSampleStoredConsentResource().getConsentID(), false);
 
             Assert.assertNotNull(retrievedConsentResource);
         }
@@ -716,7 +726,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             // Get consent
             ConsentResource retrievedConsentResource = consentCoreServiceImpl.getConsent(ConsentMgtServiceTestData
-                    .getSampleStoredTestConsentResource().getConsentID(), true);
+                    .getSampleStoredConsentResource().getConsentID(), true);
 
             Assert.assertNotNull(retrievedConsentResource);
             Assert.assertNotNull(retrievedConsentResource.getConsentAttributes());
@@ -738,7 +748,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             // Get consent
             consentCoreServiceImpl.getConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource().getConsentID(),
+                            .getSampleStoredConsentResource().getConsentID(),
                     false);
         }
     }
@@ -772,7 +782,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             // Get consent
             DetailedConsentResource retrievedConsentResource = consentCoreServiceImpl
-                    .getDetailedConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource().getConsentID());
+                    .getDetailedConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource().getConsentID());
 
             Assert.assertNotNull(retrievedConsentResource);
         }
@@ -808,7 +818,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             // Get consent
             consentCoreServiceImpl.getDetailedConsent(ConsentMgtServiceTestData
-                    .getSampleStoredTestConsentResource().getConsentID());
+                    .getSampleStoredConsentResource().getConsentID());
         }
     }
 
@@ -867,7 +877,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             ConsentResource storedConsentResource = ConsentMgtServiceTestData
-                    .getSampleStoredTestConsentResource(ConsentMgtServiceTestData.AWAITING_UPLOAD_STATUS);
+                    .getSampleStoredConsentResource(ConsentMgtServiceTestData.AWAITING_UPLOAD_STATUS);
 
             doReturn(storedConsentResource).when(mockedConsentCoreDAO)
                     .getConsentResource(any(), anyString());
@@ -892,7 +902,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             ConsentResource storedConsentResource = ConsentMgtServiceTestData
-                    .getSampleStoredTestConsentResource(ConsentMgtServiceTestData.AWAITING_UPLOAD_STATUS);
+                    .getSampleStoredConsentResource(ConsentMgtServiceTestData.AWAITING_UPLOAD_STATUS);
 
             doReturn(storedConsentResource).when(mockedConsentCoreDAO)
                     .getConsentResource(any(), anyString());
@@ -1340,6 +1350,8 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             doNothing().when(mockedConsentCoreDAO).updateAuthorizationStatus(any(), anyString(),
                     anyString());
+            doReturn(ConsentMgtServiceTestData.getSampleStoredTestAuthorizationResource())
+                    .when(mockedConsentCoreDAO).getAuthorizationResource(any(), anyString());
 
             consentCoreServiceImpl.updateAuthorizationStatus(ConsentMgtServiceTestData.CONSENT_ID,
                     ConsentMgtServiceTestData.SAMPLE_CONSUMED_STATUS);
@@ -1464,6 +1476,8 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             doNothing().when(mockedConsentCoreDAO).updateAuthorizationUser(any(), anyString(),
                     anyString());
+            doReturn(ConsentMgtServiceTestData.getSampleStoredTestAuthorizationResource())
+                    .when(mockedConsentCoreDAO).getAuthorizationResource(any(), anyString());
 
             consentCoreServiceImpl.updateAuthorizationUser(ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_ID_1,
                     ConsentMgtServiceTestData.SAMPLE_USER_ID);
@@ -1497,7 +1511,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                             any(ConsentStatusAuditRecord.class));
 
             Assert.assertTrue(consentCoreServiceImpl
-                    .bindUserAccountsToConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+                    .bindUserAccountsToConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                             ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID",
                             ConsentMgtServiceTestData.SAMPLE_ACCOUNT_ID_LIST,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
@@ -1532,7 +1546,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                             any(ConsentStatusAuditRecord.class));
 
             Assert.assertTrue(consentCoreServiceImpl
-                    .bindUserAccountsToConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+                    .bindUserAccountsToConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                             ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID",
                             ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP,
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
@@ -1551,7 +1565,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             consentCoreServiceImpl.bindUserAccountsToConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource(),
+                            .getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID",
                     ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP,
                     ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS, null);
@@ -1568,7 +1582,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
         }
-        ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+        ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
         consentResource.setConsentID(null);
 
         consentCoreServiceImpl.bindUserAccountsToConsent(consentResource,
@@ -1588,7 +1602,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             consentResource.setClientID(null);
 
             consentCoreServiceImpl.bindUserAccountsToConsent(consentResource,
@@ -1609,7 +1623,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             consentResource.setConsentType(null);
 
             consentCoreServiceImpl.bindUserAccountsToConsent(consentResource,
@@ -1631,7 +1645,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             consentCoreServiceImpl.bindUserAccountsToConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource(),
+                            .getSampleStoredConsentResource(),
                     null, "authID", ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP,
                     ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS);
@@ -1649,7 +1663,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             consentCoreServiceImpl.bindUserAccountsToConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource(),
+                            .getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, null,
                     ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP,
                     ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
@@ -1668,7 +1682,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             consentCoreServiceImpl.bindUserAccountsToConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource(),
+                            .getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID",
                     ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP, null,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS);
@@ -1686,7 +1700,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
             Assert.assertTrue(consentCoreServiceImpl
-                    .bindUserAccountsToConsent(ConsentMgtServiceTestData.getSampleStoredTestConsentResource(),
+                    .bindUserAccountsToConsent(ConsentMgtServiceTestData.getSampleStoredConsentResource(),
                             ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID", new HashMap<>(),
                             ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
                             ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS));
@@ -1707,7 +1721,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     .when(mockedConsentCoreDAO).updateAuthorizationUser(any(), anyString(),
                             anyString());
             consentCoreServiceImpl.bindUserAccountsToConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource(),
+                            .getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID",
                     ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP,
                     ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
@@ -1729,7 +1743,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     .when(mockedConsentCoreDAO).storeConsentStatusAuditRecord(any(),
                             any(ConsentStatusAuditRecord.class));
             consentCoreServiceImpl.bindUserAccountsToConsent(ConsentMgtServiceTestData
-                            .getSampleStoredTestConsentResource(),
+                            .getSampleStoredConsentResource(),
                     ConsentMgtServiceTestData.SAMPLE_USER_ID, "authID",
                     ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP,
                     ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
@@ -1866,8 +1880,8 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
             doReturn(storedConsentMappingResource).when(mockedConsentCoreDAO)
                     .storeConsentMappingResource(any(), any());
 
-            ArrayList<ConsentMappingResource> storedConsentMappingResources =
-                    consentCoreServiceImpl.createConsentAccountMappings(storedAuthorizationResource.getAuthorizationID(),
+            ArrayList<ConsentMappingResource> storedConsentMappingResources = consentCoreServiceImpl
+                    .createConsentAccountMappings(storedAuthorizationResource.getAuthorizationID(),
                             ConsentMgtServiceTestData.SAMPLE_ACCOUNT_IDS_AND_PERMISSIONS_MAP);
 
             Assert.assertNotNull(storedConsentMappingResources);
@@ -2667,7 +2681,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             doReturn(ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResource())
                     .when(mockedConsentCoreDAO).getDetailedConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData
@@ -2705,7 +2719,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResource();
             detailedConsentResource.setConsentMappingResources(mappingResources);
 
-            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             doReturn(detailedConsentResource)
                     .when(mockedConsentCoreDAO).getDetailedConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData
@@ -2733,7 +2747,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             doReturn(ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResource())
                     .when(mockedConsentCoreDAO).getDetailedConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData
@@ -2761,7 +2775,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
 
-            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredTestConsentResource();
+            ConsentResource consentResource = ConsentMgtServiceTestData.getSampleStoredConsentResource();
             doReturn(ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResourceWithMultipleAccountIDs())
                     .when(mockedConsentCoreDAO).getDetailedConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData
@@ -4212,7 +4226,8 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                             Mockito.anyInt());
 
             consentCoreServiceImpl.searchDetailedConsents(ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST,
-                    ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST, ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPES_LIST,
+                    ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST,
+                    ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPES_LIST,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_STATUSES_LIST,
                     ConsentMgtServiceTestData.SAMPLE_USER_IDS_LIST,
                     12345L, 23456L, null, null);
@@ -4234,7 +4249,8 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                             any(), any(), any(), any(), any(), any());
 
             consentCoreServiceImpl.searchDetailedConsents(ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST,
-                    ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST, ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPES_LIST,
+                    ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST,
+                    ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPES_LIST,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_STATUSES_LIST,
                     ConsentMgtServiceTestData.SAMPLE_USER_IDS_LIST,
                     12345L, 23456L, null, null);
@@ -4257,7 +4273,8 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                             Mockito.anyInt());
 
             consentCoreServiceImpl.searchDetailedConsents(ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST,
-                    ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST, ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPES_LIST,
+                    ConsentMgtServiceTestData.SAMPLE_CLIENT_IDS_LIST,
+                    ConsentMgtServiceTestData.SAMPLE_CONSENT_TYPES_LIST,
                     ConsentMgtServiceTestData.SAMPLE_CONSENT_STATUSES_LIST,
                     ConsentMgtServiceTestData.SAMPLE_USER_IDS_LIST,
                     12345L, 23456L, 1, 0);
@@ -4278,7 +4295,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     anyString(), anyString());
             doNothing().when(mockedConsentCoreDAO).updateConsentValidityTime(any(),
                     anyString(), Mockito.anyLong());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource())
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource())
                     .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentStatusAuditRecord(sampleID,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
@@ -4323,7 +4340,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             doNothing().when(mockedConsentCoreDAO).updateConsentValidityTime(any(),
                     anyString(), Mockito.anyLong());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource())
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource())
                     .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentStatusAuditRecord(sampleID,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
@@ -4351,7 +4368,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
             doNothing().when(mockedConsentCoreDAO).updateConsentReceipt(any(),
                     anyString(), anyString());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource())
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource())
                     .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentStatusAuditRecord(sampleID,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
@@ -4438,7 +4455,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     anyString(), anyString());
             doNothing().when(mockedConsentCoreDAO).updateConsentValidityTime(any(),
                     anyString(), Mockito.anyLong());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource())
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource())
                     .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
             doThrow(ConsentDataInsertionException.class)
                     .when(mockedConsentCoreDAO).storeConsentStatusAuditRecord(any(),
@@ -4844,7 +4861,7 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
                     anyString(), anyString());
             doNothing().when(mockedConsentCoreDAO).updateConsentValidityTime(any(),
                     anyString(), Mockito.anyLong());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource())
+            doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource())
                     .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
             doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentStatusAuditRecord(sampleID,
                     ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
@@ -4877,37 +4894,29 @@ public class ConsentMgtCoreServiceTests extends PowerMockTestCase {
 
     private void setInitialDataForAmendDetailedConsentSuccessFlow() throws Exception {
 
-        try (MockedStatic<DatabaseUtil> databaseUtilMock = mockStatic(DatabaseUtil.class);
-             MockedStatic<ConsentStoreInitializer> consentStoreMock = mockStatic(ConsentStoreInitializer.class);
-             MockedStatic<ConsentManagementDataHolder> dataHolderMock = mockStatic(ConsentManagementDataHolder.class);
-             MockedStatic<TokenRevocationUtil> tokenRevocationUtilMock = mockStatic(TokenRevocationUtil.class)) {
+        doNothing().when(mockedConsentCoreDAO).updateConsentReceipt(any(),
+                anyString(), anyString());
+        doNothing().when(mockedConsentCoreDAO).updateConsentValidityTime(any(),
+                anyString(), Mockito.anyLong());
+        doReturn(ConsentMgtServiceTestData.getSampleStoredConsentResource())
+                .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
+        doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentStatusAuditRecord(sampleID,
+                ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
+                .when(mockedConsentCoreDAO).storeConsentStatusAuditRecord(any(),
+                        any(ConsentStatusAuditRecord.class));
 
-            mockStaticClasses(databaseUtilMock, consentStoreMock, dataHolderMock, tokenRevocationUtilMock);
+        doReturn(ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResource())
+                .when(mockedConsentCoreDAO).getDetailedConsentResource(any(), anyString());
+        doReturn(ConsentMgtServiceTestData
+                .getSampleTestConsentMappingResource(ConsentMgtServiceTestData.UNMATCHED_AUTHORIZATION_ID))
+                .when(mockedConsentCoreDAO).storeConsentMappingResource(any(),
+                        any(ConsentMappingResource.class));
+        doNothing().when(mockedConsentCoreDAO).updateConsentMappingStatus(any(),
+                any(), anyString());
 
-            doNothing().when(mockedConsentCoreDAO).updateConsentReceipt(any(),
-                    anyString(), anyString());
-            doNothing().when(mockedConsentCoreDAO).updateConsentValidityTime(any(),
-                    anyString(), Mockito.anyLong());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentResource())
-                    .when(mockedConsentCoreDAO).getConsentResource(any(), anyString());
-            doReturn(ConsentMgtServiceTestData.getSampleStoredTestConsentStatusAuditRecord(sampleID,
-                    ConsentMgtServiceTestData.SAMPLE_CURRENT_STATUS))
-                    .when(mockedConsentCoreDAO).storeConsentStatusAuditRecord(any(),
-                            any(ConsentStatusAuditRecord.class));
-
-            doReturn(ConsentMgtServiceTestData.getSampleDetailedStoredTestConsentResource())
-                    .when(mockedConsentCoreDAO).getDetailedConsentResource(any(), anyString());
-            doReturn(ConsentMgtServiceTestData
-                    .getSampleTestConsentMappingResource(ConsentMgtServiceTestData.UNMATCHED_AUTHORIZATION_ID))
-                    .when(mockedConsentCoreDAO).storeConsentMappingResource(any(),
-                            any(ConsentMappingResource.class));
-            doNothing().when(mockedConsentCoreDAO).updateConsentMappingStatus(any(),
-                    any(), anyString());
-
-            doReturn(true).when(mockedConsentCoreDAO).deleteConsentAttributes(any(),
-                    anyString(), any());
-            doReturn(true).when(mockedConsentCoreDAO).storeConsentAttributes(any(),
-                    any(ConsentAttributes.class));
-        }
+        doReturn(true).when(mockedConsentCoreDAO).deleteConsentAttributes(any(),
+                anyString(), any());
+        doReturn(true).when(mockedConsentCoreDAO).storeConsentAttributes(any(),
+                any(ConsentAttributes.class));
     }
 }

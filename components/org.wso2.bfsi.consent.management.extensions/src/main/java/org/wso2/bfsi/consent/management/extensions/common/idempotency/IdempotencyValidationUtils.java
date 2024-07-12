@@ -109,8 +109,8 @@ public class IdempotencyValidationUtils {
             OffsetDateTime createdDate = OffsetDateTime.parse(toISO8601DateTime(createdTime));
             OffsetDateTime currDate = OffsetDateTime.now(createdDate.getOffset());
 
-            long diffInMinutes = Duration.between(createdDate, currDate).toMinutes();
-            return diffInMinutes <= Long.parseLong(allowedTimeDuration);
+            long diffInHours = Duration.between(createdDate, currDate).toHours();
+            return diffInHours <= Long.parseLong(allowedTimeDuration);
         } else {
             log.error("Idempotency allowed duration is not configured in the system. Hence returning false");
             return false;

@@ -74,13 +74,14 @@ public class IdempotencyValidator {
             log.error("Client ID is empty. Hence cannot proceed with idempotency validation");
             return new IdempotencyValidationResult(false, false);
         }
-        String idempotencyKeyValue = consentManageData.getHeaders().get(getIdempotencyHeaderName())
-                .replaceAll("[\r\n]", "");
+        String idempotencyKeyValue = consentManageData.getHeaders().get(getIdempotencyHeaderName()) == null ?  null :
+                consentManageData.getHeaders().get(getIdempotencyHeaderName()).replaceAll("[\r\n]", "");
         // If idempotency key value is empty then cannot proceed with idempotency validation
         if (StringUtils.isBlank(idempotencyKeyValue)) {
             log.error("Idempotency Key Value is empty. Hence cannot proceed with idempotency validation");
             return new IdempotencyValidationResult(false, false);
         }
+
         try {
             String idempotencyKeyName = getIdempotencyAttributeName(consentManageData.getRequestPath());
             if (!IdempotencyConstants.EMPTY_OBJECT.equals(consentManageData.getPayload().toString())) {
