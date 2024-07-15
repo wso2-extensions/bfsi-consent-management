@@ -16,31 +16,48 @@
  ~ under the License.
  --%>
 
-<%@ page import="net.minidev.json.JSONArray" %>
-<%@ page import="net.minidev.json.JSONObject" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
 <%@ page import="org.owasp.encoder.Encode" %>
-<%@ page import="org.apache.commons.lang.StringUtils" %>
 
 <html>
-<head></head>
+<head>
+    <jsp:include page="includes/head.jsp"/>
+    <script src="libs/jquery_3.5.0/jquery-3.5.0.js"></script>
+    <script src="js/auth-functions.js"></script>
+</head>
+
 <body>
 
-    <p>You will be redirected back to the <%=Encode.forHtmlContent(request.getParameter("app"))%>. If the
-        redirection fails, please click the submit button.....</p>
+    <div class="page-content-wrapper" style="position: relative; min-height: 100vh;">
+        <div class="container-fluid " style="padding-bottom: 40px">
+            <div class="container">
+                <div class="login-form-wrapper">
+                    <div class="row">
+                        <img src="images/logo-dark.svg"
+                             class="img-responsive brand-spacer login-logo" alt="WSO2 Open Banking"/>
+                    </div>
 
-    <form method="post" id="oauth2_authz" name="oauth2_authz" action="../../oauth2/authorize">
-        <input type="hidden" id="hasApprovedAlways" name="hasApprovedAlways" value="${hasApprovedAlways}"/>
-        <input type="hidden" name="sessionDataKeyConsent" value="${sessionDataKeyConsent}"/>
-        <input type="hidden" name="consent" id="consent" value="${consent}"/>
-        <input type="hidden" name="user" id="user" value="${user}"/>
-        <button type="submit">SUBMIT</button>
-    </form>
+                    <div class="row data-container">
 
-    <script type="text/javascript">
-        document.forms[0].submit();
-    </script>
+                        <p>You will be redirected back to the <%=Encode.forHtmlContent(request.getParameter("app"))%>. If the
+                            redirection fails, please click the submit button.....</p>
 
-</body>
+                        <form method="post" id="oauth2_authz" name="oauth2_authz" action="../../oauth2/authorize">
+                            <input type="hidden" id="hasApprovedAlways" name="hasApprovedAlways" value="${hasApprovedAlways}"/>
+                            <input type="hidden" name="sessionDataKeyConsent" value="${sessionDataKeyConsent}"/>
+                            <input type="hidden" name="consent" id="consent" value="${consent}"/>
+                            <input type="hidden" name="user" id="user" value="${user}"/>
+                            <button type="submit">SUBMIT</button>
+                        </form>
+
+                        <script type="text/javascript">
+                            document.forms[0].submit();
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="libs/bootstrap_3.4.1/js/bootstrap.min.js"></script>
+        <jsp:include page="includes/footer.jsp"/>
+    </body>
 </html>

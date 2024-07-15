@@ -33,12 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.bfsi.authentication.endpoint.util.AuthenticationUtils;
 import org.wso2.bfsi.authentication.endpoint.util.Constants;
-import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.consent.management.extensions.authservlet.BFSIAuthServletInterface;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -69,7 +67,7 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
     // Suppressed warning count - 1
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        setAuthExtension();
+        bfsiAuthServletTK = AuthenticationUtils.getAuthExtension();
 
         HttpSession session = request.getSession();
         Map<String, String> metadata = new HashMap<>();
@@ -132,7 +130,7 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
             HttpPatch dataRequest = new HttpPatch(persistenceUrl);
             dataRequest.addHeader(Constants.ACCEPT, Constants.JSON);
             dataRequest.addHeader(Constants.AUTHORIZATION, Constants.BASIC +
-                    BFSIConsentServlet.getConsentApiCredentials());
+                    AuthenticationUtils.getConsentApiCredentials());
             StringEntity body = new StringEntity(consentData.toString(), ContentType.APPLICATION_JSON);
             dataRequest.setEntity(body);
             HttpResponse dataResponse = client.execute(dataRequest);
@@ -157,17 +155,4 @@ public class BFSIConsentConfirmServlet extends HttpServlet {
             return null;
         }
     }
-    /**
-     * Retrieve the config value for Auth servlet Extension.
-     */
-     void setAuthExtension() {
-         try {
-             bfsiAuthServletTK = (BFSIAuthServletInterface) Class.forName(ConsentManagementConfigParser.getInstance()
-                     .getAuthServletExtension()).getDeclaredConstructor().newInstance();
-         } catch (InstantiationException | IllegalAccessException |
-                 InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-             log.error("Webapp extension not found", e);
-         }
-    }
-
 }

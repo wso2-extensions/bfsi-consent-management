@@ -23,6 +23,5 @@
         </p>
     </div>
 </footer>
-</div>
 <script src="libs/jquery_3.5.0/jquery-3.5.0.js"></script>
 <script src="libs/bootstrap_3.4.1/js/bootstrap.min.js"></script>

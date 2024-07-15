@@ -73,22 +73,24 @@ public class ConsentExtensionsDataHolder {
 
         this.configurationService = configurationService;
 
-        ConsentStepsBuilder consentStepsBuilder = new ConsentStepsBuilder();
-        this.setConsentStepsBuilder(consentStepsBuilder);
-        ConsentExtensionExporter.setConsentStepsBuilder(consentStepsBuilder);
+        if (configurationService != null) {
+            ConsentStepsBuilder consentStepsBuilder = new ConsentStepsBuilder();
+            this.setConsentStepsBuilder(consentStepsBuilder);
+            ConsentExtensionExporter.setConsentStepsBuilder(consentStepsBuilder);
 
-        ConsentManageBuilder consentManageBuilder = new ConsentManageBuilder();
-        this.setConsentManageBuilder(consentManageBuilder);
-        ConsentExtensionExporter.setConsentManageBuilder(consentManageBuilder);
+            ConsentManageBuilder consentManageBuilder = new ConsentManageBuilder();
+            this.setConsentManageBuilder(consentManageBuilder);
+            ConsentExtensionExporter.setConsentManageBuilder(consentManageBuilder);
 
-        ConsentValidateBuilder consentValidateBuilder = new ConsentValidateBuilder();
-        this.setConsentValidateBuilder(consentValidateBuilder);
-        ConsentExtensionExporter.setConsentValidateBuilder(consentValidateBuilder);
+            ConsentValidateBuilder consentValidateBuilder = new ConsentValidateBuilder();
+            this.setConsentValidateBuilder(consentValidateBuilder);
+            ConsentExtensionExporter.setConsentValidateBuilder(consentValidateBuilder);
 
-        ConsentAdminBuilder consentAdminBuilder = new ConsentAdminBuilder();
-        consentAdminBuilder.build();
-        this.setConsentAdminBuilder(consentAdminBuilder);
-        ConsentExtensionExporter.setConsentAdminBuilder(consentAdminBuilder);
+            ConsentAdminBuilder consentAdminBuilder = new ConsentAdminBuilder();
+            consentAdminBuilder.build();
+            this.setConsentAdminBuilder(consentAdminBuilder);
+            ConsentExtensionExporter.setConsentAdminBuilder(consentAdminBuilder);
+        }
     }
 
     public ConsentManageBuilder getConsentManageBuilder() {

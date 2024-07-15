@@ -32,21 +32,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.bfsi.authentication.endpoint.util.AuthenticationUtils;
 import org.wso2.bfsi.authentication.endpoint.util.Constants;
-import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
-import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.consent.management.extensions.authservlet.BFSIAuthServletInterface;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.servlet.RequestDispatcher;
@@ -67,8 +60,6 @@ public class BFSIConsentServlet extends HttpServlet {
     static BFSIAuthServletInterface bfsiAuthServletTK;
     private static final long serialVersionUID = 6106269076132678046L;
     private static Logger log = LoggerFactory.getLogger(BFSIConsentServlet.class);
-    private static final String BUNDLE = "org.wso2.bfsi.authentication.endpoint.i18n";
-    private static final ConsentManagementConfigParser parser = ConsentManagementConfigParser.getInstance();
 
     @SuppressFBWarnings({"REQUESTDISPATCHER_FILE_DISCLOSURE", "TRUST_BOUNDARY_VIOLATION"})
     // Suppressed content - obAuthServlet.getJSPPath()
@@ -81,7 +72,7 @@ public class BFSIConsentServlet extends HttpServlet {
     public void doGet(HttpServletRequest originalRequest, HttpServletResponse response)
             throws IOException, ServletException {
         HttpServletRequest request = originalRequest;
-        setAuthExtension();
+        bfsiAuthServletTK = AuthenticationUtils.getAuthExtension();
 
         // get consent data
         String sessionDataKey = request.getParameter(Constants.SESSION_DATA_KEY_CONSENT);
@@ -107,10 +98,13 @@ public class BFSIConsentServlet extends HttpServlet {
                 }
             }
         } catch (IOException e) {
+            log.error("Exception occurred while retrieving consent data", e);
             dataSet.put(Constants.IS_ERROR, "Exception occurred while retrieving consent data");
         } catch (URISyntaxException e) {
+            log.error("Error while constructing URI for redirection", e);
             dataSet.put(Constants.IS_ERROR, "Error while constructing URI for redirection");
         } catch (JSONException e) {
+            log.error("Error while parsing the response", e);
             dataSet.put(Constants.IS_ERROR, "Error while parsing the response");
         }
         if (dataSet.has(Constants.IS_ERROR)) {
@@ -128,7 +122,7 @@ public class BFSIConsentServlet extends HttpServlet {
                 Boolean.parseBoolean(getServletContext().getInitParameter(Constants.DISPLAY_SCOPES)));
 
         // set strings to request
-        ResourceBundle resourceBundle = getResourceBundle(request.getLocale());
+        ResourceBundle resourceBundle = AuthenticationUtils.getResourceBundle(request.getLocale());
 
         originalRequest.setAttribute(Constants.PRIVACY_DESCRIPTION, i18n(resourceBundle,
                 Constants.PRIVACY_DESCRIPTION_KEY));
@@ -180,7 +174,8 @@ public class BFSIConsentServlet extends HttpServlet {
 
         CloseableHttpClient client = HttpClientBuilder.create().build();
         HttpGet dataRequest = new HttpGet(retrieveUrl);
-        dataRequest.addHeader(Constants.AUTHORIZATION, Constants.BASIC + getConsentApiCredentials());
+        dataRequest.addHeader(Constants.AUTHORIZATION, Constants.BASIC +
+                AuthenticationUtils.getConsentApiCredentials());
 
         return client.execute(dataRequest);
 
@@ -209,52 +204,4 @@ public class BFSIConsentServlet extends HttpServlet {
             return consentResponse;
         }
     }
-
-    /**
-     * Retrieve the config value for Auth servlet Extension.
-     */
-    void setAuthExtension() {
-
-        try {
-            bfsiAuthServletTK = (BFSIAuthServletInterface) Class.forName(parser.getAuthServletExtension())
-                    .getDeclaredConstructor().newInstance();
-        } catch (InstantiationException | IllegalAccessException |
-                InvocationTargetException | NoSuchMethodException | ClassNotFoundException e) {
-            log.error("Webapp extension not found", e);
-        }
-    }
-
-    @Generated(message = "Encapsulated method for unit test")
-    ResourceBundle getResourceBundle(Locale locale) {
-
-        return ResourceBundle.getBundle(BUNDLE, locale);
-    }
-
-    /**
-     * Retrieve admin credentials in Base64 format from webapp properties or OB configs.
-     */
-    static String getConsentApiCredentials () {
-        String username, password;
-        try {
-            InputStream configurations = BFSIConsentConfirmServlet.class.getClassLoader()
-                    .getResourceAsStream(Constants.CONFIG_FILE_NAME);
-            Properties configurationProperties = new Properties();
-            configurationProperties.load(configurations);
-            boolean isConfiguredInWebapp = Boolean.parseBoolean(
-                    configurationProperties.getProperty(Constants.LOCATION_OF_CREDENTIALS));
-            if (!isConfiguredInWebapp) {
-                username = parser.getConsentAPIUsername();
-                password = parser.getConsentAPIPassword();
-            } else {
-                username = configurationProperties.getProperty(Constants.USERNAME_IN_WEBAPP_CONFIGS);
-                password = configurationProperties.getProperty(Constants.PASSWORD_IN_WEBAPP_CONFIGS);
-            }
-        } catch (IOException | NullPointerException e) {
-            log.error("Error occurred while reading the webapp properties file. Therefore using OB configurations.");
-            username = parser.getConsentAPIUsername();
-            password = parser.getConsentAPIPassword();
-        }
-        return Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));
-    }
-
 }
