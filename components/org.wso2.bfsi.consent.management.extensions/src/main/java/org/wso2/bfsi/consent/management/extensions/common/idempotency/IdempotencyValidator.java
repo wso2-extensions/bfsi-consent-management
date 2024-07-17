@@ -216,7 +216,7 @@ public class IdempotencyValidator {
      * @param resourcePath     Resource Path
      * @return idempotency Attribute Name.
      */
-    public String getIdempotencyAttributeName(String resourcePath) {
+    protected String getIdempotencyAttributeName(String resourcePath) {
         return IdempotencyConstants.IDEMPOTENCY_KEY_NAME;
     }
 
@@ -225,7 +225,7 @@ public class IdempotencyValidator {
      *
      * @return idempotency Header Name.
      */
-    public String getIdempotencyHeaderName() {
+    protected String getIdempotencyHeaderName() {
         return IdempotencyConstants.X_IDEMPOTENCY_KEY;
     }
 
@@ -236,7 +236,7 @@ public class IdempotencyValidator {
      * @param consentId             ConsentId
      * @return Created Time.
      */
-    public long getCreatedTimeOfPreviousRequest(String resourcePath, String consentId) {
+    protected long getCreatedTimeOfPreviousRequest(String resourcePath, String consentId) {
         DetailedConsentResource consentRequest = null;
         try {
             consentRequest = consentCoreService.getDetailedConsent(consentId);
@@ -257,7 +257,7 @@ public class IdempotencyValidator {
      * @param consentId             ConsentId
      * @return Map containing the payload.
      */
-    public String getPayloadOfPreviousRequest(String resourcePath, String consentId) {
+    protected String getPayloadOfPreviousRequest(String resourcePath, String consentId) {
         DetailedConsentResource consentRequest = null;
         try {
             consentRequest = consentCoreService.getDetailedConsent(consentId);
@@ -278,7 +278,7 @@ public class IdempotencyValidator {
      * @param consentReceipt      Payload received from database
      * @return   Whether payloads are equal
      */
-    public boolean isPayloadSimilar(ConsentManageData consentManageData, String consentReceipt) {
+    protected boolean isPayloadSimilar(ConsentManageData consentManageData, String consentReceipt) {
 
         if (consentManageData.getPayload() == null || consentReceipt == null) {
             return false;
