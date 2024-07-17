@@ -25,7 +25,6 @@
 <html>
     <head>
         <jsp:include page="includes/head.jsp"/>
-        <script src="libs/jquery_3.5.0/jquery-3.5.0.js"></script>
         <script src="js/auth-functions.js"></script>
     </head>
 
@@ -219,7 +218,6 @@
                 </div>
             </div>
 
-            <script src="libs/bootstrap_3.4.1/js/bootstrap.min.js"></script>
             <jsp:include page="includes/footer.jsp"/>
         </div>
     </body>

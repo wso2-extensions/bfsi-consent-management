@@ -202,14 +202,9 @@ padding-left: inherit; margin-right: 15em; padding-right: inherit;">
         </div>
     </div>
     <!-- /content -->
-    
-    
-    
+
     <!-- footer -->
     <jsp:include page="includes/footer.jsp"/>
-    
-    <script src="libs/jquery_3.5.0/jquery-3.5.0.js"></script>
-    <script src="libs/bootstrap_3.4.1/js/bootstrap.min.js"></script>
     
     <script type="text/javascript" src="js/u2f-api.js"></script>
     <script type="text/javascript">
