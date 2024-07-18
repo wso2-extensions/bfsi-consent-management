@@ -205,8 +205,7 @@ padding-left: inherit; margin-right: 15em; padding-right: inherit;">
 
     <!-- footer -->
     <jsp:include page="includes/footer.jsp"/>
-    
-    <script type="text/javascript" src="js/u2f-api.js"></script>
+
     <script type="text/javascript">
         var ToC = "<nav role='navigation' class='table-of-contents'>" + "<h4 style='color: black'>On this page:</h4>" + "<ul>";
         var newLine, el, title, link;
