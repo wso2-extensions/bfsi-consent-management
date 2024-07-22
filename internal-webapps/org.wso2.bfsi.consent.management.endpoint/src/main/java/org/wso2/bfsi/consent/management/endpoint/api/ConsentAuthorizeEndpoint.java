@@ -45,6 +45,8 @@ import org.wso2.bfsi.consent.management.service.impl.ConsentCoreServiceImpl;
 import org.wso2.carbon.identity.oauth.cache.SessionDataCacheEntry;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
 import org.wso2.carbon.identity.oauth2.model.OAuth2Parameters;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
+import org.wso2.carbon.user.api.UserStoreException;
 
 import java.io.Serializable;
 import java.net.URI;
@@ -122,7 +124,7 @@ public class ConsentAuthorizeEndpoint {
     @Produces({"application/json; charset=utf-8"})
     public Response retrieve(@Context HttpServletRequest request, @Context HttpServletResponse response,
                              @PathParam("session-data-key") String sessionDataKey) throws ConsentException,
-            ConsentManagementException {
+            ConsentManagementException, UserStoreException {
 
         String loggedInUser;
         String app;
@@ -148,7 +150,8 @@ public class ConsentAuthorizeEndpoint {
                 ConsentUtils.getSensitiveDataWithConsentKey(sessionDataKey);
 
         if ("false".equals(sensitiveDataMap.get(ConsentExtensionConstants.IS_ERROR))) {
-            loggedInUser = (String) sensitiveDataMap.get("loggedInUser");
+            String loggedInUserId = (String) sensitiveDataMap.get("loggedInUser");
+            loggedInUser = OAuth2Util.resolveUsernameFromUserId("carbon.super", loggedInUserId);
             app = (String) sensitiveDataMap.get("application");
             spQueryParams = (String) sensitiveDataMap.get("spQueryParams");
             scopeString = (String) sensitiveDataMap.get("scope");
