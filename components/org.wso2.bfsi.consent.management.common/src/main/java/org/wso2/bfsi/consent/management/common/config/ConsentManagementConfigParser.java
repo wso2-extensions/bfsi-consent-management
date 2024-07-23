@@ -156,7 +156,7 @@ public class ConsentManagementConfigParser {
      */
     private boolean elementHasText(OMElement element) {
 
-        return StringUtils.isNotBlank(element.getText());
+       return StringUtils.isNotBlank(element.getText());
     }
 
     /**
@@ -234,7 +234,7 @@ public class ConsentManagementConfigParser {
                             if (StringUtils.isEmpty(obExecutorClass)) {
                                 //Throwing exceptions since we cannot proceed without invalid executor names
                                 throw new ConsentManagementRuntimeException("Executor class is not defined " +
-                                        "correctly in open-banking.xml");
+                                        "correctly in bfsi-consent-management.xml");
                             }
                             int priority = Integer.MAX_VALUE;
                             if (!StringUtils.isEmpty(obExecutorPriority)) {
@@ -337,5 +337,23 @@ public class ConsentManagementConfigParser {
 
         Optional<String> source = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_API_PASSWORD);
         return source.map(String::trim).orElse("admin");
+    }
+
+    /**
+     * Method to get the value Idempotency enable configuration.
+     * @return  Whether Idempotency is enabled or not
+     */
+    public boolean isIdempotencyValidationEnabled() {
+        Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.IDEMPOTENCY_IS_ENABLED);
+        return config.map(Boolean::parseBoolean).orElse(false);
+    }
+
+    /**
+     * Method to get the value Idempotency allowed time configuration.
+     * @return  Idempotency allowed time
+     */
+    public String getIdempotencyAllowedTime() {
+        Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.IDEMPOTENCY_ALLOWED_TIME);
+        return config.map(String::trim).orElse("1440");
     }
 }
