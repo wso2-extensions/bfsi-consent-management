@@ -88,37 +88,52 @@
                                 </copy>
                                 <copy todir="${project.basedir}/carbon-home/repository/components/dropins" overwrite="true">
                                     <fileset
-                                            dir="../../components/org.wso2.bfsi.consent.management.dao/target">
+                                            dir="../components/org.wso2.bfsi.consent.management.dao/target">
                                         <filename
                                                 regex="org.wso2.bfsi.consent.management.dao-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${project.basedir}/carbon-home/repository/components/dropins" overwrite="true">
                                     <fileset
-                                            dir="../../components/org.wso2.bfsi.consent.management.service/target">
+                                            dir="../components/org.wso2.bfsi.consent.management.service/target">
                                         <filename
                                                 regex="org.wso2.bfsi.consent.management.service-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${project.basedir}/carbon-home/repository/components/dropins" overwrite="true">
                                     <fileset
-                                            dir="../../components/org.wso2.bfsi.consent.management.extensions/target">
+                                            dir="../components/org.wso2.bfsi.consent.management.extensions/target">
                                         <filename
                                                 regex="org.wso2.bfsi.consent.management.extensions-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
                                 <copy todir="${project.basedir}/carbon-home/repository/components/dropins" overwrite="true">
                                     <fileset
-                                            dir="../../components/org.wso2.bfsi.identity.extensions/target">
+                                            dir="../components/org.wso2.bfsi.identity.extensions/target">
                                         <filename
                                                 regex="org.wso2.bfsi.identity.extensions-(\d.*?)\.jar$"/>
                                     </fileset>
                                 </copy>
                                 <!-- Copying wars -->
-                                <unzip src="../internal-webapps/org.wso2.bfsi.consent.management.endpoint/target/api#bfsi#consent.war"
-                                       dest="${project.basedir}/carbon-home/repository/deployment/server/webapps/api#bfsi#consent/"/>
-                                <unzip src="../internal-webapps/org.wso2.bfsi.authentication.endpoint/target/bfsi#authenticationendpoint.war"
-                                       dest="${project.basedir}/carbon-home/repository/deployment/server/webapps/bfsi#authenticationendpoint/"/>
+                                <copy todir="${project.basedir}/carbon-home/repository/deployment" overwrite="true">
+                                    <fileset
+                                            dir="../internal-webapps/org.wso2.bfsi.consent.management.endpoint/target">
+                                        <filename
+                                                regex="api#bfsi#consent.war$"/>
+                                    </fileset>
+                                </copy>
+                                <copy todir="${project.basedir}/carbon-home/repository/deployment" overwrite="true">
+                                    <fileset
+                                            dir="../internal-webapps/org.wso2.bfsi.authentication.endpoint/target">
+                                        <filename
+                                                regex="bfsi#authenticationendpoint.war$"/>
+                                    </fileset>
+                                </copy>
+
+<!--                                <unzip src="../internal-webapps/org.wso2.bfsi.consent.management.endpoint/target/api#bfsi#consent.war"-->
+<!--                                       dest="${project.basedir}/carbon-home/repository/deployment/server/webapps/api#bfsi#consent/"/>-->
+<!--                                <unzip src="../internal-webapps/org.wso2.bfsi.authentication.endpoint/target/bfsi#authenticationendpoint.war"-->
+<!--                                       dest="${project.basedir}/carbon-home/repository/deployment/server/webapps/bfsi#authenticationendpoint/"/>-->
                             </target>
                         </configuration>
                         <goals>

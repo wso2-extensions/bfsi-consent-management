@@ -63,7 +63,7 @@
                 <module>components/org.wso2.bfsi.consent.management.extensions</module>
                 <module>components/org.wso2.bfsi.identity.extensions</module>
                 <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
-                <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
+                <module>internal-webapps/org.wso2.bfsi.authentication.endpoint</module>
             </modules>
             <build>
                 <plugins>
@@ -100,7 +100,7 @@
                 <module>components/org.wso2.bfsi.consent.management.extensions</module>
                 <module>components/org.wso2.bfsi.identity.extensions</module>
                 <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
-                <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
+                <module>internal-webapps/org.wso2.bfsi.authentication.endpoint</module>
                 <module>distribution</module>
             </modules>
         </profile>

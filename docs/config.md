@@ -20,7 +20,7 @@ BFSI Consent Management Connector provides the capability to manage the above ph
 
 ### Deploying Artifacts
 
-Copy the artifacts downloaded to the folders specified below. 
+Download the connector zip file and extract it. Copy the artifacts downloaded to the folders specified below. 
 
 1. Copy the following artifacts to <IS_HOME>/repository/components/dropins folder.
     - org.wso2.bfsi.consent.management.common-1.0.0.jar
