@@ -308,6 +308,16 @@
                 <version>${spring-web.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxrs</artifactId>
                 <version>${org.apache.cxf.version}</version>
@@ -333,9 +343,70 @@
                 <version>${jackson.databinding.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.orbit.com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${org.wso2.orbit.nimbus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jstl</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.verison}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>javax.servlet</artifactId>
+                <version>${equinox.javax.servlet.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>${encoder.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${orbit.version.commons.httpclient}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${orbit.httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-impl</artifactId>
+                <version>${taglibs-standard-impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-catalina</artifactId>
+                <version>${apache.tomcat-catalina.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring-web-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-web.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
@@ -481,14 +552,24 @@
         <org.apache.cxf.version>3.3.7</org.apache.cxf.version>
         <jackson.databinding.version>2.16.1</jackson.databinding.version>
         <spring-web.version>5.1.2.RELEASE</spring-web.version>
+        <spring-web-test.version>2.5</spring-web-test.version>
+        <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jstl.version>1.2</jstl.version>
+        <org.slf4j.verison>1.7.21</org.slf4j.verison>
+        <equinox.javax.servlet.version>3.0.0.v201112011016</equinox.javax.servlet.version>
+        <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
+        <orbit.version.commons.httpclient>4.5.13.wso2v1</orbit.version.commons.httpclient>
+        <orbit.httpcore.version>4.3.3.wso2v1</orbit.httpcore.version>
+        <commons.io.version>2.7</commons.io.version>
+        <taglibs-standard-impl.version>1.2.5</taglibs-standard-impl.version>
+        <apache.tomcat-catalina.version>9.0.11</apache.tomcat-catalina.version>
         <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <javax.validation.api.version>3.0.0</javax.validation.api.version>
         <hibernate-validator>7.0.1.Final</hibernate-validator>
         <commons.bean.utils.version>1.9.3</commons.bean.utils.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
         <hibernate-validator>6.0.20.Final</hibernate-validator>
-        <commons.bean.utils.version>1.9.3</commons.bean.utils.version>
-        <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <oltu.version>1.0.0.wso2v3</oltu.version>
         <jackson.databind.version>2.16.1</jackson.databind.version>
         <!-- Base product dependency versions -->

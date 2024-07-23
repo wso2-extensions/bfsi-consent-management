@@ -108,13 +108,20 @@ public class ConsentValidationEndpoint {
     public Response validate(@Context HttpServletRequest request, @Context HttpServletResponse response) {
 
         String payload = ConsentUtils.getStringPayload(request);
-        JSONObject requestData;
+        JSONObject requestData = new JSONObject();
 
         if (ConsentUtils.getConsentJWTPayloadValidatorConfigEnabled()) {
             try {
                 ConsentExtensionUtils.validateJWTSignatureWithPublicKey(payload, requestSignatureAlias);
-                requestData = new JSONObject(Objects
-                        .requireNonNull(CommonUtils.decodeRequestJWT(payload, ConsentExtensionConstants.BODY)).toJSONString());
+                String decodedRequest = CommonUtils.decodeRequestJWT(payload, ConsentExtensionConstants.BODY) != null ?
+                        CommonUtils.decodeRequestJWT(payload, ConsentExtensionConstants.BODY).toJSONString() : null;
+                if (Objects.nonNull(decodedRequest)) {
+                    requestData = new JSONObject(decodedRequest);
+                } else {
+                    log.error("Error while decoding the JWT request payload");
+                    throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR,
+                            "Error while decoding the JWT request payload");
+                }
             } catch (ConsentManagementException e) {
                 log.error("Error while validating JWT signature", e);
                 throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Error while validating JWT " +
