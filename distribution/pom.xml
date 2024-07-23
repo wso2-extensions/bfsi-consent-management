@@ -129,11 +129,6 @@
                                                 regex="bfsi#authenticationendpoint.war$"/>
                                     </fileset>
                                 </copy>
-
-<!--                                <unzip src="../internal-webapps/org.wso2.bfsi.consent.management.endpoint/target/api#bfsi#consent.war"-->
-<!--                                       dest="${project.basedir}/carbon-home/repository/deployment/server/webapps/api#bfsi#consent/"/>-->
-<!--                                <unzip src="../internal-webapps/org.wso2.bfsi.authentication.endpoint/target/bfsi#authenticationendpoint.war"-->
-<!--                                       dest="${project.basedir}/carbon-home/repository/deployment/server/webapps/bfsi#authenticationendpoint/"/>-->
                             </target>
                         </configuration>
                         <goals>
