@@ -75,16 +75,16 @@ keytool -import -alias <alias_name> -file <localtion_to-the-root-certificate> -k
 keytool -import -alias <alias_name> -file <localtion_to-the-issuer-certificate> -keystore <IS_HOME>/repository/resources/security/client-truststore.jks -storepass wso2carbon
 ```
 
-2. Add the following configurations to the deployment toml file
+2. Add the following configurations to the deployment toml file inside the <IS_HOME>/repository/conf folder.
 
 - Add the following data source configuration
 
 ``` toml tab="MySQL"
 [[datasource]]
 id="WSO2BFSI_DB"
-url = "jdbc:mysql://localhost:3306/bfsi_consentdb?autoReconnect=true&amp;useSSL=false"
-username = "root"
-password = "root"
+url = "jdbc:mysql://<DB_HOST>:<DB_PORT>/bfsi_consentdb?autoReconnect=true&amp;useSSL=false"
+username = "<DB_USERNAME>"
+password = "<DB_PASSOWRD>"
 driver = "com.mysql.jdbc.Driver"
 jmx_enable=false
 pool_options.maxActive = "150"
@@ -99,9 +99,9 @@ pool_options.defaultAutoCommit=false
 ``` toml tab="Oracle"
 [[datasource]]
 id="WSO2BFSI_DB"
-url = "jdbc:oracle:thin:bfsi_consentdb/password@localhost:1521:root"
-username = "root"
-password = "root"
+url = "jdbc:oracle:thin:bfsi_consentdb/password@<DB_HOST>:<DB_PORT>:<DB_USERNAME>"
+username = "<DB_USERNAME>"
+password = "<DB_PASSOWRD>"
 driver = "oracle.jdbc.driver.OracleDriver"
 jmx_enable=false
 pool_options.maxActive = "150"
@@ -116,9 +116,9 @@ pool_options.defaultAutoCommit=false
 ``` toml tab="MS SQL"
 [[datasource]]
 id="WSO2BFSI_DB"
-url = "jdbc:sqlserver://localhost:1433;databaseName=bfsi_consentdb"
-username = "root"
-password = "root"
+url = "jdbc:sqlserver://<DB_HOST>:<DB_PORT>;databaseName=bfsi_consentdb"
+username = "<DB_USERNAME>"
+password = "<DB_PASSOWRD>"
 driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
 jmx_enable=false
 pool_options.maxActive = "300"
@@ -133,9 +133,9 @@ pool_options.defaultAutoCommit=false
 ``` toml tab="PostgreSQL"
 [[datasource]]
 id="WSO2BFSI_DB"
-url = "jdbc:postgresql://localhost:5432/bfsi_consentdb"
-username = "postgres"
-password = "root"
+url = "jdbc:postgresql://<DB_HOST>:<DB_PORT>/bfsi_consentdb"
+username = "<DB_USERNAME>"
+password = "<DB_PASSOWRD>"
 driver = "org.postgresql.Driver"
 jmx_enable=false
 pool_options.maxActive = "150"
