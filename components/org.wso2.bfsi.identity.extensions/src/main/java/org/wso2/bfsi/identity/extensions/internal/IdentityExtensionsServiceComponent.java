@@ -30,7 +30,9 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationService;
 import org.wso2.bfsi.identity.extensions.claims.RoleClaimProviderImpl;
+import org.wso2.bfsi.identity.extensions.listener.TokenRevocationListener;
 import org.wso2.carbon.identity.application.mgt.ApplicationManagementService;
+import org.wso2.carbon.identity.oauth.event.OAuthEventInterceptor;
 import org.wso2.carbon.identity.oauth2.OAuth2Service;
 import org.wso2.carbon.identity.openidconnect.ClaimProvider;
 import org.wso2.carbon.identity.openidconnect.RequestObjectService;
@@ -53,6 +55,7 @@ public class IdentityExtensionsServiceComponent {
         log.debug("Identity Extensions component activated.");
         BundleContext bundleContext = context.getBundleContext();
         bundleContext.registerService(ClaimProvider.class.getName(), new RoleClaimProviderImpl(), null);
+        bundleContext.registerService(OAuthEventInterceptor.class, new TokenRevocationListener(), null);
 
         log.debug("Registered BFSI related Identity services.");
     }

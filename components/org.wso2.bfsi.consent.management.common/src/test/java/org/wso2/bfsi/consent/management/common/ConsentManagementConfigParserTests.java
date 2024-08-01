@@ -125,4 +125,47 @@ public class ConsentManagementConfigParserTests {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getPreserveConsent(), "false");
     }
+
+    @Test(priority = 12)
+    public void testGetAuthServletExtension() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getAuthServletExtension(), "");
+    }
+
+    @Test(priority = 13)
+    public void testGetConsentAPIUsername() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentAPIUsername(), "admin");
+    }
+
+    @Test(priority = 14)
+    public void testGetConsentAPIPassword() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentAPIPassword(), "admin");
+    }
+
+    @Test(priority = 15)
+    public void testIsIdempotencyValidationEnabled() {
+
+        Assert.assertFalse(ConsentManagementConfigParser.getInstance().isIdempotencyValidationEnabled());
+    }
+
+    @Test(priority = 16)
+    public void testGetIdempotencyAllowedTime() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getIdempotencyAllowedTime(), "1440");
+    }
+
+    @Test(priority = 17)
+    public void testIsPSUFederated() {
+
+        Assert.assertFalse(ConsentManagementConfigParser.getInstance().isPSUFederated());
+    }
+
+
+    @Test(priority = 18)
+    public void testGetFederatedIDPName() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getFederatedIDPName(), "");
+    }
 }

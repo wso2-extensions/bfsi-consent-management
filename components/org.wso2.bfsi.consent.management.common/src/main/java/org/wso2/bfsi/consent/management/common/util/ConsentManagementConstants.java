@@ -51,10 +51,14 @@ public class ConsentManagementConstants {
     public static final String REQUEST_VALIDATOR = "Identity.Extensions.RequestObjectValidator";
     public static final String RESPONSE_HANDLER = "Identity.Extensions.ResponseTypeHandler";
     public static final String CLAIM_PROVIDER = "Identity.Extensions.ClaimProvider";
-    public static final String ENABLE_TRANSPORT_CERT_AS_HEADER = "Identity.ClientTransportCertAsHeaderEnabled";
     public static final String REMOVE_USER_STORE_DOMAIN_FROM_SUBJECT =
             "Identity.TokenSubject.RemoveUserStoreDomainFromSubject";
     public static final String REMOVE_TENANT_DOMAIN_FROM_SUBJECT =
             "Identity.TokenSubject.RemoveTenantDomainFromSubject";
     public static final String CONSENT_ID_CLAIM_NAME = "Identity.ConsentIDClaimName";
+    public static final String IS_CONSENT_REVOCATION_FLOW = "IS_CONSENT_REVOCATION_FLOW";
+    public static final String DEFAULT_STATUS_FOR_REVOKED_CONSENTS = "Revoked";
+
+    public static final String IS_PSU_FEDERATED = "PSUFederatedAuthentication.Enabled";
+    public static final String PSU_FEDERATED_IDP_NAME = "PSUFederatedAuthentication.IDPName";
 }
