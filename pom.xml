@@ -33,17 +33,69 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>components/org.wso2.bfsi.consent.management.common</module>
-        <module>components/org.wso2.bfsi.consent.management.dao</module>
-        <module>components/org.wso2.bfsi.consent.management.service</module>
-        <module>components/org.wso2.bfsi.consent.management.extensions</module>
-        <module>components/org.wso2.bfsi.identity.extensions</module>
-        <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
-    </modules>
-
     <name>BFSI Consent Management Connector for Identity Server</name>
     <url>http://wso2.org</url>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <!-- this profile is active by default -->
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>profile</name>
+                    <value>dev</value>
+                </property>
+            </activation>
+            <modules>
+                <module>components/org.wso2.bfsi.consent.management.common</module>
+                <module>components/org.wso2.bfsi.consent.management.dao</module>
+                <module>components/org.wso2.bfsi.consent.management.service</module>
+                <module>components/org.wso2.bfsi.consent.management.extensions</module>
+                <module>components/org.wso2.bfsi.identity.extensions</module>
+                <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
+                <module>internal-webapps/org.wso2.bfsi.authentication.endpoint</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <sourcepath>src/main/java</sourcepath>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>solution</id>
+            <activation>
+                <property>
+                    <name>profile</name>
+                    <value>solution</value>
+                </property>
+            </activation>
+            <modules>
+                <module>components/org.wso2.bfsi.consent.management.common</module>
+                <module>components/org.wso2.bfsi.consent.management.dao</module>
+                <module>components/org.wso2.bfsi.consent.management.service</module>
+                <module>components/org.wso2.bfsi.consent.management.extensions</module>
+                <module>components/org.wso2.bfsi.identity.extensions</module>
+                <module>internal-webapps/org.wso2.bfsi.consent.management.endpoint</module>
+                <module>internal-webapps/org.wso2.bfsi.authentication.endpoint</module>
+                <module>distribution</module>
+            </modules>
+        </profile>
+    </profiles>
 
     <repositories>
         <repository>
@@ -247,6 +299,16 @@
                 <version>${spring-web.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxrs</artifactId>
                 <version>${org.apache.cxf.version}</version>
@@ -272,9 +334,70 @@
                 <version>${jackson.databinding.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.orbit.com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${org.wso2.orbit.nimbus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jstl</groupId>
+                <artifactId>jstl</artifactId>
+                <version>${jstl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j.verison}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.equinox</groupId>
+                <artifactId>javax.servlet</artifactId>
+                <version>${equinox.javax.servlet.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
                 <artifactId>encoder</artifactId>
                 <version>${encoder.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${orbit.version.commons.httpclient}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${orbit.httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.taglibs</groupId>
+                <artifactId>taglibs-standard-impl</artifactId>
+                <version>${taglibs-standard-impl.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat</groupId>
+                <artifactId>tomcat-catalina</artifactId>
+                <version>${apache.tomcat-catalina.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring-web-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring-web.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
@@ -372,25 +495,13 @@
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-testng</artifactId>
-                <version>${mockito-testng.version}</version>
+                <version>${mockito.testng.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.h2database.wso2</groupId>
                 <artifactId>h2-database-engine</artifactId>
                 <version>${orbit.version.h2.engine}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-module-testng</artifactId>
-                <version>${powermock.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.powermock</groupId>
-                <artifactId>powermock-api-mockito2</artifactId>
-                <version>${powermock.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -427,16 +538,23 @@
         <org.apache.cxf.version>3.3.7</org.apache.cxf.version>
         <jackson.databinding.version>2.16.1</jackson.databinding.version>
         <spring-web.version>5.1.2.RELEASE</spring-web.version>
+        <spring-web-test.version>2.5</spring-web-test.version>
+        <javax.ws.rs.version>1.1.1</javax.ws.rs.version>
+        <servlet-api.version>2.5</servlet-api.version>
+        <jstl.version>1.2</jstl.version>
+        <org.slf4j.verison>1.7.21</org.slf4j.verison>
+        <equinox.javax.servlet.version>3.0.0.v201112011016</equinox.javax.servlet.version>
         <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
-        <javax.validation.api.version>3.0.0</javax.validation.api.version>
-        <hibernate-validator>7.0.1.Final</hibernate-validator>
+        <orbit.version.commons.httpclient>4.5.13.wso2v1</orbit.version.commons.httpclient>
+        <orbit.httpcore.version>4.3.3.wso2v1</orbit.httpcore.version>
+        <commons.io.version>2.7</commons.io.version>
+        <taglibs-standard-impl.version>1.2.5</taglibs-standard-impl.version>
+        <apache.tomcat-catalina.version>9.0.11</apache.tomcat-catalina.version>
+        <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <commons.bean.utils.version>1.9.3</commons.bean.utils.version>
         <javax.validation.api.version>2.0.1.Final</javax.validation.api.version>
         <hibernate-validator>6.0.20.Final</hibernate-validator>
-        <commons.bean.utils.version>1.9.3</commons.bean.utils.version>
-        <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
         <oltu.version>1.0.0.wso2v3</oltu.version>
-        <jackson.databind.version>2.16.1</jackson.databind.version>
         <!-- Base product dependency versions -->
         <carbon.identity.framework.version>7.0.75</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[7.0.75, 8.0.0)</carbon.identity.framework.version.range>
@@ -446,21 +564,16 @@
         <org.wso2.orbit.nimbus.version>7.3.0.wso2v1</org.wso2.orbit.nimbus.version>
         <!-- Unit Test Dependency versions -->
         <org.testng.version>7.10.1</org.testng.version>
-        <jacoco.version>0.8.7</jacoco.version>
-        <commons-dbcp.version>1.4</commons-dbcp.version>
-        <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
-        <mockito.version>5.3.1</mockito.version>
-        <mockito-testng.version>0.5.2</mockito-testng.version>
-        <powermock.version>2.0.9</powermock.version>
         <jacoco.version>0.8.6</jacoco.version>
         <commons-dbcp.version>1.4</commons-dbcp.version>
         <orbit.version.h2.engine>1.2.140.wso2v3</orbit.version.h2.engine>
+        <mockito.version>5.3.1</mockito.version>
+        <mockito.testng.version>0.5.2</mockito.testng.version>
         <!-- OSGi Version ranges -->
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <axiom.osgi.version.range>[1.2.11, 2.0.0)</axiom.osgi.version.range>
-        <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <commons-collections.version.range>[4.4.0, 5.0.0)</commons-collections.version.range>
         <google.gson.version.range>[2.9,3)</google.gson.version.range>
         <javax.validation.api.version.range>[3.0.0, 4.0.0)</javax.validation.api.version.range>

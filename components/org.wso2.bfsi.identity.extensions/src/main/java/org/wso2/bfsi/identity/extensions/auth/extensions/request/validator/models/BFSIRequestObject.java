@@ -45,8 +45,6 @@ import java.util.Map;
                 message = "aud parameter is missing in the request object")
 })
 @ValidScopeFormat(scope = "claimsSet.claims.scope")
-@ValidAudience(audience = "claimsSet.claims.aud", clientId = "claimsSet.claims.client_id")
-@ValidSigningAlgorithm(algorithm = "signedJWT.header.algorithm.name", clientId = "claimsSet.claims.client_id")
 public class BFSIRequestObject<T extends BFSIRequestObject> extends RequestObject {
 
     // decorator object
