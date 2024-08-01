@@ -19,7 +19,6 @@
 package org.wso2.bfsi.identity.extensions.grant.type.handlers;
 
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
-import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.identity.extensions.util.IdentityCommonUtils;
 import org.wso2.carbon.identity.oauth2.IdentityOAuth2Exception;
 import org.wso2.carbon.identity.oauth2.RequestObjectException;
@@ -33,7 +32,6 @@ import org.wso2.carbon.identity.oauth2.token.handlers.grant.AuthorizationCodeGra
 public class BFSIAuthorizationCodeGrantHandler extends AuthorizationCodeGrantHandler {
 
     @Override
-    @Generated(message = "Excluding from code coverage since it requires a super call")
     public OAuth2AccessTokenRespDTO issue(OAuthTokenReqMessageContext tokReqMsgCtx) throws IdentityOAuth2Exception {
 
         try {
