@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ ~ Copyright (c) 2024, WSO2 LLC. (https://www.wso2.com).
+ ~
+ ~ WSO2 LLC. licenses this file to you under the Apache License,
+ ~ Version 2.0 (the "License"); you may not use this file except
+ ~ in compliance with the License.
+ ~ You may obtain a copy of the License at
+ ~
+ ~     http://www.apache.org/licenses/LICENSE-2.0
+ ~
+ ~ Unless required by applicable law or agreed to in writing,
+ ~ software distributed under the License is distributed on an
+ ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ ~ KIND, either express or implied. See the License for the
+ ~ specific language governing permissions and limitations
+ ~ under the License.
+ -->
+
+<Server xmlns="http://wso2.org/projects/carbon/bfsi-consent-management.xml">
+    <ConsentManagement>
+        <JDBCPersistenceManager>
+            <DataSource>
+                <Name>jdbc/WSO2BFSI_DB</Name>
+            </DataSource>
+            <ConnectionVerificationTimeout>1</ConnectionVerificationTimeout>
+        </JDBCPersistenceManager>
+        <ManageHandler>org.wso2.bfsi.consent.management.extensions.manage.impl.DefaultConsentManageHandler</ManageHandler>
+        <AuthorizeSteps>
+            <Retrieve>
+                <Step class="org.wso2.bfsi.consent.management.extensions.authorize.impl.DefaultConsentRetrievalStep" priority="1"/>
+            </Retrieve>
+            <Persist>
+                <Step class="org.wso2.bfsi.consent.management.extensions.authorize.impl.DefaultConsentPersistStep" priority="1"/>
+            </Persist>
+        </AuthorizeSteps>
+        <Validation>
+            <Validator>org.wso2.bfsi.consent.management.extensions.validate.impl.DefaultConsentValidator</Validator>
+            <RequestSignatureAlias>wso2carbon</RequestSignatureAlias>
+            <JWTPayloadValidation>true</JWTPayloadValidation>
+        </Validation>
+        <AdminHandler>org.wso2.bfsi.consent.management.extensions.admin.impl.DefaultConsentAdminHandler</AdminHandler>
+        <ConsentAPICredentials>
+            <Username>admin</Username>
+            <Password>admin</Password>
+        </ConsentAPICredentials>
+        <Payments>
+            <MaximumInstructedAmount>1000</MaximumInstructedAmount>
+        </Payments>
+    </ConsentManagement>
+    <AuthenticationWebApp>
+        <ServletExtension>org.wso2.bfsi.consent.management.extensions.authservlet.impl.BFSIDefaultAuthServletImpl</ServletExtension>
+    </AuthenticationWebApp>
+    <PreserveConsentLink>true</PreserveConsentLink>
+    <Identity>
+        <ConsentIDClaimName>consent_id</ConsentIDClaimName>
+        <Extensions>
+            <RequestObjectValidator>org.wso2.bfsi.identity.extensions.auth.extensions.request.validator.DefaultBFSIRequestObjectValidator</RequestObjectValidator>
+            <ResponseTypeHandler>org.wso2.bfsi.identity.extensions.auth.extensions.response.handler.impl.BFSIDefaultResponseTypeHandlerImpl</ResponseTypeHandler>
+            <ClaimProvider>org.wso2.bfsi.identity.extensions.claims.BFSIDefaultClaimProvider</ClaimProvider>
+        </Extensions>
+        <ClientTransportCertAsHeaderEnabled>true</ClientTransportCertAsHeaderEnabled>
+        <TokenSubject>
+            <RemoveUserStoreDomainFromSubject>true</RemoveUserStoreDomainFromSubject>
+            <RemoveTenantDomainFromSubject>true</RemoveTenantDomainFromSubject>
+        </TokenSubject>
+    </Identity>
+    <HTTPConnectionPool>
+        <MaxConnections>2000</MaxConnections>
+        <MaxConnectionsPerRoute>1500</MaxConnectionsPerRoute>
+    </HTTPConnectionPool>
+    <Consent>
+        <Portal>
+            <ClientCredentials>
+                <ClientId>0NXYPMnh9mxSPCVjvvsVh17LWDca</ClientId>
+                <ClientSecret>pfVkfiEUvQqmZdYQuruauOs6SS0wd7yggkR2of58NXsa</ClientSecret>
+            </ClientCredentials>
+            <Params>
+                <IdentityServerBaseUrl>https://localhost:9443</IdentityServerBaseUrl>
+                <ApiManagerServerBaseUrl>https://localhost:8243</ApiManagerServerBaseUrl>
+            </Params>
+        </Portal>
+    </Consent>
+</Server>

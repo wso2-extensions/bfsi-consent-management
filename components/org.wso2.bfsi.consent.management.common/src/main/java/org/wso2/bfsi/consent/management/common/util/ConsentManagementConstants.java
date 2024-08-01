@@ -45,6 +45,9 @@ public class ConsentManagementConstants {
     public static final String CONSENT_API_PASSWORD = "ConsentManagement.ConsentAPICredentials.Password";
     public static final String MAX_INSTRUCTED_AMOUNT = "ConsentManagement.Payments" +
             ".MaximumInstructedAmount";
+
+    public static final String IDEMPOTENCY_IS_ENABLED = "ConsentManagement.Idempotency.Enabled";
+    public static final String IDEMPOTENCY_ALLOWED_TIME = "ConsentManagement.Idempotency.AllowedTimeDuration";
     public static final String REQUEST_VALIDATOR = "Identity.Extensions.RequestObjectValidator";
     public static final String RESPONSE_HANDLER = "Identity.Extensions.ResponseTypeHandler";
     public static final String CLAIM_PROVIDER = "Identity.Extensions.ClaimProvider";

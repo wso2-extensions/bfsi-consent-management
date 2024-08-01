@@ -29,7 +29,7 @@ public class ConsentMgtServiceTestData {
     public static final Long SAMPLE_CONSENT_VALIDITY_PERIOD = 1638337852L;
     public static final String SAMPLE_CURRENT_STATUS = "Authorised";
     public static final boolean SAMPLE_RECURRING_INDICATOR = true;
-    public static final String SAMPLE_AUTHORIZATION_TYPE = "authorizationType";
+    public static final String SAMPLE_AUTH_TYPE = "authorizationType";
     public static final String SAMPLE_USER_ID = "admin@wso2.com";
     public static final String SAMPLE_AUTHORIZATION_STATUS = "awaitingAuthorization";
     public static final String UNMATCHED_CONSENT_ID = "2222";
@@ -110,7 +110,7 @@ public class ConsentMgtServiceTestData {
                 System.currentTimeMillis() / 1000, System.currentTimeMillis() / 1000);
     }
 
-    public static ConsentResource getSampleStoredTestConsentResource() {
+    public static ConsentResource getSampleStoredConsentResource() {
         ConsentResource consentResource = getSampleTestConsentResource();
         consentResource.setConsentID(UUID.randomUUID().toString());
 
@@ -118,7 +118,7 @@ public class ConsentMgtServiceTestData {
 
     }
 
-    public static ConsentResource getSampleStoredTestConsentResource(String status) {
+    public static ConsentResource getSampleStoredConsentResource(String status) {
         ConsentResource consentResource = getSampleTestConsentResource(status);
         consentResource.setConsentID(UUID.randomUUID().toString());
 
@@ -128,7 +128,7 @@ public class ConsentMgtServiceTestData {
 
     public static ConsentResource getSampleStoredTestConsentResourceWithAttributes() {
 
-        ConsentResource consentResource = getSampleStoredTestConsentResource();
+        ConsentResource consentResource = getSampleStoredConsentResource();
         consentResource.setConsentAttributes(ConsentMgtServiceTestData.SAMPLE_CONSENT_ATTRIBUTES_MAP);
 
         return consentResource;
@@ -191,7 +191,7 @@ public class ConsentMgtServiceTestData {
 
         AuthorizationResource authorizationResource = new AuthorizationResource(consentID,
                 ConsentMgtServiceTestData.SAMPLE_USER_ID, ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_STATUS,
-                ConsentMgtServiceTestData.SAMPLE_AUTHORIZATION_TYPE, System.currentTimeMillis() / 1000);
+                ConsentMgtServiceTestData.SAMPLE_AUTH_TYPE, System.currentTimeMillis() / 1000);
         authorizationResource.setAuthorizationID(authorizationID);
 
         return authorizationResource;

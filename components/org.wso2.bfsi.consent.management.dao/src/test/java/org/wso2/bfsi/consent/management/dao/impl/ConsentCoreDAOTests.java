@@ -158,7 +158,7 @@ public class ConsentCoreDAOTests {
     public void testRetrieveConsentResourceSQLError() throws Exception {
 
         Mockito.doThrow(SQLException.class).when(mockedConnection).prepareStatement(Mockito.anyString());
-        consentCoreDAO.getConsentResource(mockedConnection, Mockito.anyObject());
+        consentCoreDAO.getConsentResource(mockedConnection, Mockito.any());
     }
 
     @Test(expectedExceptions = ConsentDataRetrievalException.class)
@@ -933,7 +933,7 @@ public class ConsentCoreDAOTests {
     public void testRetrieveConsentAttributesSQLError() throws Exception {
 
         Mockito.doThrow(SQLException.class).when(mockedConnection).prepareStatement(Mockito.anyString());
-        consentCoreDAO.getConsentAttributes(mockedConnection, Mockito.anyObject());
+        consentCoreDAO.getConsentAttributes(mockedConnection, Mockito.any());
     }
 
 //    @Test
@@ -1025,7 +1025,7 @@ public class ConsentCoreDAOTests {
     public void testRetrieveConsentAttributesByNameSQLError() throws Exception {
 
         Mockito.doThrow(SQLException.class).when(mockedConnection).prepareStatement(Mockito.anyString());
-        consentCoreDAO.getConsentAttributesByName(mockedConnection, Mockito.anyObject());
+        consentCoreDAO.getConsentAttributesByName(mockedConnection, Mockito.any());
     }
 
     @Test (expectedExceptions = ConsentDataRetrievalException.class)
@@ -1190,7 +1190,7 @@ public class ConsentCoreDAOTests {
     public void testStoreConsentFileSQLError() throws Exception {
 
         Mockito.doThrow(SQLException.class).when(mockedConnection).prepareStatement(Mockito.anyString());
-        consentCoreDAO.storeConsentFile(mockedConnection, Mockito.anyObject());
+        consentCoreDAO.storeConsentFile(mockedConnection, Mockito.any());
     }
 
     @Test
@@ -1231,7 +1231,7 @@ public class ConsentCoreDAOTests {
     public void testRetrieveConsentFileResourceSQLError() throws Exception {
 
         Mockito.doThrow(SQLException.class).when(mockedConnection).prepareStatement(Mockito.anyString());
-        consentCoreDAO.getConsentFile(mockedConnection, Mockito.anyObject());
+        consentCoreDAO.getConsentFile(mockedConnection, Mockito.any());
     }
 
     @Test (expectedExceptions = ConsentDataRetrievalException.class)
