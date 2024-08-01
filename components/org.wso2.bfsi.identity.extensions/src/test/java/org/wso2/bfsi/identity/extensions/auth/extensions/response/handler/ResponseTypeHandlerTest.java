@@ -291,8 +291,7 @@ public class ResponseTypeHandlerTest {
             claim.setName("openbanking_intent_id");
             claim.setValue("123");
 
-            List<RequestedClaim> requestedClaims = List
-                    .of(claim);
+            List<RequestedClaim> requestedClaims = List.of(claim);
 
             RequestObjectService mockRequestObjectService = mock(RequestObjectService.class);
             when(mockRequestObjectService.getRequestedClaimsForSessionDataKey(anyString(), anyBoolean()))

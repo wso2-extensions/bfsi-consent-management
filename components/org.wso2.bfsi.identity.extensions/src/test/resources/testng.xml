@@ -29,9 +29,9 @@
             <class name="org.wso2.bfsi.identity.extensions.claims.BFSIDefaultOIDCClaimsCallbackHandlerTest" />
             <class name="org.wso2.bfsi.identity.extensions.claims.BFSIDefaultClaimProviderTest" />
             <class name="org.wso2.bfsi.identity.extensions.claims.RoleClaimProviderImplTest" />
-            <class name="org.wso2.bfsi.identity.extensions.grant.type.handlers.BFSIAuthorizationCodeGrantHandlerTest" />
             <class name="org.wso2.bfsi.identity.extensions.validator.LogicValidatorsTest" />
             <class name="org.wso2.bfsi.identity.extensions.validator.ModelValidatorsTest" />
+            <class name="org.wso2.bfsi.identity.extensions.util.IdentityCommonUtilsTest" />
         </classes>
     </test>
 </suite>
