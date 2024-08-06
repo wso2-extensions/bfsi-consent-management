@@ -45,6 +45,7 @@ import java.util.ArrayList;
 public class DefaultConsentValidator implements ConsentValidator {
 
     private static final Log log = LogFactory.getLog(DefaultConsentValidator.class);
+    private static final String ACCOUNTS_BULK_REGEX = "/accounts";
     private static final String ACCOUNTS_REGEX = "/accounts/[^/?]*";
     private static final String TRANSACTIONS_REGEX = "/accounts/[^/?]*/transactions";
     private static final String BALANCES_REGEX = "/accounts/[^/?]*/balances";
@@ -57,13 +58,26 @@ public class DefaultConsentValidator implements ConsentValidator {
     public void validate(ConsentValidateData consentValidateData, ConsentValidationResult consentValidationResult)
             throws ConsentException {
 
+        if (consentValidateData.getComprehensiveConsent() == null ||
+                consentValidateData.getComprehensiveConsent().getReceipt() == null) {
+            log.error("Consent Details cannot be found");
+            consentValidationResult.setValid(false);
+            consentValidationResult.setErrorMessage("Consent Details cannot be found");
+            consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
+            consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
+            return;
+        }
+
         JSONObject receiptJSON;
         try {
             receiptJSON = new JSONObject(consentValidateData.getComprehensiveConsent().getReceipt());
         } catch (JSONException e) {
             log.error(e.getMessage().replaceAll("[\n\r]", ""));
-            throw new ConsentException(ResponseStatus.INTERNAL_SERVER_ERROR, "Exception occurred while validating" +
-                    " permissions");
+            consentValidationResult.setValid(false);
+            consentValidationResult.setErrorMessage(e.getMessage().replaceAll("[\n\r]", ""));
+            consentValidationResult.setErrorCode(ResponseStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+            consentValidationResult.setHttpCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
 
         //User Validation
@@ -80,6 +94,7 @@ public class DefaultConsentValidator implements ConsentValidator {
 
         if (!userIdMatching) {
             log.error("Invalid User Id");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Invalid User Id");
             consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
@@ -90,6 +105,7 @@ public class DefaultConsentValidator implements ConsentValidator {
         String clientIdFromConsent = consentValidateData.getComprehensiveConsent().getClientID();
         if (clientIdFromToken == null || !clientIdFromToken.equals(clientIdFromConsent)) {
             log.error("Invalid Client Id");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Invalid Client Id");
             consentValidationResult.setErrorCode(ResponseStatus.FORBIDDEN.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_FORBIDDEN);
@@ -110,9 +126,11 @@ public class DefaultConsentValidator implements ConsentValidator {
                 break;
             default:
                 log.error("Invalid consent type");
+                consentValidationResult.setValid(false);
                 consentValidationResult.setErrorMessage("Invalid consent type");
                 consentValidationResult.setErrorCode(ResponseStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
                 consentValidationResult.setHttpCode(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+                return;
         }
     }
 
@@ -129,16 +147,22 @@ public class DefaultConsentValidator implements ConsentValidator {
 
         // Perform URI Validation.
         String uri = consentValidateData.getRequestPath();
-        if (!(uri.matches(ACCOUNTS_REGEX) || uri.matches(TRANSACTIONS_REGEX) || uri.matches(BALANCES_REGEX))) {
+        if (!(uri.matches(ACCOUNTS_BULK_REGEX) || uri.matches(ACCOUNTS_REGEX) || uri.matches(TRANSACTIONS_REGEX) ||
+                uri.matches(BALANCES_REGEX))) {
+            log.error(INVALID_URI_ERROR);
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage(INVALID_URI_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(401);
             return;
         }
         String persmissionString = permissions.toString();
-        if ((uri.matches(ACCOUNTS_REGEX) && !persmissionString.contains("ReadAccountsDetail")) ||
+        if ((uri.matches(ACCOUNTS_BULK_REGEX) && !persmissionString.contains("ReadAccountsBasic")) ||
+                (uri.matches(ACCOUNTS_REGEX) && !persmissionString.contains("ReadAccountsDetail")) ||
                 (uri.matches(TRANSACTIONS_REGEX) && !persmissionString.contains("ReadTransactionsDetail")) ||
                 (uri.matches(BALANCES_REGEX)) && !persmissionString.contains("ReadBalances")) {
+            log.error(PERMISSION_MISMATCH_ERROR);
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage(PERMISSION_MISMATCH_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(401);
@@ -148,6 +172,8 @@ public class DefaultConsentValidator implements ConsentValidator {
         //Consent Status Validation
         if (!ConsentExtensionConstants.AUTHORIZED_STATUS
                 .equals(consentValidateData.getComprehensiveConsent().getCurrentStatus())) {
+            log.error("Consent is not in the correct state");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Consent is not in the correct state");
             consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
@@ -155,6 +181,8 @@ public class DefaultConsentValidator implements ConsentValidator {
         }
 
         if (isConsentExpired(receiptJSON.getJSONObject("Data").getString("ExpirationDateTime"))) {
+            log.error(CONSENT_EXPIRED_ERROR);
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage(CONSENT_EXPIRED_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_UNAUTHORIZED);
@@ -176,6 +204,8 @@ public class DefaultConsentValidator implements ConsentValidator {
         // Perform URI Validation.
         String uri = consentValidateData.getRequestPath();
         if (!isCOFURIValid(uri)) {
+            log.error("Invalid request URI");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Invalid request URI");
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_UNAUTHORIZED);
@@ -185,6 +215,8 @@ public class DefaultConsentValidator implements ConsentValidator {
         //Consent Status Validation
         if (!ConsentExtensionConstants.AUTHORIZED_STATUS
                 .equals(consentValidateData.getComprehensiveConsent().getCurrentStatus())) {
+            log.error("Consent is not in the correct state");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Consent is not in the correct state");
             consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
@@ -194,6 +226,8 @@ public class DefaultConsentValidator implements ConsentValidator {
         //Validate whether the consent is expired
         if (isConsentExpired(receiptJSON.getJSONObject(ConsentExtensionConstants.DATA)
                 .getString(ConsentExtensionConstants.EXPIRATION_DATE))) {
+            log.error(CONSENT_EXPIRED_ERROR);
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage(CONSENT_EXPIRED_ERROR);
             consentValidationResult.setErrorCode(ResponseStatus.UNAUTHORIZED.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_UNAUTHORIZED);
@@ -207,6 +241,7 @@ public class DefaultConsentValidator implements ConsentValidator {
                 !consentValidateData.getConsentId()
                         .equals(consentValidateData.getComprehensiveConsent().getConsentID())) {
             log.error("Consent ID mismatch");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Consent ID mismatch");
             consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
@@ -220,6 +255,7 @@ public class DefaultConsentValidator implements ConsentValidator {
                 !data.get(ConsentExtensionConstants.CONSENT_ID)
                         .equals(consentValidateData.getComprehensiveConsent().getConsentID())) {
             log.error("Invalid consent ID");
+            consentValidationResult.setValid(false);
             consentValidationResult.setErrorMessage("Invalid consent ID");
             consentValidationResult.setErrorCode(ResponseStatus.BAD_REQUEST.getReasonPhrase());
             consentValidationResult.setHttpCode(HttpStatus.SC_BAD_REQUEST);
