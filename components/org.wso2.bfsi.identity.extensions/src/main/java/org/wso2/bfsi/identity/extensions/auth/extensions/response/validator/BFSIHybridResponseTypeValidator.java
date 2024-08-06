@@ -63,7 +63,7 @@ public class BFSIHybridResponseTypeValidator extends TokenValidator {
             String clientID = request.getParameter(OAuth.OAUTH_CLIENT_ID).replaceAll("[\r\n]", "");
             String errorMsg = "Request with \'client_id\' = \'" + clientID +
                     "\' has \'response_type\' for \'hybrid flow\'; but \'openid\' scope not found.";
-            log.error(errorMsg);
+            log.error(errorMsg.replaceAll("[\r\n]", ""));
             throw OAuthProblemException.error(OAuthError.CodeResponse.INVALID_REQUEST)
                     .description(errorMsg);
         }
