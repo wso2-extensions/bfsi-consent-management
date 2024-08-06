@@ -85,7 +85,6 @@ public class ValidatorTestDataProvider {
                 {claimsTemplate.replace("${SCOPE}",
                         "openid common:customer.detail:read")},
 
-                //
                 {claimsTemplate.replace("${SCOPE}",
                         "accounts openid")},
                 {claimsTemplate.replace("${SCOPE}",
@@ -93,7 +92,6 @@ public class ValidatorTestDataProvider {
                 {claimsTemplate.replace("${SCOPE}",
                         "openid fundsconfirmations")},
 
-                //
                 {claimsTemplate.replace("${SCOPE}",
                         "ais openid")},
                 {claimsTemplate.replace("${SCOPE}",
@@ -120,7 +118,6 @@ public class ValidatorTestDataProvider {
                 {claimsTemplate.replace("${SCOPE}",
                         "openid common:customer.detail:read")},
 
-                //
                 {claimsTemplate.replace("${SCOPE}",
                         "Accounts openid")},
                 {claimsTemplate.replace("${SCOPE}",
@@ -128,7 +125,6 @@ public class ValidatorTestDataProvider {
                 {claimsTemplate.replace("${SCOPE}",
                         "openid FundsConfirmations")},
 
-                //
                 {claimsTemplate.replace("${SCOPE}",
                         "AIS openid")},
                 {claimsTemplate.replace("${SCOPE}",

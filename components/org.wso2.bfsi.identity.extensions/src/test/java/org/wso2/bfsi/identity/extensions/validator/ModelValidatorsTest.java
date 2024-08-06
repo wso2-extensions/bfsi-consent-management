@@ -80,7 +80,6 @@ public class ModelValidatorsTest {
         String violation = violations.stream().findFirst().map(ConstraintViolation::getMessage).orElse(null);
         assertEquals("age failed", violation);
 
-        //
         sampleRequestObject = new SampleDifferentClass();
         sampleRequestObject.setName("name");
         sampleRequestObject.setAge(70);
@@ -89,7 +88,6 @@ public class ModelValidatorsTest {
         violation = violations.stream().findFirst().map(ConstraintViolation::getMessage).orElse(null);
         assertEquals("male failed", violation);
 
-        //
         sampleRequestObject = new SampleDifferentClass();
         sampleRequestObject.setMale(true);
         sampleRequestObject.setAge(70);
@@ -110,7 +108,6 @@ public class ModelValidatorsTest {
         String violation = BFSIValidator.getInstance().getFirstViolation(sampleRequestObject);
         assertEquals("age failed", violation);
 
-        //
         sampleRequestObject = new SampleDifferentClass();
         sampleRequestObject.setName("name");
         sampleRequestObject.setAge(70);
@@ -118,14 +115,11 @@ public class ModelValidatorsTest {
         violation = BFSIValidator.getInstance().getFirstViolation(sampleRequestObject);
         assertEquals("male failed", violation);
 
-        //
         sampleRequestObject = new SampleDifferentClass();
         sampleRequestObject.setMale(true);
         sampleRequestObject.setAge(70);
 
         violation = BFSIValidator.getInstance().getFirstViolation(sampleRequestObject);
         assertEquals("name failed", violation);
-
     }
-
 }
