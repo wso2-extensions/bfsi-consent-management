@@ -20,7 +20,6 @@ package org.wso2.bfsi.consent.management.extensions.idempotency;
 
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -42,7 +41,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
 
@@ -160,13 +161,13 @@ public class IdempotencyValidatorTests {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doReturn(consentIdList).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                .getDetailedConsent(anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
 
         Assert.assertTrue(result.isIdempotent());
@@ -190,15 +191,15 @@ public class IdempotencyValidatorTests {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
 
-        Mockito.doReturn(attributeList).when(consentCoreServiceImpl)
-                .getConsentAttributesByName(Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn("{}").when(consentManageData).getPayload();
-        Mockito.doReturn("{}").when(consentManageData).getPayload();
-        Mockito.doReturn("/payments/".concat(consentId)).when(consentManageData).getRequestPath();
+        doReturn(attributeList).when(consentCoreServiceImpl)
+                .getConsentAttributesByName(anyString());
+        doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                .getDetailedConsent(anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn("{}").when(consentManageData).getPayload();
+        doReturn("{}").when(consentManageData).getPayload();
+        doReturn("/payments/".concat(consentId)).when(consentManageData).getRequestPath();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
         Assert.assertTrue(result.isIdempotent());
         Assert.assertFalse(result.isValid());
@@ -217,9 +218,9 @@ public class IdempotencyValidatorTests {
         doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
         consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
 
-        Mockito.doReturn(new HashMap<>()).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doReturn(new HashMap<>()).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
 
         Assert.assertFalse(result.isIdempotent());
@@ -238,9 +239,9 @@ public class IdempotencyValidatorTests {
         doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
         consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
 
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn("").when(consentManageData).getPayload();
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn("").when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
 
         Assert.assertFalse(result.isIdempotent());
@@ -259,11 +260,11 @@ public class IdempotencyValidatorTests {
         doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
         consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
 
-        Mockito.doThrow(ConsentManagementException.class).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doThrow(ConsentManagementException.class).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
 
         Assert.assertFalse(result.isIdempotent());
@@ -282,11 +283,11 @@ public class IdempotencyValidatorTests {
         doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
         consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
 
-        Mockito.doReturn(new ArrayList<>()).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doReturn(new ArrayList<>()).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
 
         Assert.assertFalse(result.isIdempotent());
@@ -305,12 +306,12 @@ public class IdempotencyValidatorTests {
         doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
         consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        Mockito.doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(Mockito.anyString());
+        doReturn(consentIdList).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(anyString());
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
         Assert.assertTrue(result.isIdempotent());
         Assert.assertFalse(result.isValid());
@@ -329,12 +330,12 @@ public class IdempotencyValidatorTests {
         doReturn(consentCoreServiceImpl).when(dataHolderMock).getConsentCoreService();
         consentExtensionsDataHolder.when(ConsentExtensionsDataHolder::getInstance).thenReturn(dataHolderMock);
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn("sampleClientID").when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
-        Mockito.doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(Mockito.anyString());
+        doReturn(consentIdList).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn("sampleClientID").when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doReturn(null).when(consentCoreServiceImpl).getDetailedConsent(anyString());
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
         Assert.assertTrue(result.isIdempotent());
         Assert.assertFalse(result.isValid());
@@ -355,13 +356,13 @@ public class IdempotencyValidatorTests {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.now().minusHours(2);
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(PAYLOAD).when(consentManageData).getPayload();
+        doReturn(consentIdList).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                .getDetailedConsent(anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(PAYLOAD).when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
         Assert.assertTrue(result.isIdempotent());
         Assert.assertFalse(result.isValid());
@@ -382,13 +383,13 @@ public class IdempotencyValidatorTests {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
 
-        Mockito.doReturn(consentIdList).when(consentCoreServiceImpl)
-                .getConsentIdByConsentAttributeNameAndValue(Mockito.anyString(), Mockito.anyString());
-        Mockito.doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
-                .getDetailedConsent(Mockito.anyString());
-        Mockito.doReturn(headers).when(consentManageData).getHeaders();
-        Mockito.doReturn(CLIENT_ID).when(consentManageData).getClientId();
-        Mockito.doReturn(DIFFERENT_PAYLOAD).when(consentManageData).getPayload();
+        doReturn(consentIdList).when(consentCoreServiceImpl)
+                .getConsentIdByConsentAttributeNameAndValue(anyString(), anyString());
+        doReturn(getConsent(offsetDateTime.toEpochSecond())).when(consentCoreServiceImpl)
+                .getDetailedConsent(anyString());
+        doReturn(headers).when(consentManageData).getHeaders();
+        doReturn(CLIENT_ID).when(consentManageData).getClientId();
+        doReturn(DIFFERENT_PAYLOAD).when(consentManageData).getPayload();
         IdempotencyValidationResult result = new IdempotencyValidator().validateIdempotency(consentManageData);
         Assert.assertTrue(result.isIdempotent());
         Assert.assertFalse(result.isValid());

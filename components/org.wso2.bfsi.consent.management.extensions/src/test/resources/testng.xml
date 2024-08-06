@@ -21,6 +21,8 @@
 <suite name="consent-extensions-test-suite">
     <test name="consent-extensions-test-all">
         <classes>
+            <class name="org.wso2.bfsi.consent.management.extensions.validate.DefaultConsentValidatorTest"/>
+            <class name="org.wso2.bfsi.consent.management.extensions.admin.DefaultConsentAdminHandlerTest"/>
             <class name="org.wso2.bfsi.consent.management.extensions.idempotency.IdempotencyValidatorTests"/>
         </classes>
     </test>
