@@ -46,7 +46,7 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
 
     private static final Log log = LogFactory.getLog(BFSIRequestObjectValidationExtension.class);
     // Get extension impl
-    static BFSIRequestObjectValidator obDefaultRequestObjectValidator =
+    static BFSIRequestObjectValidator bfsiDefaultRequestObjectValidator =
             IdentityExtensionsDataHolder.getInstance().getObRequestObjectValidator();
 
     /**
@@ -72,7 +72,7 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
                     dataMap.put(IdentityCommonConstants.SCOPE, Arrays.asList(allowedScopes.split(" ")));
                 }
                 // perform BFSI customized validations
-                ValidationResponse validationResponse = obDefaultRequestObjectValidator
+                ValidationResponse validationResponse = bfsiDefaultRequestObjectValidator
                         .validateBFSIConstraints(bfsiRequestObject, dataMap);
 
                 if (!validationResponse.isValid()) {
