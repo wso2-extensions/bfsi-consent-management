@@ -113,13 +113,6 @@ public class BFSIRequestObjectValidationExtension extends RequestObjectValidator
      * @param oAuth2Parameters   oAuth2Parameters
      * @return                true if valid audience
      */
-    @Generated(message = "Empty method")
-    @Override
-    protected boolean isValidAudience(RequestObject requestObject, OAuth2Parameters oAuth2Parameters) {
-
-        // converted to validation layer
-        return true;
-    }
 
     /**
      * Called by validateRequestObject.

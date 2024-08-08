@@ -184,7 +184,7 @@ public abstract class ConsentManagementBaseCache<K extends ConsentManagementBase
         CacheConfiguration.Duration modifiedExpiry = new CacheConfiguration.Duration(TimeUnit.MINUTES,
                 getCacheModifiedExpiryMinutes());
 
-        // Build Cache on OB base cache.
+        // Build Cache on BFSI base cache.
         CacheBuilder<K, V> cacheBuilder = cacheManager.createCacheBuilder(cacheName);
 
         return cacheBuilder.setExpiry(CacheConfiguration.ExpiryType.ACCESSED, accessExpiry)
