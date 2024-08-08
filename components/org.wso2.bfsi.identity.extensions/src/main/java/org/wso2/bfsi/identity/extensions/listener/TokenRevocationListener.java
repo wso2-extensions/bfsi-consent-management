@@ -42,7 +42,6 @@ import java.util.Map;
 public class TokenRevocationListener extends AbstractOAuthEventInterceptor {
 
     private static final Log log = LogFactory.getLog(TokenRevocationListener.class);
-    private static final ConsentCoreServiceImpl consentCoreService = new ConsentCoreServiceImpl();
 
     /**
      * Revoke the consent bound to the access token after revoking the access token.
@@ -80,7 +79,7 @@ public class TokenRevocationListener extends AbstractOAuthEventInterceptor {
                         contextParams.containsKey(ConsentManagementConstants.IS_CONSENT_REVOCATION_FLOW)
                         && (boolean) context.getParameter(ConsentManagementConstants.IS_CONSENT_REVOCATION_FLOW);
                 if (!isConsentRevocationFlow) {
-                    consentCoreService.revokeConsentWithReason(consentId, ConsentManagementConstants.
+                    (new ConsentCoreServiceImpl()).revokeConsentWithReason(consentId, ConsentManagementConstants.
                             DEFAULT_STATUS_FOR_REVOKED_CONSENTS, null, false, "Revoked by token revocation");
                 }
             } catch (ConsentManagementException e) {

@@ -20,7 +20,6 @@ package org.wso2.bfsi.identity.extensions.internal;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -53,9 +52,10 @@ public class IdentityExtensionsServiceComponent {
     protected void activate(ComponentContext context) {
 
         log.debug("Identity Extensions component activated.");
-        BundleContext bundleContext = context.getBundleContext();
-        bundleContext.registerService(ClaimProvider.class.getName(), new RoleClaimProviderImpl(), null);
-        bundleContext.registerService(OAuthEventInterceptor.class, new TokenRevocationListener(), null);
+        context.getBundleContext().registerService(ClaimProvider.class.getName(), new RoleClaimProviderImpl(),
+                null);
+        context.getBundleContext().registerService(OAuthEventInterceptor.class.getName(), new TokenRevocationListener(),
+                null);
 
         log.debug("Registered BFSI related Identity services.");
     }
