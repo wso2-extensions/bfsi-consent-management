@@ -228,6 +228,12 @@ client_certificate_header = "x-wso2-mutual-auth-cert"
 ./wso2server.sh
 ```
 
+## Register a FAPI-compliant Service Provider
+
+To tryout the Consent Management Connector you need to create a FAPI complaint service provider. Please refer Register a FAPI-compliant application section in the [WSO2 Identity Server Documentation](https://is.docs.wso2.com/en/latest/guides/applications/register-a-fapi-compliant-app/) to create a new service provider.
+
+
+
 ## Tryout BFSI Consent Management Connector
 
 ### Initiate a consent
