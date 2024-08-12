@@ -1,8 +1,11 @@
 package org.wso2.bfsi.consent.management.extensions.util;
 
 import org.wso2.bfsi.consent.management.dao.models.AuthorizationResource;
+import org.wso2.bfsi.consent.management.dao.models.ConsentFile;
+import org.wso2.bfsi.consent.management.dao.models.ConsentHistoryResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentMappingResource;
 import org.wso2.bfsi.consent.management.dao.models.ConsentResource;
+import org.wso2.bfsi.consent.management.dao.models.ConsentStatusAuditRecord;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
 
 import java.util.ArrayList;
@@ -71,5 +74,29 @@ public class TestUtil {
                 TestConstants.SAMPLE_CONSENT_FREQUENCY, TestConstants.SAMPLE_CONSENT_VALIDITY_PERIOD,
                 TestConstants.SAMPLE_RECURRING_INDICATOR, status,
                 System.currentTimeMillis() / 1000, System.currentTimeMillis() / 1000);
+    }
+
+    public static ConsentHistoryResource getSampleConsentHistoryResource() {
+
+        ConsentHistoryResource consentHistoryResource = new ConsentHistoryResource();
+
+        consentHistoryResource.setTimestamp(TestConstants.SAMPLE_CONSENT_AMENDMENT_TIMESTAMP);
+        consentHistoryResource.setReason(TestConstants.SAMPLE_AMENDMENT_REASON);
+        consentHistoryResource.setDetailedConsentResource(getSampleDetailedConsentResource());
+
+        return consentHistoryResource;
+    }
+
+    public static ConsentStatusAuditRecord getSampleConsentStatusAuditRecord(String consentID,
+                                                                                 String currentStatus) {
+
+        return new ConsentStatusAuditRecord(consentID, currentStatus,
+                System.currentTimeMillis() / 1000, TestConstants.SAMPLE_REASON,
+                TestConstants.SAMPLE_ACTION_BY, TestConstants.SAMPLE_PREVIOUS_STATUS);
+    }
+
+    public static ConsentFile getSampleConsentFileObject(String fileContent) {
+
+        return new ConsentFile(UUID.randomUUID().toString(), fileContent);
     }
 }

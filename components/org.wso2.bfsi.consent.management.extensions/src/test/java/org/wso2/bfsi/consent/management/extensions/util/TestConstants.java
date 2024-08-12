@@ -35,6 +35,12 @@ public class TestConstants {
     public static final String PAYMENTS = "payments";
     public static final String FUNDS_CONFIRMATIONS = "fundsconfirmations";
     public static final String COF_PATH = "/funds-confirmations";
+    public static final long SAMPLE_CONSENT_AMENDMENT_TIMESTAMP = 1638337852;
+    public static final String SAMPLE_AMENDMENT_REASON = "sampleReason";
+    public static final String SAMPLE_REASON = "sample reason";
+    public static final String SAMPLE_ACTION_BY = "admin@wso2.com";
+    public static final String  SAMPLE_PREVIOUS_STATUS = "Received";
+    public static final String SAMPLE_CONSENT_FILE = "sample file content";
     public static final Map<String, String> SAMPLE_CONSENT_ATTRIBUTES_MAP = new HashMap<String, String>() {
         {
             put("x-request-id", UUID.randomUUID().toString());

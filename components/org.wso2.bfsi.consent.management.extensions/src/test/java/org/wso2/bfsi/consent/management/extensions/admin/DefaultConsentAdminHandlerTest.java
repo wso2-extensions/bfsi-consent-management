@@ -23,10 +23,12 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementException;
+import org.wso2.bfsi.consent.management.dao.models.ConsentStatusAuditRecord;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
 import org.wso2.bfsi.consent.management.extensions.admin.impl.DefaultConsentAdminHandler;
 import org.wso2.bfsi.consent.management.extensions.admin.model.ConsentAdminData;
 import org.wso2.bfsi.consent.management.extensions.common.ConsentExtensionConstants;
+import org.wso2.bfsi.consent.management.extensions.common.ResponseStatus;
 import org.wso2.bfsi.consent.management.extensions.internal.ConsentExtensionsDataHolder;
 import org.wso2.bfsi.consent.management.extensions.util.TestConstants;
 import org.wso2.bfsi.consent.management.extensions.util.TestUtil;
@@ -45,6 +47,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.verify;
 
 /**
  * Default Consent admin handler test.
@@ -52,13 +55,11 @@ import static org.mockito.Mockito.mockStatic;
 public class DefaultConsentAdminHandlerTest {
 
     private DefaultConsentAdminHandler adminHandler = new DefaultConsentAdminHandler();
-    private ConsentAdminData consentAdminDataMock;
     private ConsentCoreServiceImpl consentCoreServiceImpl;
     private MockedStatic<ConsentExtensionsDataHolder> consentExtensionsDataHolder;
 
     @BeforeClass
     public void initTest() throws ConsentManagementException {
-        consentAdminDataMock = mock(ConsentAdminData.class);
         consentCoreServiceImpl = mock(ConsentCoreServiceImpl.class);
         consentExtensionsDataHolder = mockStatic(ConsentExtensionsDataHolder.class);
 
@@ -68,13 +69,25 @@ public class DefaultConsentAdminHandlerTest {
 
         ArrayList<DetailedConsentResource> resources = new ArrayList<>();
         resources.add(TestUtil.getSampleDetailedConsentResource());
-        doReturn(resources).when(consentCoreServiceImpl).searchDetailedConsents(any(), any(), any(), any(),
-                any(), anyLong(), anyLong(), anyInt(), anyInt());
+        doReturn(resources).when(consentCoreServiceImpl).searchDetailedConsents(any(ArrayList.class),
+                any(ArrayList.class), any(ArrayList.class), any(ArrayList.class), any(ArrayList.class),
+                anyLong(), anyLong(), anyInt(), anyInt());
 
         doReturn(TestUtil.getSampleConsentResource(TestConstants.AUTHORISED_STATUS)).when(consentCoreServiceImpl)
                 .getConsent(anyString(), anyBoolean());
+        doReturn(TestUtil.getSampleDetailedConsentResource()).when(consentCoreServiceImpl)
+                .getDetailedConsent(anyString());
         doReturn(true).when(consentCoreServiceImpl).revokeConsentWithReason(anyString(), anyString(),
                 anyString(), anyString());
+        doReturn(Map.of("HistoryId", TestUtil.getSampleConsentHistoryResource())).when(consentCoreServiceImpl)
+                .getConsentAmendmentHistoryData(anyString());
+        ArrayList<ConsentStatusAuditRecord> auditRecords = new ArrayList<>();
+        auditRecords.add(TestUtil.getSampleConsentStatusAuditRecord(TestConstants.SAMPLE_CONSENT_ID,
+                TestConstants.AUTHORISED_STATUS));
+        doReturn(auditRecords).when(consentCoreServiceImpl).getConsentStatusAuditRecords(any(ArrayList.class),
+                anyInt(), anyInt());
+        doReturn(TestUtil.getSampleConsentFileObject(TestConstants.SAMPLE_CONSENT_FILE)).when(consentCoreServiceImpl)
+                .getConsentFile(anyString());
     }
 
     @AfterClass
@@ -86,28 +99,51 @@ public class DefaultConsentAdminHandlerTest {
     @Test
     public void testHandleSearch() {
 
+        ConsentAdminData consentAdminDataMock = mock(ConsentAdminData.class);
         doReturn(getQueryParams()).when(consentAdminDataMock).getQueryParams();
 
         adminHandler.handleSearch(consentAdminDataMock);
-
-//        ArgumentCaptor<ArrayList> argumentCaptor = ArgumentCaptor.forClass(ArrayList.class);
-//        verify(consentCoreServiceImpl).deactivateAccountMappings(argumentCaptor.capture());
-//        ArrayList capturedArgument = argumentCaptor.getValue();
-//
-//        assertTrue(capturedArgument.contains(MAPPING_ID_1));
-//        assertTrue(capturedArgument.contains(MAPPING_ID_3));
-//        verify(consentAdminDataMock).setResponseStatus(ResponseStatus.NO_CONTENT);
-//
-////        Assert.assertNotNull(consentAdminDataMock.getResponsePayload());
-//        Assert.assertNotNull(consentAdminDataMock.getResponseStatus());
+        verify(consentAdminDataMock).setResponseStatus(ResponseStatus.OK);
     }
 
     @Test
     public void testHandleRevoke() {
 
+        ConsentAdminData consentAdminDataMock = mock(ConsentAdminData.class);
         doReturn(getQueryParams()).when(consentAdminDataMock).getQueryParams();
 
         adminHandler.handleRevoke(consentAdminDataMock);
+        verify(consentAdminDataMock).setResponseStatus(ResponseStatus.NO_CONTENT);
+    }
+
+    @Test
+    public void testHandleConsentAmendmentHistoryRetrieval() {
+
+        ConsentAdminData consentAdminDataMock = mock(ConsentAdminData.class);
+        doReturn(getQueryParams()).when(consentAdminDataMock).getQueryParams();
+
+        adminHandler.handleConsentAmendmentHistoryRetrieval(consentAdminDataMock);
+        verify(consentAdminDataMock).setResponseStatus(ResponseStatus.OK);
+    }
+
+    @Test
+    public void testHandleConsentStatusAuditSearch() {
+
+        ConsentAdminData consentAdminDataMock = mock(ConsentAdminData.class);
+        doReturn(getQueryParams()).when(consentAdminDataMock).getQueryParams();
+
+        adminHandler.handleConsentStatusAuditSearch(consentAdminDataMock);
+        verify(consentAdminDataMock).setResponseStatus(ResponseStatus.OK);
+    }
+
+    @Test
+    public void testHandleConsentFileSearch() {
+
+        ConsentAdminData consentAdminDataMock = mock(ConsentAdminData.class);
+        doReturn(getQueryParams()).when(consentAdminDataMock).getQueryParams();
+
+        adminHandler.handleConsentFileSearch(consentAdminDataMock);
+        verify(consentAdminDataMock).setResponseStatus(ResponseStatus.OK);
     }
 
     private Map getQueryParams() {
