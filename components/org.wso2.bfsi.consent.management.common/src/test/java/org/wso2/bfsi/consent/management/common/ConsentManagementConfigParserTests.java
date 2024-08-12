@@ -26,7 +26,6 @@ import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigura
 import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigurationServiceImpl;
 import org.wso2.bfsi.consent.management.common.exceptions.ConsentManagementRuntimeException;
 import org.wso2.bfsi.consent.management.common.util.CarbonUtils;
-import org.wso2.bfsi.consent.management.common.util.CommonTestUtil;
 
 import java.io.File;
 
@@ -39,13 +38,12 @@ public class ConsentManagementConfigParserTests {
     ConsentManagementConfigurationService configService;
 
     @BeforeClass
-    public void beforeClass() throws ReflectiveOperationException {
+    public void beforeClass() {
 
         //to execute util class initialization
         new CarbonUtils();
         System.setProperty("some.property", "property.value");
         System.setProperty("carbon.home", ".");
-        CommonTestUtil.injectEnvironmentVariable("CARBON_HOME", ".");
         String path = "src/test/resources";
         File file = new File(path);
         absolutePathForTestResources = file.getAbsolutePath();
@@ -124,5 +122,35 @@ public class ConsentManagementConfigParserTests {
     public void testGetPreserveConsent() {
 
         Assert.assertEquals(ConsentManagementConfigParser.getInstance().getPreserveConsent(), "false");
+    }
+
+    @Test(priority = 12)
+    public void testGetAuthServletExtension() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getAuthServletExtension(), "");
+    }
+
+    @Test(priority = 13)
+    public void testGetConsentAPIUsername() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentAPIUsername(), "admin");
+    }
+
+    @Test(priority = 14)
+    public void testGetConsentAPIPassword() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getConsentAPIPassword(), "admin");
+    }
+
+    @Test(priority = 15)
+    public void testIsIdempotencyValidationEnabled() {
+
+        Assert.assertFalse(ConsentManagementConfigParser.getInstance().isIdempotencyValidationEnabled());
+    }
+
+    @Test(priority = 16)
+    public void testGetIdempotencyAllowedTime() {
+
+        Assert.assertEquals(ConsentManagementConfigParser.getInstance().getIdempotencyAllowedTime(), "1440");
     }
 }
