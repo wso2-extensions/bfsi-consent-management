@@ -19,15 +19,15 @@ name: Build BFSI Consent Management Repository
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   pull_request:
+    types:
+      - opened
     branches:
       - 'main'
 
 jobs:
 
   Build-repo-check:
-
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
