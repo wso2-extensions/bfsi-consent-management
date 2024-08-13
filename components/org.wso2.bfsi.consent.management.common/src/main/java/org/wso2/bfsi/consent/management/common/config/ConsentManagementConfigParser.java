@@ -356,4 +356,37 @@ public class ConsentManagementConfigParser {
         Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.IDEMPOTENCY_ALLOWED_TIME);
         return config.map(String::trim).orElse("1440");
     }
+
+    /**
+     * Get config related for checking whether PSU is a federated user or not.
+     *
+     * @return Boolean value indicating whether PSU is a federated user or not
+     */
+    public boolean isPSUFederated() {
+
+        Optional<String> isPSUFederated = getConfigurationFromKeyAsString(ConsentManagementConstants.IS_PSU_FEDERATED);
+        return isPSUFederated.map(Boolean::parseBoolean).orElse(false);
+    }
+
+    /**
+     * Get Federated PSU IDP Name.
+     *
+     * @return String Federated IDP name
+     */
+    public String getFederatedIDPName() {
+
+        Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.PSU_FEDERATED_IDP_NAME);
+        return config.map(String::trim).orElse("");
+    }
+
+    /**
+     * Get Consent ID Claim Name.
+     *
+     * @return String Consent ID Claim name
+     */
+    public String getConsentIDClaimName() {
+
+        Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME);
+        return config.map(String::trim).orElse("consent_id");
+    }
 }

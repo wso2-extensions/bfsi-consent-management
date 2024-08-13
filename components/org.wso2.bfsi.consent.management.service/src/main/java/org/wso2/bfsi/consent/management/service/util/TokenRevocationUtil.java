@@ -3,6 +3,8 @@ package org.wso2.bfsi.consent.management.service.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
+import org.wso2.bfsi.consent.management.common.config.ConsentManagementConfigParser;
+import org.wso2.bfsi.consent.management.common.util.ConsentManagementConstants;
 import org.wso2.bfsi.consent.management.common.util.Generated;
 import org.wso2.bfsi.consent.management.dao.models.DetailedConsentResource;
 import org.wso2.bfsi.consent.management.service.internal.ConsentManagementDataHolder;
@@ -14,7 +16,9 @@ import org.wso2.carbon.identity.oauth2.dao.OAuthTokenPersistenceFactory;
 import org.wso2.carbon.identity.oauth2.dto.OAuthRevocationRequestDTO;
 import org.wso2.carbon.identity.oauth2.dto.OAuthRevocationResponseDTO;
 import org.wso2.carbon.identity.oauth2.model.AccessTokenDO;
+import org.wso2.carbon.identity.oauth2.util.OAuth2Util;
 import org.wso2.carbon.user.core.util.UserCoreUtil;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -37,8 +41,7 @@ public class TokenRevocationUtil {
         AuthenticatedUser authenticatedUser = getAuthenticatedUser(userID);
         Set<AccessTokenDO> accessTokenDOSet = getAccessTokenDOSet(detailedConsentResource, authenticatedUser);
 
-        //TODO : Get consent id claim name from configuration
-        String consentIdClaim = "consent_id";
+        String consentIdClaim = ConsentManagementConfigParser.getInstance().getConsentIDClaimName();
 
         if (!accessTokenDOSet.isEmpty()) {
             Set<String> activeTokens = new HashSet<>();
@@ -56,7 +59,7 @@ public class TokenRevocationUtil {
                 OAuthClientAuthnContext oAuthClientAuthnContext = new OAuthClientAuthnContext();
                 oAuthClientAuthnContext.setAuthenticated(true);
                 oAuthClientAuthnContext.setClientId(clientId);
-                oAuthClientAuthnContext.addParameter("IS_CONSENT_REVOCATION_FLOW", true);
+                oAuthClientAuthnContext.addParameter(ConsentManagementConstants.IS_CONSENT_REVOCATION_FLOW, true);
 
                 // set common properties of token revocation request
                 OAuthRevocationRequestDTO revokeRequestDTO = new OAuthRevocationRequestDTO();
@@ -94,8 +97,17 @@ public class TokenRevocationUtil {
         if (UserCoreUtil.getDomainFromThreadLocal() == null) {
             UserCoreUtil.setDomainInThreadLocal(UserCoreUtil.extractDomainFromName(userID));
         }
-        // TODO: Set federated user details
-        return AuthenticatedUser.createLocalAuthenticatedUserFromSubjectIdentifier(userID);
+        if (ConsentManagementConfigParser.getInstance().isPSUFederated()) {
+            AuthenticatedUser authenticatedUser =
+                    AuthenticatedUser.createFederateAuthenticatedUserFromSubjectIdentifier(userID);
+            authenticatedUser.setUserStoreDomain(OAuth2Util.getUserStoreForFederatedUser(authenticatedUser));
+            authenticatedUser.setTenantDomain(MultitenantUtils.getTenantDomain(userID));
+            authenticatedUser.setFederatedIdPName(ConsentManagementConfigParser.getInstance().getFederatedIDPName());
+            authenticatedUser.setUserName(MultitenantUtils.getTenantAwareUsername(userID));
+            return authenticatedUser;
+        } else {
+            return AuthenticatedUser.createLocalAuthenticatedUserFromSubjectIdentifier(userID);
+        }
     }
 
     @Generated(message = "Excluded from code coverage since used for testing purposes")

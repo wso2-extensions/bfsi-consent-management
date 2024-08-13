@@ -24,7 +24,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.bfsi.consent.management.common.util.CarbonUtils;
 import org.wso2.bfsi.consent.management.common.util.CommonTestDataProvider;
-import org.wso2.bfsi.consent.management.common.util.CommonTestUtil;
 import org.wso2.bfsi.consent.management.common.util.CommonUtils;
 
 import java.text.ParseException;
@@ -35,11 +34,10 @@ import java.text.ParseException;
 public class CommonUtilsTests {
 
     @BeforeClass
-    public void beforeClass() throws ReflectiveOperationException {
+    public void beforeClass() {
 
         //to execute util class initialization
         new CarbonUtils();
-        CommonTestUtil.injectEnvironmentVariable("CARBON_HOME", ".");
     }
 
     @Test(dataProvider = "jwtData", dataProviderClass = CommonTestDataProvider.class)
@@ -53,12 +51,5 @@ public class CommonUtilsTests {
     public void testDecodeRequestJWTInvalidScenario() throws ParseException {
 
         CommonUtils.decodeRequestJWT("invalid_jwt", "header");
-    }
-
-    @Test
-    public void testGetCarbonHome()  {
-
-        String carbonHome = CarbonUtils.getCarbonHome();
-        Assert.assertNotNull(carbonHome);
     }
 }

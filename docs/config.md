@@ -18,38 +18,17 @@ BFSI Consent Management Connector provides the capability to manage the above ph
 
 ## Setting up the BFSI Consent Management Connector
 
-### Deploying Artifacts
-
-Download the connector zip file and extract it. Copy the artifacts downloaded to the folders specified below. 
-
-1. Copy the following artifacts to <IS_HOME>/repository/components/dropins folder.
-    - org.wso2.bfsi.consent.management.common-1.0.0.jar
-    - org.wso2.bfsi.consent.management.dao-1.0.0.jar
-    - org.wso2.bfsi.consent.management.service-1.0.0.jar
-    - org.wso2.bfsi.consent.management.extensions-1.0.0.jar
-    - org.wso2.bfsi.identity.extensions-1.0.0.jar
-    - classmate-1.5.1.jar
-2. Copy the following artifacts to <IS_HOME>/repository/components/libs folder.
-    - commons-beanutils-1.9.4.jar
-    - validation-api-2.0.1.Final.jar
-    - hibernate-validator-6.0.20.Final.jar
-3. Copy the following artifacts to <IS_HOME>/repository/deployment/server/webapps folder.
-    - api#bfsi#consent.war
-    - bfsi#authenticationendpoint.war
-4. Copy the following configuration file to <IS_HOME>/repository/conf folder.
-    - bfsi-consent-management.xml
-
 ### Setting up a new database
 
 1. Create a new database with the name - `bfsi_consentdb`.
 2. Create database tables by running the relevant the db script inside from the `dbscripts` folder.
    
-   | DBMS Type                 | DB Script                                                            |
-   |---------------------------|----------------------------------------------------------------------|
-   | MySQL 8.0                 | <a href="../resources/mysql.sql" download> mysql.sql  </a>           |
-   | Oracle 19c                | <a href="../resources/oracle.sql" download> oracle.sql  </a>         |
-   | Microsoft SQL Server 2017 | <a href="../resources/mssql.sql" download> mssql.sql  </a>           |
-   | PostgreSQL 13             | <a href="../resources/postgresql.sql" download> postgresql.sql  </a> |
+   | DBMS Type                 | DB Script                                                                 |
+   |---------------------------|---------------------------------------------------------------------------|
+   | MySQL 8.0                 | <a href="/resources/mysql.sql" download> mysql.sql  </a>                  |
+   | Oracle 19c                | <a href="/resources/oracle.sql" download> oracle.sql  </a>         |
+   | Microsoft SQL Server 2017 | <a href="/resources/mssql.sql" download> mssql.sql  </a>           |
+   | PostgreSQL 13             | <a href="/resources/postgresql.sql" download> postgresql.sql  </a> |
 
 3. According to your DBMS, place the compatible JDBC drivers in the following directories:
  
@@ -64,6 +43,27 @@ Download the connector zip file and extract it. Copy the artifacts downloaded to
        | Oracle 19c | `ojdbc10.jar` |
        | Microsoft SQL Server 2017 | `sqljdbc41.jar` |
        | PostgreSQL 13 | `postgresql-42.2.17.jar` |
+
+### Deploying Artifacts
+
+Download the connector zip file and extract it. Copy the artifacts downloaded to the folders specified below.
+
+1. Copy the following artifacts to <IS_HOME>/repository/components/dropins folder.
+   - org.wso2.bfsi.consent.management.common-1.0.0.jar
+   - org.wso2.bfsi.consent.management.dao-1.0.0.jar
+   - org.wso2.bfsi.consent.management.service-1.0.0.jar
+   - org.wso2.bfsi.consent.management.extensions-1.0.0.jar
+   - org.wso2.bfsi.identity.extensions-1.0.0.jar
+   - classmate-1.5.1.jar
+2. Copy the following artifacts to <IS_HOME>/repository/components/libs folder.
+   - commons-beanutils-1.9.4.jar
+   - validation-api-2.0.1.Final.jar
+   - hibernate-validator-6.0.20.Final.jar
+3. Copy the following artifacts to <IS_HOME>/repository/deployment/server/webapps folder.
+   - api#bfsi#consent.war
+   - bfsi#authenticationendpoint.war
+4. Copy the following configuration file to <IS_HOME>/repository/conf folder.
+   - bfsi-consent-management.xml
 
 ### Configuring BFSI Consent Management Connector
 
@@ -171,7 +171,7 @@ drop_unregistered_scopes = false
 
 - Config the Consent page in the authentication endpoint.
 ``` toml 
-[oauth.endpoints]
+[oauth.endpoints.v2]
 oauth2_consent_page = "${carbon.protocol}://localhost:${carbon.management.port}/bfsi/authenticationendpoint/oauth2_authz.do"
 oidc_consent_page = "${carbon.protocol}://localhost:${carbon.management.port}/bfsi/authenticationendpoint/oauth2_consent.do"
 ```
@@ -221,6 +221,18 @@ claim_callback_handler="org.wso2.bfsi.identity.extensions.claims.BFSIDefaultOIDC
 [oauth.mutualtls]
 client_certificate_header = "x-wso2-mutual-auth-cert"
 ```
+### Start server
+
+1. Run the following command in <IS_HOME>/bin directory to start the server.
+``` bash
+./wso2server.sh
+```
+
+## Register a FAPI-compliant Service Provider
+
+To tryout the Consent Management Connector you need to create a FAPI complaint service provider. Please refer Register a FAPI-compliant application section in the [WSO2 Identity Server Documentation](https://is.docs.wso2.com/en/latest/guides/applications/register-a-fapi-compliant-app/) to create a new service provider.
+
+
 
 ## Tryout BFSI Consent Management Connector
 
