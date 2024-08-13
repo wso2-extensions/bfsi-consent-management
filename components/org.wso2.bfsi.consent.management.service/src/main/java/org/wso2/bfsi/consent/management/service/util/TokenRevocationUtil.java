@@ -41,8 +41,7 @@ public class TokenRevocationUtil {
         AuthenticatedUser authenticatedUser = getAuthenticatedUser(userID);
         Set<AccessTokenDO> accessTokenDOSet = getAccessTokenDOSet(detailedConsentResource, authenticatedUser);
 
-        String consentIdClaim = ConsentManagementConfigParser.getInstance().getConfiguration()
-                .get(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME).toString();
+        String consentIdClaim = ConsentManagementConfigParser.getInstance().getConsentIDClaimName();
 
         if (!accessTokenDOSet.isEmpty()) {
             Set<String> activeTokens = new HashSet<>();

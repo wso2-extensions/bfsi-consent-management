@@ -97,8 +97,7 @@ public class TokenRevocationListener extends AbstractOAuthEventInterceptor {
      */
     public String getConsentIdFromScopes(String[] scopes) {
 
-        String consentIdClaim = ConsentManagementConfigParser.getInstance().getConfiguration()
-                .get(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME).toString();
+        String consentIdClaim = ConsentManagementConfigParser.getInstance().getConsentIDClaimName();
         if (scopes != null) {
             for (String scope : scopes) {
                 if (scope.contains(consentIdClaim)) {

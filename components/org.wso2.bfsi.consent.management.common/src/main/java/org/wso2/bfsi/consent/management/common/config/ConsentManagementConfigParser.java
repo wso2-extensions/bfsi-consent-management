@@ -378,4 +378,15 @@ public class ConsentManagementConfigParser {
         Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.PSU_FEDERATED_IDP_NAME);
         return config.map(String::trim).orElse("");
     }
+
+    /**
+     * Get Consent ID Claim Name.
+     *
+     * @return String Consent ID Claim name
+     */
+    public String getConsentIDClaimName() {
+
+        Optional<String> config = getConfigurationFromKeyAsString(ConsentManagementConstants.CONSENT_ID_CLAIM_NAME);
+        return config.map(String::trim).orElse("consent_id");
+    }
 }
